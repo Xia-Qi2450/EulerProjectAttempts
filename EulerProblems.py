@@ -75,33 +75,50 @@ class EulerSolver:
         Finds the largest palindrome made from the product of two N-digit numbers.
         Returns a tuple containing: (largest_palindrome, factor_1, factor_2)
         """
-        # Calculate limits dynamically based on digit count
-        upper_bound = 10**digits - 1  # e.g., 999 for 3 digits
-        lower_bound = 10 ** (digits - 1)  # e.g., 100 for 3 digits
+        upper_bound = 10**digits - 1  
+        lower_bound = 10 ** (digits - 1)  
 
         max_palindrome = 0
         best_factors = (0, 0)
 
-        # Iterate downwards to find the largest product first
         for i in range(upper_bound, lower_bound - 1, -1):
-
-            # Optimization 1: i * i is the maximum possible product for the current i.
-            # If it is smaller than our current maximum, no larger palindrome can be found.
             if i * i < max_palindrome:
                 break
-
             for j in range(i, lower_bound - 1, -1):
                 product = i * j
-
-                # Optimization 2: Since j decreases, products will only get smaller.
                 if product <= max_palindrome:
                     break
-
                 if self.is_palindrome(product):
                     max_palindrome = product
                     best_factors = (i, j)
 
         return max_palindrome, best_factors
+    
+    def sum_square_difference(self, n=100):
+        """
+        Returns the difference between the square of the the sum and the sum of the square
+        """
+        square_of_sum = sum(range(1, n + 1)) ** 2
+        sum_of_squares = sum(i**2 for i in range(1, n + 1))
+        
+        return square_of_sum - sum_of_squares
+    
+    def sieve_of_eratosthenes(self, limit:int, target_index:int):
+        """
+        Returns the prime numbers at your targeted index with a limit
+        """
+        sieve = [True] * limit
+        sieve[0] = sieve[1] = False
+        primes = []
+        
+        for num in range(2, limit):
+            if sieve[num]:
+                primes.append(num)
+                if len(primes) == target_index:
+                    return num
+                for multiple in range(num * num, limit, num):
+                    sieve[multiple] = False
+                
     # ==========================================================
     # Project Euler Problems
     # ==========================================================
@@ -180,17 +197,56 @@ class EulerSolver:
         )
 
     def problem4(self):
-        "find the largest palindromic number made from the product of two 3-digit numbers"
+        "Find the largest palindromic number made from the product of two 3-digit numbers"
         self.header(
             4,
-            "find the largest palindromic number made from the product of two 3-digit numbers"
+            "Find the largest palindromic number made from the product of two 3-digit numbers"
         )
         result_3, factors_3 = self.run_task(
             "Finding 3-digit palindrome...",
             self.get_largest_palindrome_product,
             3
         )
-        print(f"3-Digit Result: {Fore.GREEN}{result_3} {Fore.RESET} (Factors: {Fore.GREEN}{factors_3})")
+        print(f"The 3-digit palindrome is: {Fore.GREEN}{result_3}{Fore.RESET} (Factors: {Fore.GREEN}{factors_3}{Fore.RESET})")
+    
+    def problem5(self):
+        "Find the smallest positive number that is evenly divisible by all numbers from 1 to 20."
+        self.header(
+            5,
+            "Find the smallest positive number that is evenly divisible by all numbers from 1 to 20."
+        )
+        result = self.run_task(
+            "Finding the least common multiple...",
+            math.lcm,
+            *range(1,21)
+        )
+        print(f"The smallest positive number is: {Fore.GREEN}{result}{Fore.RESET}")
+    
+    def problem6(self):
+        "Find the difference between the square of the sum and the sum of the squares of the first 100 natural numbers"
+        self.header(
+            6,
+            "Find the difference between the square of the sum and the sum of the squares of the first 100 natural numbers"
+        )
+        result = self.run_task(
+            "Finding the difference...",
+            self.sum_square_difference,
+            100
+        )
+        print(f"The difference between the square of the sum and the sum of the squares is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem7(self):
+        "Find the 10,001st prime number"
+        self.header(
+            7,
+            "Find the 10,001st prime number"
+        )
+        result = self.run_task(
+            "Finding prime numbers using the Sieve of Eratosthenes...",
+            self.sieve_of_eratosthenes,
+            150000, 10001
+        )
+        print(f"The 10,001st prime number is: {Fore.GREEN}{result}{Fore.RESET}")
 
     # ==========================================================
     # Runner
@@ -202,6 +258,9 @@ class EulerSolver:
         self.problem2()
         self.problem3()
         self.problem4()
+        self.problem5()
+        self.problem6()
+        self.problem7()
 
 
 if __name__ == "__main__":
