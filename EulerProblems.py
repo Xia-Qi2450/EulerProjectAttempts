@@ -54,7 +54,7 @@ class EulerSolver:
             yield a
             a, b = b, a + b
 
-    def largest_prime_factor(self, n):
+    def largest_prime_factor(self, n) -> int:
         """Return the largest prime factor of n."""
         factor = 2
 
@@ -65,7 +65,43 @@ class EulerSolver:
                 factor += 1
 
         return n
+    
+    def is_palindrome(self, number: int) -> bool:
+        """Checks if a number reads the same backward as forward."""
+        return str(number) == str(number)[::-1]
 
+    def get_largest_palindrome_product(self, digits: int) -> tuple:
+        """
+        Finds the largest palindrome made from the product of two N-digit numbers.
+        Returns a tuple containing: (largest_palindrome, factor_1, factor_2)
+        """
+        # Calculate limits dynamically based on digit count
+        upper_bound = 10**digits - 1  # e.g., 999 for 3 digits
+        lower_bound = 10 ** (digits - 1)  # e.g., 100 for 3 digits
+
+        max_palindrome = 0
+        best_factors = (0, 0)
+
+        # Iterate downwards to find the largest product first
+        for i in range(upper_bound, lower_bound - 1, -1):
+
+            # Optimization 1: i * i is the maximum possible product for the current i.
+            # If it is smaller than our current maximum, no larger palindrome can be found.
+            if i * i < max_palindrome:
+                break
+
+            for j in range(i, lower_bound - 1, -1):
+                product = i * j
+
+                # Optimization 2: Since j decreases, products will only get smaller.
+                if product <= max_palindrome:
+                    break
+
+                if self.is_palindrome(product):
+                    max_palindrome = product
+                    best_factors = (i, j)
+
+        return max_palindrome, best_factors
     # ==========================================================
     # Project Euler Problems
     # ==========================================================
@@ -143,6 +179,19 @@ class EulerSolver:
             f"{Fore.GREEN}{largest_factor}"
         )
 
+    def problem4(self):
+        "find the largest palindromic number made from the product of two 3-digit numbers"
+        self.header(
+            4,
+            "find the largest palindromic number made from the product of two 3-digit numbers"
+        )
+        result_3, factors_3 = self.run_task(
+            "Finding 3-digit palindrome...",
+            self.get_largest_palindrome_product,
+            3
+        )
+        print(f"3-Digit Result: {Fore.GREEN}{result_3} {Fore.RESET} (Factors: {Fore.GREEN}{factors_3})")
+
     # ==========================================================
     # Runner
     # ==========================================================
@@ -152,6 +201,7 @@ class EulerSolver:
         self.problem1()
         self.problem2()
         self.problem3()
+        self.problem4()
 
 
 if __name__ == "__main__":
