@@ -28,7 +28,7 @@ class EulerSolver:
 
         result = function(*args)
 
-        spinner.succeed(f"DONE! ({time.time() - start:.3f}s)")
+        spinner.succeed(f"DONE! ({time.time() - start:.5f}s)")
         return result
 
     # ==========================================================
