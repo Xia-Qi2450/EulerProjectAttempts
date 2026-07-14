@@ -4,7 +4,7 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **10 / 100** ✅
+**Current Progress:** **15 / 100** ✅
 
 ---
 
@@ -34,6 +34,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 8 | Largest Product in a Series | ✅ |
 | 9 | Special Pythagorean Triplet | ✅ |
 | 10 | Summation of Primes | ✅ |
+| 11 | Largest Product in a Grid | ✅ |
+| 12 | Highly Divisible Triangular Number | ✅ |
+| 13 | Large Sum | ✅ |
+| 14 | Longest Collatz Sequence | ✅ |
+| 15 | Lattice Paths | ✅ |
 
 ---
 
@@ -117,7 +122,7 @@ Finish all **100** Project Euler problems while continually improving:
 Current Progress:
 
 ```
-██░░░░░░░░░░░░░░░░░░ 10%
+███░░░░░░░░░░░░░░░░░ 15%
 ```
 
 ---
