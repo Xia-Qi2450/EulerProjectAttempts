@@ -4,7 +4,7 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **7 / 100** ✅
+**Current Progress:** **10 / 100** ✅
 
 ---
 
@@ -31,6 +31,9 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 5 | Smallest Multiple | ✅ |
 | 6 | Sum Square Difference | ✅ |
 | 7 | 10,001st Prime | ✅ |
+| 8 | Largest Product in a Series | ✅ |
+| 9 | Special Pythagorean Triplet | ✅ |
+| 10 | Summation of Primes | ✅ |
 
 ---
 
@@ -114,7 +117,7 @@ Finish all **100** Project Euler problems while continually improving:
 Current Progress:
 
 ```
-██░░░░░░░░░░░░░░░░░░ 8%
+██░░░░░░░░░░░░░░░░░░ 10%
 ```
 
 ---

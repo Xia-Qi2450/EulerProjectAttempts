@@ -105,7 +105,7 @@ class EulerSolver:
     
     def sieve_of_eratosthenes(self, limit:int, target_index:int):
         """
-        Returns the prime numbers at your targeted index with a limit
+        Returns the prime numbers at your targeted index with a limit using the Sieve of Eratosthenes
         """
         sieve = [True] * limit
         sieve[0] = sieve[1] = False
@@ -118,7 +118,56 @@ class EulerSolver:
                     return num
                 for multiple in range(num * num, limit, num):
                     sieve[multiple] = False
+
+         # CRITICAL FIX: Handle what happens if the loop ends and target isn't reached
+        raise ValueError(f"{Fore.RED}The limit {limit} is too small to find prime index {target_index}. Increase your limit.{Fore.RESET}")
+
+    def adjacent_digit_multiplier(self, num_str:str, window_size:int):
+        """
+        Returns the max product of adjacent numbers with a window size
+        """
+        max_product = 0
+        for i in range(len(num_str) - window_size + 1):
+            window = num_str[i : i + window_size]
+            digits = [int(d) for d in window]
+            # Use math.prod to calculate product of the window
+            current_product = math.prod(digits)
+            
+            if current_product > max_product:
+                max_product = current_product
+        return max_product
+    
+    def find_pythagorean_triplets(self, limit):
+        """
+        Find all Pythagorean triplets where all numbers are less than or equal to the limit
+        """
+        triplets = []
+        for a in range(1, limit + 1):
+            for b in range(a + 1, limit + 1):
+                c_squared = a**2 + b**2
+                c = int(c_squared ** 0.5)
                 
+                if c * c == c_squared and c <= limit:
+                    triplets.append((a, b, c))
+        
+        return triplets
+    
+    def sum_primes_under_limit(self, limit: int):
+        """
+        Returns the sum of all prime numbers below a given limit using the Sieve of Eratosthenes
+        """
+        sieve = [True] * limit
+        sieve[0] = sieve[1] = False
+        primes = []
+        
+        for num in range(2, limit):
+            if sieve[num]:
+                primes.append(num)
+                # Optimization: No need to flag multiples if num * num is beyond our array limit
+                if num * num < limit:
+                    for multiple in range(num * num, limit, num):
+                        sieve[multiple] = False
+        return sum(primes)
     # ==========================================================
     # Project Euler Problems
     # ==========================================================
@@ -248,6 +297,50 @@ class EulerSolver:
         )
         print(f"The 10,001st prime number is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem8(self):
+        "Find the product of 13 adjacent digits in the 1000-digit number"
+        self.header(
+            8,
+            "Find the product of 13 adjacent digits in the 1000-digit number"
+        )
+        result = self.run_task(
+            "Finding max product...",
+            self.adjacent_digit_multiplier,
+            "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450",
+            13
+        )
+        print(f"The max product of 13 adjacent digits in the 1000-digit number is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem9(self):
+        "Find the unique Pythagorean triplet where a + b + c = 1000 and the product a * b * c."
+        self.header(
+            9,
+            "Find the unique Pythagorean triplet where a + b + c = 1000 and the product a * b * c."
+        )
+        all_triplets = self.run_task(
+            "Finding all triplets until 500...",
+            self.find_pythagorean_triplets,
+            1000
+        )
+        for a, b, c in all_triplets:
+            if a + b + c == 1000:
+                product = a * b * c
+                print(f"Found unique triplet: {Fore.GREEN}a={a}, b={b}, c={c}{Fore.RESET}")
+                print(f"Product (a*b*c) = {Fore.GREEN}{product}{Fore.RESET}")
+
+    def problem10(self):
+        "Find the sum of all prime numbers below two million"
+        self.header(
+            10,
+            "Find the sum of all prime numbers below two million"
+        )
+        result = self.run_task(
+            "Finding the sum of all prime numbers...",
+            self.sum_primes_under_limit,
+            2000000
+        )
+        print(f"The sum of all prime numbers below two million is {Fore.GREEN}{result}{Fore.RESET}")
+
     # ==========================================================
     # Runner
     # ==========================================================
@@ -261,6 +354,9 @@ class EulerSolver:
         self.problem5()
         self.problem6()
         self.problem7()
+        self.problem8()
+        self.problem9()
+        self.problem10()
 
 
 if __name__ == "__main__":
