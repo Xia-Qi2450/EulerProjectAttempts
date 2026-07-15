@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import time
 import math
 import itertools
@@ -376,16 +377,13 @@ class EulerSolver:
             0,
             "Find the sum of all odd perfect squares up to 756000"
         )
-
         squares = self.run_task(
             "Finding perfect squares...",
             self.find_all_squares_until,
             756000
         )
-
         # Every number here is already a perfect square.
         odd_squares = [square for square in squares if square % 2 == 1]
-
         print(f"Total odd perfect squares found: {Fore.GREEN}{len(odd_squares)}")
         print(f"Sum of odd perfect squares: {Fore.GREEN}{sum(odd_squares)}")
 
@@ -395,13 +393,11 @@ class EulerSolver:
             1,
             "Find the sum of all multiples of 3 or 5 below 1000"
         )
-
         total = sum(
             number
             for number in range(1000)
             if number % 3 == 0 or number % 5 == 0
         )
-
         print(f"Sum of multiples of 3 or 5 below 1000: {Fore.GREEN}{total}")
 
     def problem2(self):
@@ -410,7 +406,6 @@ class EulerSolver:
             2,
             "Find the sum of all even Fibonacci numbers below 4 million"
         )
-
         even_fibonacci = self.run_task(
             "Generating Fibonacci numbers...",
             lambda limit: [
@@ -419,7 +414,6 @@ class EulerSolver:
             ],
             4000000
         )
-
         print(
             f"Sum of even Fibonacci numbers below 4 million: "
             f"{Fore.GREEN}{sum(even_fibonacci)}"
@@ -431,13 +425,11 @@ class EulerSolver:
             3,
             "Find the largest prime factor of 600851475143"
         )
-
         largest_factor = self.run_task(
             "Finding largest prime factor...",
             self.largest_prime_factor,
             600851475143
         )
-
         print(
             f"Largest prime factor of 600851475143: "
             f"{Fore.GREEN}{largest_factor}"
@@ -627,7 +619,6 @@ class EulerSolver:
                 for name in dir(self)
                 if name.startswith("problem") and name[7:].isdigit()
             )
-
         for number in problems:
             method = getattr(self, f"problem{number}", None)
 
@@ -641,7 +632,6 @@ parser = argparse.ArgumentParser(
     description="A Script with the first 100 Project Euler questions solved using Python.",
     epilog="Currently having 15/100 problems sloved!"
 )
-
 parser.add_argument(
     "problems",
     nargs="*",
@@ -649,14 +639,12 @@ parser.add_argument(
     metavar="N",
     help="Problem numbers to run"
 )
-
 parser.add_argument(
     "-a",
     "--all",
     action="store_true",
     help="Run every implemented problem."
 )
-
 parser.add_argument(
     "-l",
     "--list",
@@ -665,20 +653,14 @@ parser.add_argument(
 )
 
 if __name__ == "__main__":
-
     args = parser.parse_args()
-
     solver = EulerSolver()
-
     if args.list:
         solver.list_problems()
-
     elif args.all:
         solver.run()
-
     elif args.problems:
         solver.run(args.problems)
-
     else:
         # No arguments defaults to running everything
         solver.run()
