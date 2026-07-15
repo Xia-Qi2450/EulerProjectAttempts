@@ -129,7 +129,7 @@ Current Progress:
 
 ## Future Ideas
 
-- [ ] Command-line argument to run a single problem
+- [x] Command-line argument to run a single problem
 - [ ] Benchmark mode
 - [ ] Automatic answer verification
 - [ ] Unit tests

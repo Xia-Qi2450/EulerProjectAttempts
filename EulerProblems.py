@@ -1,6 +1,7 @@
 import time
 import math
 import itertools
+import argparse
 
 import colorama
 from colorama import Fore
@@ -124,14 +125,32 @@ class EulerSolver:
 
     def run_task(self, text: str, function, *args):
         """Run a function with a Halo spinner and timer."""
-        spinner = Halo(text=text, spinner="dots")
+        spinner = Halo(text=text, spinner="bouncingBar")
         start = time.time()
         spinner.start()
-
+        time.sleep(0.5)
         result = function(*args)
 
-        spinner.succeed(f"DONE! ({time.time() - start:.5f}s)")
+        spinner.succeed(f"DONE! ({time.time() - 0.5 - start:.5f}s)")
         return result
+    
+    def list_problems(self):
+        """List every implemented Project Euler problem."""
+
+        print(f"{Fore.CYAN}Implemented Problems{Fore.RESET}\n")
+
+        methods = sorted(
+            (
+                name for name in dir(self)
+                if name.startswith("problem") and name[7:].isdigit()
+            ),
+            key=lambda name: int(name[7:])
+        )
+
+        for name in methods:
+            method = getattr(self, name)
+            description = (method.__doc__ or "No description").strip()
+            print(f"{Fore.GREEN}{int(name[7:]):>3}{Fore.RESET} - {description}")
 
     # ==========================================================
     # Utility Functions
@@ -601,25 +620,65 @@ class EulerSolver:
     # Runner
     # ==========================================================
 
-    def run(self):
-        self.problem0()
-        self.problem1()
-        self.problem2()
-        self.problem3()
-        self.problem4()
-        self.problem5()
-        self.problem6()
-        self.problem7()
-        self.problem8()
-        self.problem9()
-        self.problem10()
-        self.problem11()
-        self.problem12()
-        self.problem13()
-        self.problem14()
-        self.problem15()
+    def run(self, problems=None):
+        if problems is None:
+            problems = sorted(
+                int(name[7:])
+                for name in dir(self)
+                if name.startswith("problem") and name[7:].isdigit()
+            )
 
+        for number in problems:
+            method = getattr(self, f"problem{number}", None)
+
+            if callable(method):
+                method()
+            else:
+                print(f"{Fore.RED}Problem {number} has not been implemented.{Fore.RESET}")
+
+parser = argparse.ArgumentParser(
+    prog="Euler Problems",
+    description="A Script with the first 100 Project Euler questions solved using Python.",
+    epilog="Currently having 15/100 problems sloved!"
+)
+
+parser.add_argument(
+    "problems",
+    nargs="*",
+    type=int,
+    metavar="N",
+    help="Problem numbers to run"
+)
+
+parser.add_argument(
+    "-a",
+    "--all",
+    action="store_true",
+    help="Run every implemented problem."
+)
+
+parser.add_argument(
+    "-l",
+    "--list",
+    action="store_true",
+    help="List all implemented problems."
+)
 
 if __name__ == "__main__":
+
+    args = parser.parse_args()
+
     solver = EulerSolver()
-    solver.run()
+
+    if args.list:
+        solver.list_problems()
+
+    elif args.all:
+        solver.run()
+
+    elif args.problems:
+        solver.run(args.problems)
+
+    else:
+        # No arguments defaults to running everything
+        solver.run()
