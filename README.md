@@ -6,12 +6,20 @@ The goal of this project isn't just to get the correct answers—it's also an op
 
 **Current Progress:** **15 / 100** ✅
 
+```
+████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  15%
+```
+
 ---
 
 ## Features
 
 - Solutions organized inside a single `EulerSolver` class
 - Reusable helper functions for common mathematical operations
+- Automatic discovery of implemented problems
+- Command-line interface powered by `argparse`
+- Run individual Project Euler problems
+- List all implemented problems
 - Animated loading spinners using **Halo**
 - Colored terminal output using **Colorama**
 - Execution time displayed for computationally intensive problems
@@ -72,30 +80,61 @@ pip install colorama halo
 
 ## Running
 
-Simply execute:
+Run every implemented Project Euler solution:
 
 ```bash
 python EulerProblems.py
 ```
 
-Each solved problem will execute sequentially.
+or explicitly:
+
+```bash
+python EulerProblems.py --all
+```
+
+### Run specific problems
+
+Execute one or more individual problems by specifying their numbers.
+
+```bash
+python EulerProblems.py 1
+```
+
+```bash
+python EulerProblems.py 1 5 10 15
+```
+
+### List implemented problems
+
+View every currently implemented Project Euler problem.
+
+```bash
+python EulerProblems.py --list
+```
+
+or
+
+```bash
+python EulerProblems.py -l
+```
 
 Example output:
 
-```
-Euler's problem 1: Find the sum of all multiples of 3 or 5 below 1000
+```text
+Implemented Problems
 
-✔ DONE! (0.00002s)
-
-Sum of multiples of 3 or 5 below 1000:
-233168
+  0 - Find the sum of all odd perfect squares up to 756000
+  1 - Find the sum of all multiples of 3 or 5 below 1000
+  2 - Find the sum of all even Fibonacci numbers below 4 million
+  ...
+ 15 - Find the number of lattice paths through a 20×20 grid
 ```
 
 ---
 
 ## Helper Functions
 
-Some reusable utilities currently included:
+Reusable algorithms currently include:
 
 - Perfect square generation
 - Fibonacci sequence generator
@@ -104,8 +143,13 @@ Some reusable utilities currently included:
 - Largest palindrome product
 - Sum square difference
 - Sieve of Eratosthenes
-
-These are shared across multiple Project Euler problems whenever possible.
+- Adjacent digit product
+- Pythagorean triplet generation
+- Prime summation
+- Grid product search
+- Divisor counting
+- Collatz sequence solver
+- Lattice path counting
 
 ---
 
@@ -119,23 +163,19 @@ Finish all **100** Project Euler problems while continually improving:
 - Runtime efficiency
 - Code readability
 
-Current Progress:
-
-```
-███░░░░░░░░░░░░░░░░░ 15%
-```
-
 ---
 
 ## Future Ideas
 
-- [x] Command-line argument to run a single problem
+- [x] Command-line interface
+- [x] Run individual problems
+- [x] List implemented problems
 - [ ] Benchmark mode
-- [ ] Automatic answer verification
+- [ ] Automatic answer verification against Project Euler answers
+- [ ] Export benchmark results to CSV
 - [ ] Unit tests
-- [ ] More optimized algorithms
+- [ ] More optimized algorithms for later problems
 - [ ] Progress statistics
-- [ ] Save benchmark history
 - [ ] Separate helper functions into their own module
 
 ---
