@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **15 / 100** ✅
+**Current Progress:** **20 / 100** ✅
 
 ```
-████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  15%
+██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  20%
 ```
 
 ---
@@ -47,6 +47,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 13 | Large Sum | ✅ |
 | 14 | Longest Collatz Sequence | ✅ |
 | 15 | Lattice Paths | ✅ |
+| 16 | Power Digit Sum | ✅ |
+| 17 | Number Letter Counts | ✅ |
+| 18 | Maximum Path Sum I | ✅ |
+| 19 | Counting Sundays | ✅ |
+| 20 | Factorial Digit Sum | ✅ |
 
 ---
 
@@ -150,6 +155,10 @@ Reusable algorithms currently include:
 - Divisor counting
 - Collatz sequence solver
 - Lattice path counting
+- Integer-to-English word conversion
+- Maximum triangle path solver
+- Leap year calculation
+- Sunday counting algorithm
 
 ---
 

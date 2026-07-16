@@ -4,6 +4,7 @@ import math
 import itertools
 import argparse
 
+from Cython import total_ordering
 import colorama
 from colorama import Fore
 from halo import Halo
@@ -14,6 +15,7 @@ class EulerSolver:
 
     def __init__(self):
         colorama.init(autoreset=True)
+        self.problem8_number = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
         self.problem11_grid = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08\n49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00\n81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65\n52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91\n22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80\n24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50\n32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70\n67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21\n24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72\n21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95\n78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92\n16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57\n86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58\n19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40\n04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66\n88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69\n04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36\n20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16\n20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54\n01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"
         self.problem13_numbers = """37107287533902102798797998220837590246510135740250
                                     46376937677490009712648124896970078050417018260538
@@ -115,6 +117,23 @@ class EulerSolver:
                                     72107838435069186155435662884062257473692284509516
                                     20849603980134001723930671666823555245252804609722
                                     53503534226472524250874054075591789781264330331690"""
+        self.problem18triangle = [
+            [75],
+            [95, 64],
+            [17, 47, 82],
+            [18, 35, 87, 10],
+            [20,  4, 82, 47, 65],
+            [19,  1, 23, 75,  3, 34],
+            [88,  2, 77, 73,  7, 63, 67],
+            [99, 65,  4, 28,  6, 16, 70, 92],
+            [41, 41, 26, 56, 83, 40, 80, 70, 33],
+            [41, 48, 72, 33, 47, 32, 37, 16, 94, 29],
+            [53, 71, 44, 65, 25, 43, 91, 52, 97, 51, 14],
+            [70, 11, 33, 28, 77, 73, 17, 78, 39, 68, 17, 57],
+            [91, 71, 52, 38, 17, 14, 91, 43, 58, 50, 27, 29, 48],
+            [63, 66,  4, 68, 89, 53, 67, 30, 73, 16, 69, 87, 40, 31],
+            [4, 62, 98, 27, 23,  9, 70, 98, 73, 93, 38, 53, 60,  4, 23]
+        ]
 
     # ==========================================================
     # Helper Methods
@@ -367,6 +386,77 @@ class EulerSolver:
             for c in range(grid_size - 1, -1, -1):
                 dp[r][c] = dp[r + 1][c] + dp[r][c + 1]
         return dp[0][0]
+    
+    def number_to_words(self, n):
+        "Returns the pronounced version of words up to 1000. The English language sucks."
+        # Dictionaries to map the irregular patterns of the English language
+        ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", 
+                "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", 
+                "seventeen", "eighteen", "nineteen"]
+        tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+        if n == 1000:
+            return "one thousand"
+        words = []
+        if n >= 100:
+            words.append(ones[n // 100] + " hundred")
+            n %= 100
+            # If there are trailing numbers, British convention requires "and"
+            if n > 0:
+                words.append("and")
+        if n >= 20:
+            words.append(tens[n // 10])
+            if n % 10 > 0:
+                words.append(ones[n % 10])
+        elif n > 0:
+            words.append(ones[n])
+            
+        return " ".join(words)
+    
+    def solve_maximum_path(self, triangle):
+        "Returns the path with the max value"
+        # Iterate from the second-to-last row up to the top row (row index 0)
+        for row in reversed(range(len(triangle) - 1)):
+            for col in range(len(triangle[row])):
+                max_child = max(triangle[row + 1][col], triangle[row + 1][col + 1])
+                triangle[row][col] += max_child
+                
+        return triangle[0][0]
+    
+    def is_leap_year(self, year):
+        # A leap year occurs on any year evenly divisible by 4, 
+        # but not on a century unless it is divisible by 400.
+        if year % 400 == 0:
+            return True
+        if year % 100 == 0:
+            return False
+        return year % 4 == 0
+    
+    def count_sundays_algorithmic(self):
+        # Days in each month (January to December)
+        months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        
+        # 1 Jan 1900 was a Monday (let Monday = 1, Sunday = 0)
+        # 1900 was not a leap year (365 days). 365 % 7 = 1 day shift.
+        # Therefore, 1 Jan 1901 was a Tuesday (weekday = 2).
+        current_weekday = 2 
+        sundays = 0
+        
+        for year in range(1901, 2001):
+            for month_idx in range(12):
+                # If the current day is Sunday (0), increment count
+                if current_weekday == 0:
+                    sundays += 1
+                    
+                # Determine days in the current month
+                days_in_month = months[month_idx]
+                if month_idx == 1 and self.is_leap_year(year): # February
+                    days_in_month = 29
+                    
+                # Shift the weekday tracker for the 1st of the next month
+                current_weekday = (current_weekday + days_in_month) % 7
+                
+        return sundays
+    
     # ==========================================================
     # Project Euler Problems
     # ==========================================================
@@ -496,7 +586,7 @@ class EulerSolver:
         result = self.run_task(
             "Finding max product...",
             self.adjacent_digit_multiplier,
-            "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450",
+            self.problem8_number,
             13
         )
         print(f"The max product of 13 adjacent digits in the 1000-digit number is: {Fore.GREEN}{result}{Fore.RESET}")
@@ -608,6 +698,78 @@ class EulerSolver:
         )
         print(f"The total number of paths that exitsts is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem16(self):
+        "Find the sum of the digits of the number 2^1000"
+        self.header(
+            16,
+            "Find the sum of the digits of the number 2^1000"
+        )
+        def task():
+            # One-liner solution using a generator expression
+            return sum(int(digit) for digit in str(2**1000))
+        result = self.run_task(
+            "Finding the sum...",
+            task
+        )
+        print(f"The sum of the digits is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem17(self):
+        "Find the total number of letters used to write out the numbers in words from 1 to 1000"
+        self.header(
+            17,
+            "Find the total number of letters used to write out the numbers in words from 1 to 1000"
+        )
+        def task():
+            total_letters = 0
+            for i in range(1, 1001):
+                word_representation = self.number_to_words(i)
+                clean_word = word_representation.replace(" ", "").replace("-", "")
+                total_letters += len(clean_word)
+            return total_letters
+        result = self.run_task(
+            "Counting all letters...",
+            task
+        )
+        print(f"Total letter count is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem18(self):
+        "Find the maximum total from top to bottom of the given triangle"
+        self.header(
+            18,
+            "Find the maximum total from top to bottom of the given triangle"
+        )
+        result = self.run_task(
+            "Finding the maximum...",
+            self.solve_maximum_path,
+            self.problem18triangle
+        )
+        print(f"The maximum path sum is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem19(self):
+        "Find the number of Sundays that fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000). I am not using datetime to cheese it."
+        self.header(
+            19,
+            "Find the number of Sundays that fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)"
+        )
+        result = self.run_task(
+            "Finding the number of Sundays...",
+            self.count_sundays_algorithmic,
+        )
+        print(f"The Total number of Sundays is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem20(self):
+        "Find the sum of the digits in the number 100 factorial(!)"
+        self.header(
+            20,
+            "Find the sum of the digits in the number 100 factorial(!)"
+        )
+        def task():
+            return sum(map(int, str(math.factorial(100))))
+        result = self.run_task(
+            "Finding the sum...",
+            task
+        )
+        print(f"The sum of the digits of 100! is: {Fore.GREEN}{result}{Fore.RESET} ")
     # ==========================================================
     # Runner
     # ==========================================================
