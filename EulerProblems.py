@@ -5,6 +5,7 @@ import itertools
 import argparse
 
 from Cython import total_ordering
+import PrintCore
 import colorama
 from colorama import Fore
 from halo import Halo
@@ -187,7 +188,16 @@ class EulerSolver:
 
         return squares
 
-    def fibonacci_sequence(self, limit):
+    def fibonacci_generator(self):
+        """Yields (index, value) pairs for the Fibonacci sequence."""
+        a, b = 1, 1
+        index = 1
+        
+        while True:
+            yield index, a
+            a, b = b, a + b
+
+    def fibonacci_sequence_limit(self, limit):
         """Yield Fibonacci numbers below the given limit."""
         a, b = 0, 1
 
@@ -457,6 +467,25 @@ class EulerSolver:
                 
         return sundays
     
+    def sum_proper_divisors(self, n):
+        """Calculates the sum of all proper divisors of n."""
+        if n <= 1:
+            return 0
+        
+        # 1 is always a proper divisor
+        total_sum = 1 
+        
+        # Find factors up to the square root of n
+        for i in range(2, int(n**0.5) + 1):
+            if n % i == 0:
+                total_sum += i
+                # If factors are distinct, add the matching pair
+                if i != n // i:
+                    total_sum += n // i
+                    
+        return total_sum
+
+
     # ==========================================================
     # Project Euler Problems
     # ==========================================================
@@ -499,7 +528,7 @@ class EulerSolver:
         even_fibonacci = self.run_task(
             "Generating Fibonacci numbers...",
             lambda limit: [
-                n for n in self.fibonacci_sequence(limit)
+                n for n in self.fibonacci_sequence_limit(limit)
                 if n % 2 == 0
             ],
             4000000
@@ -653,10 +682,10 @@ class EulerSolver:
         print(f"The first triangle number with over 500 divisors is: {Fore.GREEN}{result}{Fore.RESET}")
 
     def problem13(self):
-        "Find out the first ten digits of the sum of 100 50-digit numbers"
+        "Find the first ten digits of the sum of 100 50-digit numbers"
         self.header(
             13,
-            "Find out the first ten digits of the sum of 100 50-digit numbers"
+            "Find the first ten digits of the sum of 100 50-digit numbers"
         )
         numbers_string = self.problem13_numbers
         def task():
@@ -770,6 +799,126 @@ class EulerSolver:
             task
         )
         print(f"The sum of the digits of 100! is: {Fore.GREEN}{result}{Fore.RESET} ")
+    
+    def problem21(self):
+        "Find the sum of all the amicable numbers under 10000"
+        self.header(
+            21, 
+            "Find the sum of all the amicable numbers under 10000"
+        )
+        def task(limit):
+            amicable_sum = 0
+            for a in range(1, limit):
+                b = self.sum_proper_divisors(a)
+                
+                # Condition 1: a and b must be distinct (a != b)
+                # Condition 2: avoid double counting by checking a < b
+                if a < b and b < limit:
+                    if self.sum_proper_divisors(b) == a:
+                        amicable_sum += a + b
+            return amicable_sum
+        result = self.run_task(
+            "Finding the sum...",
+            task,
+            10000
+        )
+        print(f"The sum of the amicable numbers is: {Fore.GREEN}{result}{Fore.RESET}")
+    
+    def problem22(self):
+        "Find the total of all the name scores in the file"
+        self.header(
+            22,
+            "Find the total of all the name scores in the file"
+        )
+        def task(file):
+            # Read the text file containing the comma-separated names
+            with open(file, 'r') as f:
+                content = f.read()
+            names = [name.strip('"') for name in content.split(',')]
+            names.sort() 
+            total_score = 0
+            for rank, name in enumerate(names, start=1):
+                alphabetical_value = sum(ord(char) - 64 for char in name)
+                total_score += rank * alphabetical_value
+            return total_score
+        result = self.run_task(
+            "Totaling up all name scores...",
+            task,
+            "0022_names.txt"
+        )
+        print(f"The total score of all the names is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem23(self):
+        "Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers."
+        self.header(
+            23,
+            "Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers."
+        )
+        def task():
+            # The mathematical ceiling given in the problem statement
+            LIMIT = 28124  
+            divisorsum = [0] * LIMIT
+            for i in range(1, LIMIT):
+                for j in range(i * 2, LIMIT, i):
+                    divisorsum[j] += i
+            abundant_nums = [i for (i, x) in enumerate(divisorsum) if x > i]
+            expressible_as_abundant_sum = [False] * LIMIT
+            for i in abundant_nums:
+                for j in abundant_nums:
+                    if i + j < LIMIT:
+                        expressible_as_abundant_sum[i + j] = True
+                    else:
+                        # Since abundant_nums is sorted, if i + j exceeds the limit, 
+                        # any subsequent j will also exceed it. We can safely break.
+                        break
+            total_sum = sum(i for (i, x) in enumerate(expressible_as_abundant_sum) if not x)
+            return total_sum
+        result = self.run_task(
+            "Finding the sum...",
+            task
+        )
+        print(f"The sum of all positive integers which cannot be written as the sum of two abundant numbers is: {Fore.GREEN}{result}{Fore.RESET}")
+    
+    def problem24(self):
+        "Find the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9"
+        self.header(
+            24,
+            "Find the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9"
+        )
+        def task():
+            # 0-indexed position of the millionth permutation
+            target_index = 999999 
+            digits = list(range(10))
+            result = []
+            for i in range(9, -1, -1):
+                digit_idx, target_index = divmod(target_index, math.factorial(i))
+                result.append(digits.pop(digit_idx))
+            return "".join(map(str, result))
+        result = self.run_task(
+            "Finding the millionth permutation...",
+            task
+        )
+        print(f"The millionth lexicographic permutation is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem25(self):
+        "Find the index of the first term in the Fibonacci sequence to contain 1000 digits?"
+        self.header(
+            25,
+            "Find the index of the first term in the Fibonacci sequence to contain 1000 digits?"
+        )
+        def task():
+            index = 1
+            for i, value in self.fibonacci_generator():
+                # Check if the number has 1,000 digits
+                if len(str(value)) >= 1000:
+                    return index
+                index += 1
+        result = self.run_task(
+            'Finding the 1000-digit Fibonacci number...',
+            task
+        )
+        print(f"The index of the 1000-digit Fibonacci number is: {Fore.GREEN}{result}{Fore.RESET}")
+
     # ==========================================================
     # Runner
     # ==========================================================
@@ -792,7 +941,7 @@ class EulerSolver:
 parser = argparse.ArgumentParser(
     prog="Euler Problems",
     description="A Script with the first 100 Project Euler questions solved using Python.",
-    epilog="Currently having 15/100 problems sloved!"
+    epilog="Currently having 25/100 problems sloved!"
 )
 parser.add_argument(
     "problems",

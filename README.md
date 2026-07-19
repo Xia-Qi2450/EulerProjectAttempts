@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **20 / 100** ✅
+**Current Progress:** **25 / 100** ✅
 
 ```
-██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  20%
+█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  25%
 ```
 
 ---
@@ -52,6 +52,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 18 | Maximum Path Sum I | ✅ |
 | 19 | Counting Sundays | ✅ |
 | 20 | Factorial Digit Sum | ✅ |
+| 21 | Amicable Numbers | ✅ |
+| 22 | Names Scores | ✅ |
+| 23 | Non-Abundant Sums | ✅ |
+| 24 | Lexicographic Permutations | ✅ |
+| 25 | 1000-digit Fibonacci Number | ✅ |
 
 ---
 
@@ -59,6 +64,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 
 ```
 EulerProblems.py
+0022_names.txt  (The text file for Problem 22)
 ```
 
 Everything currently lives inside one file:
@@ -132,33 +138,31 @@ Implemented Problems
   1 - Find the sum of all multiples of 3 or 5 below 1000
   2 - Find the sum of all even Fibonacci numbers below 4 million
   ...
- 15 - Find the number of lattice paths through a 20×20 grid
+ XX - Latest implemented problem
 ```
 
 ---
 
 ## Helper Functions
 
-Reusable algorithms currently include:
+Many Project Euler problems reuse common algorithms. Instead of rewriting code, helper methods are shared across multiple solutions.
 
-- Perfect square generation
-- Fibonacci sequence generator
-- Largest prime factor
-- Palindrome checker
-- Largest palindrome product
-- Sum square difference
+Current helper functionality includes:
+
+- Prime number generation
 - Sieve of Eratosthenes
-- Adjacent digit product
-- Pythagorean triplet generation
-- Prime summation
-- Grid product search
+- Prime factorization
+- Fibonacci generation
+- Palindrome checking
 - Divisor counting
-- Collatz sequence solver
-- Lattice path counting
-- Integer-to-English word conversion
-- Maximum triangle path solver
-- Leap year calculation
-- Sunday counting algorithm
+- Triangle number generation
+- Grid searching
+- Integer-to-English conversion
+- Leap year calculations
+- Date calculations
+- Dynamic programming
+- Mathematical utilities
+- And more as new problems require them.
 
 ---
 
@@ -186,6 +190,20 @@ Finish all **100** Project Euler problems while continually improving:
 - [ ] More optimized algorithms for later problems
 - [ ] Progress statistics
 - [ ] Separate helper functions into their own module
+
+---
+
+## Why this project?
+
+Project Euler offers problems that combine mathematics with programming. Rather than simply obtaining the correct answer, this project focuses on writing solutions that are:
+
+- Readable
+- Reusable
+- Efficient
+- Well documented
+- Easy to benchmark and improve over time
+
+Every solved problem is another opportunity to learn something new.
 
 ---
 
