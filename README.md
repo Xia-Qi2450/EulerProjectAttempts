@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **25 / 100** ✅
+**Current Progress:** **30 / 100** ✅
 
 ```
-█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  25%
+███████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  30%
 ```
 
 ---
@@ -57,6 +57,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 23 | Non-Abundant Sums | ✅ |
 | 24 | Lexicographic Permutations | ✅ |
 | 25 | 1000-digit Fibonacci Number | ✅ |
+| 26 | Reciprocal Cycles | ✅ |
+| 27 | Quadratic Primes | ✅ |
+| 28 | Number Spiral Diagonals | ✅ |
+| 29 | Distinct Powers | ✅ |
+| 30 | Digit Fifth Powers | ✅ |
 
 ---
 
