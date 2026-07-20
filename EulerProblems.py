@@ -4,12 +4,9 @@ import math
 import itertools
 import argparse
 
-from Cython import total_ordering
-import PrintCore
 import colorama
 from colorama import Fore
 from halo import Halo
-
 
 class EulerSolver:
     """A collection of Project Euler solutions."""
@@ -220,6 +217,15 @@ class EulerSolver:
     def is_palindrome(self, number: int) -> bool:
         """Checks if a number reads the same backward as forward."""
         return str(number) == str(number)[::-1]
+    
+    def is_prime(self, n):
+        """Checks if a number is prime."""
+        if n < 2:
+            return False
+        for i in range(2, int(math.isqrt(n)) + 1):
+            if n % i == 0:
+                return False
+        return True
 
     def get_largest_palindrome_product(self, digits: int) -> tuple:
         """
@@ -678,6 +684,7 @@ class EulerSolver:
                 triangle += i  # i-th triangle number is 1 + 2 + ... + i
                 if self.count_divisors(triangle) > limit:
                     return triangle
+                
         result = self.run_task("Finding the triangle number...", find_first_triangle_number, 500)
         print(f"The first triangle number with over 500 divisors is: {Fore.GREEN}{result}{Fore.RESET}")
 
@@ -736,6 +743,7 @@ class EulerSolver:
         def task():
             # One-liner solution using a generator expression
             return sum(int(digit) for digit in str(2**1000))
+        
         result = self.run_task(
             "Finding the sum...",
             task
@@ -755,6 +763,7 @@ class EulerSolver:
                 clean_word = word_representation.replace(" ", "").replace("-", "")
                 total_letters += len(clean_word)
             return total_letters
+        
         result = self.run_task(
             "Counting all letters...",
             task
@@ -794,6 +803,7 @@ class EulerSolver:
         )
         def task():
             return sum(map(int, str(math.factorial(100))))
+        
         result = self.run_task(
             "Finding the sum...",
             task
@@ -817,6 +827,7 @@ class EulerSolver:
                     if self.sum_proper_divisors(b) == a:
                         amicable_sum += a + b
             return amicable_sum
+        
         result = self.run_task(
             "Finding the sum...",
             task,
@@ -841,6 +852,7 @@ class EulerSolver:
                 alphabetical_value = sum(ord(char) - 64 for char in name)
                 total_score += rank * alphabetical_value
             return total_score
+        
         result = self.run_task(
             "Totaling up all name scores...",
             task,
@@ -873,6 +885,7 @@ class EulerSolver:
                         break
             total_sum = sum(i for (i, x) in enumerate(expressible_as_abundant_sum) if not x)
             return total_sum
+        
         result = self.run_task(
             "Finding the sum...",
             task
@@ -894,6 +907,7 @@ class EulerSolver:
                 digit_idx, target_index = divmod(target_index, math.factorial(i))
                 result.append(digits.pop(digit_idx))
             return "".join(map(str, result))
+        
         result = self.run_task(
             "Finding the millionth permutation...",
             task
@@ -918,13 +932,148 @@ class EulerSolver:
             task
         )
         print(f"The index of the 1000-digit Fibonacci number is: {Fore.GREEN}{result}{Fore.RESET}")
+    
+    def problem26(self):
+        "Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part."
+        self.header(
+            26,
+            "Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part."
+        )
+        def get_cycle_length(d):
+            # Track the step/index at which each remainder was seen
+            seen_remainders = {}
+            remainder = 1
+            step = 0
+            while remainder != 0:
+                if remainder in seen_remainders:
+                    return step - seen_remainders[remainder]
+                
+                seen_remainders[remainder] = step
+                remainder = (remainder * 10) % d
+                step += 1
+            return 0  # Divides evenly 
+        
+        def task():
+            max_len = 0
+            best_d = 0
+            for d in range(2, 1000):
+                length = get_cycle_length(d)
+                if length > max_len:
+                    max_len = length
+                    best_d = d
+            return best_d, max_len
+        
+        d_value, cycle_len = self.run_task(
+            "Finding the largest recurring decimal...",
+            task       
+        )
+        print(f"The value of d < 1000 with the longest cycle is: {Fore.GREEN}{d_value}{Fore.RESET}")
+        print(f"Length of the cycle is: {Fore.GREEN}{cycle_len}{Fore.RESET}")
+    
+    def problem27(self):
+        "Find the product of the coefficients a and b in the quadratic expression n^2 + an + b that yields the maximum number of consecutive primes, starting with n = 0"
+        self.header(
+            27,
+            "Find the product of the coefficients a and b in the quadratic expression n^2 + an + b that yields the maximum number of consecutive primes, starting with n = 0"
+        )
+        def task():
+            max_primes = 0
+            best_a = 0
+            best_b = 0
+            for b in range(2, 1000):
+                if not self.is_prime(b):
+                    continue
+                for a in range(-999, 1000):
+                    n = 0
+                    while True:
+                        candidate = n**2 + a * n + b
+                        if candidate <= 0 or not self.is_prime(candidate):
+                            break
+                        n += 1
+                    if n > max_primes:
+                        max_primes = n
+                        best_a = a
+                        best_b = b
+            return best_a * best_b, best_a, best_b
+        
+        product, a, b = self.run_task(
+            "Finding the coefficents and the product of the former...",
+            task
+        )
+        print(f"The coefficients are: a = {Fore.GREEN}{a}{Fore.RESET}, b = {Fore.GREEN}{b}{Fore.RESET}")
+        print(f"Product of coefficients (a * b) is: {Fore.GREEN}{product}{Fore.RESET}")
+
+    def problem28(self):
+        "Find the sum of the numbers on the diagonals in a 1001 by 1001 spiral"
+        self.header(
+            28,
+            "Find the sum of the numbers on the diagonals in a 1001 by 1001 spiral"
+        )
+        def task(grid_size):
+            total_sum = 1
+            current_number = 1
+            
+            # Outer layers advance by 2 step sizes each time (2, 4, 6, ..., grid_size - 1)
+            for step in range(2, grid_size, 2):
+                for _ in range(4):
+                    current_number += step
+                    total_sum += current_number
+                    
+            return total_sum
+        
+        result = self.run_task(
+            "Finding the sum...",
+            task,
+            1001
+        )
+        print(f"The sum of numbers on the diagonals is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem29(self):
+        "Find the number of distinct terms in the sequence generated by a^b for 2 <= a <= 100 and 2 <= b <= 100"
+        self.header(
+            29,
+            "Find the number of distinct terms in the sequence generated by a^b for 2 <= a <= 100 and 2 <= b <= 100"
+        )
+        def task():
+            # Use a set comprehension to automatically filter out duplicate values
+            distinct_powers = {a**b for a in range(2, 101) for b in range(2, 101)}
+            return len(distinct_powers)
+        
+        result = self.run_task(
+            "Finding the number of distinct terms",
+            task
+        )
+        print(f"The number of distict terms is: {Fore.GREEN}{result}{Fore.RESET}")
+    
+    def problem30(self):
+        "Find the sum of all the numbers that can be written as the sum of fifth powers of their digits."
+        self.header(
+            30,
+            "Find the sum of all the numbers that can be written as the sum of fifth powers of their digits."
+        )
+        def task():
+            total_sum = 0
+            upper_bound = 6 * (9 ** 5)
+            for number in range(2, upper_bound + 1):
+                digit_sum = sum(int(digit) ** 5 for digit in str(number))
+                if digit_sum == number:
+                    total_sum += number    
+            return total_sum
+        
+        result = self.run_task(
+            "Finding the sum...",
+            task
+        )
+        print(f"The sum of all the numbers that can be written as the sum of fifth powers of there digits is: {Fore.GREEN}{result}{Fore.RESET}")
 
     # ==========================================================
     # Runner
     # ==========================================================
 
     def run(self, problems=None):
+        start_time = 0
         if problems is None:
+            start_time = time.time()
             problems = sorted(
                 int(name[7:])
                 for name in dir(self)
@@ -937,11 +1086,15 @@ class EulerSolver:
                 method()
             else:
                 print(f"{Fore.RED}Problem {number} has not been implemented.{Fore.RESET}")
+        if start_time != 0: 
+            runtime = time.time() - start_time
+            print(Fore.CYAN + "="*100)
+            print(Fore.CYAN + f"Total Runtime: {runtime:.4f}")
 
 parser = argparse.ArgumentParser(
     prog="Euler Problems",
     description="A Script with the first 100 Project Euler questions solved using Python.",
-    epilog="Currently having 25/100 problems sloved!"
+    epilog="Currently having 30/100 problems sloved!"
 )
 parser.add_argument(
     "problems",
