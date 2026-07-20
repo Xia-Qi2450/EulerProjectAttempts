@@ -1126,5 +1126,6 @@ if __name__ == "__main__":
     elif args.problems:
         solver.run(args.problems)
     else:
-        # No arguments defaults to running everything
-        solver.run()
+        # No arguments defaults to help
+        parser.print_help()
+        

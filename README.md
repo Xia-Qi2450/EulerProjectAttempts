@@ -96,13 +96,13 @@ pip install colorama halo
 
 ## Running
 
-Run every implemented Project Euler solution:
+Prints out a help message:
 
 ```bash
 python EulerProblems.py
 ```
 
-or explicitly:
+Run every implemented Project Euler solution:
 
 ```bash
 python EulerProblems.py --all
