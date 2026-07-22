@@ -4,9 +4,30 @@ import math
 import itertools
 import argparse
 
-import colorama
-from colorama import Fore
-from halo import Halo
+# ===============
+# Custom Errors
+# ===============
+
+class EulerProblemNotImplemented(Exception):
+    def __init__(self, problem_no:int):
+        message = f"Euler Problem number {problem_no} Has not been implemented yet."
+        super().__init__(message)
+
+class RequiredModulesNotFound(Exception):
+    def __init__(self, module) -> None:
+        message = (
+            f"The required module '{module}' for this script cannot be imported. "
+            "Please install it via pip."
+        )
+        super().__init__(message)
+
+try:
+    import colorama
+    from colorama import Fore
+    from halo import Halo
+except ImportError as e:
+    raise RequiredModulesNotFound(e.name) from e
+
 
 class EulerSolver:
     """A collection of Project Euler solutions."""
@@ -1086,10 +1107,12 @@ class EulerSolver:
                 method()
             else:
                 print(f"{Fore.RED}Problem {number} has not been implemented.{Fore.RESET}")
+                raise EulerProblemNotImplemented(number)
         if start_time != 0: 
             runtime = time.time() - start_time
             print(Fore.CYAN + "="*100)
             print(Fore.CYAN + f"Total Runtime: {runtime:.4f}")
+
 
 parser = argparse.ArgumentParser(
     prog="Euler Problems",
