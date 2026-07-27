@@ -1,17 +1,33 @@
 #!/usr/bin/env python3
 import time
 import math
+import random
 import itertools
+from collections import Counter
 import argparse
+import shutil
 
 # ===============
 # Custom Errors
 # ===============
 
-class EulerProblemNotImplemented(Exception):
-    def __init__(self, problem_no:int):
+class EulerProblemError(Exception):
+    """Base exception for Project Euler errors."""
+
+class EulerProblemNotImplemented(EulerProblemError):
+    def __init__(self, problem_no:int) -> None:
         message = f"Euler Problem number {problem_no} Has not been implemented yet."
         super().__init__(message)
+
+class EulerProblemExecutionError(EulerProblemError):
+    def __init__(self, problem_no: int, error: Exception):
+        self.problem_no = problem_no
+        self.error = error
+
+        super().__init__(
+            f"Euler Problem {problem_no} failed during execution.\n"
+            f"Caused by {type(error).__name__}: {error}"
+        )
 
 class RequiredModulesNotFound(Exception):
     def __init__(self, module) -> None:
@@ -21,19 +37,32 @@ class RequiredModulesNotFound(Exception):
         )
         super().__init__(message)
 
+class ImportModulesFail(Exception):
+    def __init__(self, error) -> None:
+        message = (
+            f"An unexpected error occurred while trying to import the modules: {error}"
+        )
+        super().__init__(message)
+
 try:
     import colorama
-    from colorama import Fore
+    from colorama import Fore, Style
     from halo import Halo
-except ImportError as e:
+except ModuleNotFoundError as e:
     raise RequiredModulesNotFound(e.name) from e
-
+except Exception as e:
+    raise ImportModulesFail(e) from e
 
 class EulerSolver:
     """A collection of Project Euler solutions."""
 
-    def __init__(self):
+    def __init__(self, easter_eggs=True, forced_easter_eggs = False):
         colorama.init(autoreset=True)
+        self.VERSION = "0.4_b"
+        self.GOAL = "100"
+        self.EASTER_EGGS = easter_eggs
+        self.FORCED_EASTER_EGGS = forced_easter_eggs
+        self.terminal_width = shutil.get_terminal_size(fallback=(100, 24)).columns
         self.problem8_number = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
         self.problem11_grid = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08\n49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00\n81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65\n52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91\n22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80\n24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50\n32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70\n67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21\n24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72\n21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95\n78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92\n16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57\n86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58\n19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40\n04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66\n88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69\n04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36\n20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16\n20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54\n01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"
         self.problem13_numbers = """37107287533902102798797998220837590246510135740250
@@ -158,7 +187,7 @@ class EulerSolver:
     # Helper Methods
     # ==========================================================
 
-    def header(self, problem_number: int, description: str):
+    def header(self, problem_number: int, description: str) -> None:
         """Print a formatted problem header."""
         print(f"\nEuler's problem {problem_number}: {Fore.BLUE}{description}")
 
@@ -170,13 +199,13 @@ class EulerSolver:
         time.sleep(0.5)
         result = function(*args)
 
-        spinner.succeed(f"DONE! ({time.time() - 0.5 - start:.5f}s)")
+        spinner.succeed(f"DONE! {Style.DIM}({time.time() - 0.5 - start:.4f}s){Style.NORMAL}")
         return result
     
-    def list_problems(self):
+    def list_problems(self, print_out=True) -> list:
         """List every implemented Project Euler problem."""
-
-        print(f"{Fore.CYAN}Implemented Problems{Fore.RESET}\n")
+        if print_out:
+            print(f"{Fore.CYAN}Implemented Problems{Fore.RESET}\n")
 
         methods = sorted(
             (
@@ -185,11 +214,12 @@ class EulerSolver:
             ),
             key=lambda name: int(name[7:])
         )
-
-        for name in methods:
-            method = getattr(self, name)
-            description = (method.__doc__ or "No description").strip()
-            print(f"{Fore.GREEN}{int(name[7:]):>3}{Fore.RESET} - {description}")
+        if print_out :
+            for name in methods:
+                method = getattr(self, name)
+                description = (method.__doc__ or "No description").strip()
+                print(f"{Fore.GREEN}{int(name[7:]):>3}{Fore.RESET} - {description}")
+        return methods
 
     # ==========================================================
     # Utility Functions
@@ -234,8 +264,11 @@ class EulerSolver:
                 factor += 1
 
         return n
+
+    def is_palindrome(self, s) -> bool:
+        return s == s[::-1]
     
-    def is_palindrome(self, number: int) -> bool:
+    def is_palindrome_str(self, number: int) -> bool:
         """Checks if a number reads the same backward as forward."""
         return str(number) == str(number)[::-1]
     
@@ -266,7 +299,7 @@ class EulerSolver:
                 product = i * j
                 if product <= max_palindrome:
                     break
-                if self.is_palindrome(product):
+                if self.is_palindrome_str(product):
                     max_palindrome = product
                     best_factors = (i, j)
 
@@ -282,6 +315,7 @@ class EulerSolver:
         return square_of_sum - sum_of_squares
     
     def sieve_of_eratosthenes(self, limit:int, target_index:int):
+
         """
         Returns the prime numbers at your targeted index with a limit using the Sieve of Eratosthenes
         """
@@ -299,6 +333,16 @@ class EulerSolver:
 
          # CRITICAL FIX: Handle what happens if the loop ends and target isn't reached
         raise ValueError(f"{Fore.RED}The limit {limit} is too small to find prime index {target_index}. Increase your limit.{Fore.RESET}")
+
+    def sieve_of_eratosthenes_list(self, limit:int):
+        """Generates a boolean list where index represents primality."""
+        is_prime = [True] * limit
+        is_prime[0] = is_prime[1] = False
+        for i in range(2, int(limit**0.5) + 1):
+            if is_prime[i]:
+                for j in range(i * i, limit, i):
+                    is_prime[j] = False
+        return is_prime
 
     def adjacent_digit_multiplier(self, num_str:str, window_size:int):
         """
@@ -495,6 +539,7 @@ class EulerSolver:
         return sundays
     
     def sum_proper_divisors(self, n):
+
         """Calculates the sum of all proper divisors of n."""
         if n <= 1:
             return 0
@@ -511,6 +556,25 @@ class EulerSolver:
                     total_sum += n // i
                     
         return total_sum
+
+    def has_pandigital_product(self, n):
+        # Find all factors of the product n
+        for i in range(1, math.isqrt(n) + 1):
+            if n % i == 0:
+                identity_str = f"{i}{n // i}{n}"
+                if len(identity_str) == 9 and "".join(sorted(identity_str)) == "123456789":
+                    return True
+        return False
+
+    # ==========================================================
+    # Easter Eggs
+    # ==========================================================
+
+    def miku39(self):
+        "Easter egg for problem 39, 1 in 100 chance of activating. Crypton please don't sue me."
+        # TODO: Make a Miku Easter Egg here!!!
+        print(f"{Style.BRIGHT}{Fore.CYAN}Let's take a break from math...{Fore.RESET}{Style.NORMAL}")
+        print(f"{Fore.YELLOW}You have triggered an easter egg for the problem 39!{Fore.RESET}")
 
 
     # ==========================================================
@@ -1087,6 +1151,263 @@ class EulerSolver:
         )
         print(f"The sum of all the numbers that can be written as the sum of fifth powers of there digits is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem31(self):
+        "Find the number of different ways can £2 be made using any number of coins?"
+        self.header(
+            31,
+            "Find the number of different ways can £2 be made using any number of coins?"
+        )
+        def task():
+            target = 200
+            coins = [1, 2, 5, 10, 20, 50, 100, 200]
+            
+            # dp[i] will store the number of ways to form a target sum 'i'
+            dp = [1] + [0] * target
+            
+            for coin in coins:
+                for i in range(coin, target + 1):
+                    dp[i] += dp[i - coin]
+                    
+            return dp[target]
+        
+        result = self.run_task(
+            "Finding all the ways to make £2...",
+            task
+        )
+        print(f"The total number of ways to make £2 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem32(self):
+        "Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital."
+        self.header(
+            32,
+            "Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital."
+        )
+        def task():
+             # Store unique products to avoid counting duplicates
+            unique_products = set()
+            for product in range(1000, 10000):
+                if self.has_pandigital_product(product):
+                    unique_products.add(product)
+            return sum(unique_products)
+
+        result = self.run_task(
+            "Finding the sum of the pandigital...",
+            task
+        )
+        print(f"The sum of all products whose identities can be written as a 1 - 9 pandigital is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem33(self):
+        "Find the value of the denominator. If the product of these four fractions is given in its lowest common terms."
+        self.header(
+            33,
+            "Find the value of the denominator. If the product of these four fractions is given in its lowest common terms."
+        )
+        def task():
+            product_numerator = 1
+            product_denominator = 1
+            for d in range(10, 100):
+                for n in range(10, d):
+                    n1, n0 = n // 10, n % 10
+                    d1, d0 = d // 10, d % 10
+                    if n0 == 0 and d0 == 0:
+                        continue
+                    if n0 == d1 and (n * d0 == d * n1):
+                        product_numerator *= n
+                        product_denominator *= d
+            final_denominator = product_denominator // math.gcd(product_numerator, product_denominator)
+            return final_denominator
+        result = self.run_task(
+            "Finding the denominator...",
+            task
+        )
+        print(f"The value of the denominator when the product of these four factions is given in its lowest common terms is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem34(self):
+        "Find the sum of all numbers which are equal to the sum of the factorial of their digits."
+        self.header(
+            34,
+            "Find the sum of all numbers which are equal to the sum of the factorial of their digits."
+        )
+        def task():
+            factorials = [math.factorial(i) for i in range(10)]
+            def sum_of_digit_factorials(n):
+                total = 0
+                while n > 0:
+                    total += factorials[n % 10]
+                    n //= 10
+                return total
+            upper_limit = 7 * factorials[9]
+            match_sum = 0
+            for num in range(3, upper_limit + 1):
+                if num == sum_of_digit_factorials(num):
+                    match_sum += num
+            return match_sum
+        result = self.run_task(
+            "Finding the sum...",
+            task
+        )
+        print(f"The sum of all number that are equal to the sum of the factorial of their digits is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem35(self):
+        "Find the number of circular primes are there below one million."
+        self.header(
+            35,
+            "Find the number of circular primes are there below one million."
+        )
+        def task():
+            limit = 1_000_000
+            is_prime_lookup = self.sieve_of_eratosthenes_list(limit)
+            circular_prime_count = 0
+            invalid_digits = {'0', '2', '4', '5', '6', '8'}
+            for num in range(2, limit):
+                if not is_prime_lookup[num]:
+                    continue
+                num_str = str(num)
+                if len(num_str) > 1 and any(digit in invalid_digits for digit in num_str):
+                    continue
+                is_circular = True
+                for i in range(len(num_str)):
+                    rotation = int(num_str[i:] + num_str[:i])
+                    if not is_prime_lookup[rotation]:
+                        is_circular = False
+                        break
+                if is_circular:
+                    circular_prime_count += 1    
+            return circular_prime_count
+
+        result = self.run_task(
+            "Finding all circular primes under 1000000...",
+            task
+        )
+        print(f"The number of circulat primes under one million is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem36(self):
+        "Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2."
+        self.header(
+            36,
+            "Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2."
+        )
+        def task():
+            total_sum = 0
+            # Even numbers in binary always end in 0, so they cannot be base-2 palindromes (no leading zeros).
+            # Thus, we only check odd numbers.
+            for n in range(1, 1000000, 2):
+                if self.is_palindrome(str(n)) and self.is_palindrome(bin(n)[2:]):
+                    total_sum += n
+            return total_sum
+        result = self.run_task(
+            "Finding the sum of all palindromic numbers...",
+            task
+        )
+        print(f"The sum of all numbers, less than one million, which are palindromic in base 10 and base 2 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem37(self):
+        "Find the sum of the only eleven primes that are both truncatable from left to right and right to left."
+        self.header(
+            37,
+            "Find the sum of the only eleven primes that are both truncatable from left to right and right to left."
+        )
+        def task():
+            limit = 1000000
+            is_prime = self.sieve_of_eratosthenes_list(limit)
+
+            def is_truncatable(n: int) -> bool:
+                # Single-digit primes are excluded by problem definition
+                if n < 10:
+                    return False
+                str_n = str(n)
+                for i in range(1, len(str_n)):
+                    if not is_prime[int(str_n[:i])] or not is_prime[int(str_n[i:])]:
+                        return False
+                return True
+            truncatable_primes = []
+            current_number = 11
+            while len(truncatable_primes) < 11:
+                if is_prime[current_number] and is_truncatable(current_number):
+                    truncatable_primes.append(current_number)
+                current_number += 2  # Skip even numbers to save time
+
+            return sum(truncatable_primes)
+        result = self.run_task(
+            "Finding all truncateable primes...",
+            task
+        )
+        print(f"The sum of the only eleven primes that are truncatable from left to right and right to left is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem38(self):
+        "Find the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1, 2,...,n) where n > 1."
+        self.header(
+            38,
+            "Find the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1, 2,...,n) where n > 1."
+        )
+        def task():
+            for num in range(9876, 9122, -1):
+                concatenated = str(num) + str(2 * num)
+                if len(set(concatenated)) == 9 and '0' not in concatenated:
+                    return concatenated
+        result = self.run_task(
+            "Finding the number...",
+            task
+        )
+        print(f"The largest 1 to 9 pandigital 9-digit number is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem39(self):
+        "Find the perimeter that maximizes the number of integer right-angled triangle solutions for p ≤ 1000"
+        self.header(
+            39,
+            "Find the perimeter that maximizes the number of integer right-angled triangle solutions for p ≤ 1000"
+        )
+        if self.FORCED_EASTER_EGGS or (
+                    self.EASTER_EGGS and random.randrange(100) == 39
+                ):
+                    self.miku39()
+                    return
+        def task(max_p=1000):
+            perimeters = []
+            for a in range(1, max_p // 3):
+                for b in range(a, max_p // 2):
+                    c_squared = a**2 + b**2
+                    c = int(c_squared**0.5)
+                    if c**2 == c_squared:
+                        p = a + b + c
+                        if p <= max_p:
+                            perimeters.append(p)
+            frequency_map = Counter(perimeters)
+            most_common_p, max_solutions = frequency_map.most_common(1)[0]
+            return most_common_p, max_solutions
+        result, _max = self.run_task(
+            "FInding the perimeter...",
+            task
+        )
+        print(f"The perimeter that maximizes the number of integer right-angled triangle solutions is: {Fore.GREEN}{result}{Fore.RESET}")
+        print(f"The max solutions it gives is: {Fore.GREEN}{_max}{Fore.RESET}")
+
+    def problem40(self):
+        "Find the product of specific positional digits in Champernowne's constant."
+        self.header(
+            40,
+            "Find the product of specific positional digits in Champernowne's constant."
+        )
+        def task():
+            champernowne_str = ""
+            i = 1
+            while len(champernowne_str) < 1000000:
+                champernowne_str += str(i)
+                i += 1
+            product = 1
+            for power in range(7):
+                target_index = 10**power
+                digit = int(champernowne_str[target_index - 1])
+                product *= digit
+            return product
+
+        result = self.run_task(
+            "Combing through Champernowne's Constant...",
+            task
+        )
+        print(f"The product in Champernowne's constant is: {Fore.GREEN}{result}{Fore.RESET}")
+
+
     # ==========================================================
     # Runner
     # ==========================================================
@@ -1094,7 +1415,7 @@ class EulerSolver:
     def run(self, problems=None):
         start_time = 0
         if problems is None:
-            start_time = time.time()
+            start_time = time.perf_counter()
             problems = sorted(
                 int(name[7:])
                 for name in dir(self)
@@ -1104,20 +1425,35 @@ class EulerSolver:
             method = getattr(self, f"problem{number}", None)
 
             if callable(method):
-                method()
+                try:
+                    method()
+                except ZeroDivisionError as e:
+                    raise EulerProblemExecutionError(
+                        number,
+                        ZeroDivisionError("Attempted calculation contains division by 0. Calculation fails.")
+                    ) from e
+                except Exception as e:
+                    print(f"{Fore.RED}Problem {number} ran into an error during execution.{Fore.RESET}")
+                    raise EulerProblemExecutionError(number, e) from e
             else:
                 print(f"{Fore.RED}Problem {number} has not been implemented.{Fore.RESET}")
                 raise EulerProblemNotImplemented(number)
         if start_time != 0: 
-            runtime = time.time() - start_time
-            print(Fore.CYAN + "="*100)
-            print(Fore.CYAN + f"Total Runtime: {runtime:.4f}")
+            runtime = time.perf_counter() - start_time
+            print(Fore.CYAN + "="*self.terminal_width)
+            print(Fore.CYAN + f"Total Runtime: {runtime:.4f}s")
 
+# ================
+# Argparse Configs
+# ================
+
+solver = EulerSolver()
 
 parser = argparse.ArgumentParser(
-    prog="Euler Problems",
-    description="A Script with the first 100 Project Euler questions solved using Python.",
-    epilog="Currently having 30/100 problems sloved!"
+    prog=f"EulerProblems.py",
+    description=f"Euler Project Attempts {Fore.CYAN}v{solver.VERSION}{Fore.RESET} - A Script with the first {solver.GOAL} Project Euler questions solved using Python.",
+    epilog=f"Currently having {len(solver.list_problems(False))-1}/{solver.GOAL} problems sloved!",
+    suggest_on_error=True
 )
 parser.add_argument(
     "problems",
@@ -1138,10 +1474,35 @@ parser.add_argument(
     action="store_true",
     help="List all implemented problems."
 )
+parser.add_argument(
+    "-n",
+    "--no-easter-eggs",
+    action="store_true",
+    help="Disables easter eggs from happening for clean output."
+)
+parser.add_argument(
+    "--force-easter-eggs",
+    action="store_true",
+    help=argparse.SUPPRESS,
+)
+parser.add_argument(
+    "-v",
+    "--version",
+    action="version",
+    version=(
+        f"%(prog)s {Fore.CYAN}v{solver.VERSION}{Fore.RESET}"
+        f" - Progress: {len(solver.list_problems(False))-1}/{solver.GOAL} solved"
+    ),
+)
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    solver = EulerSolver()
+    if args.no_easter_eggs and args.force_easter_eggs:
+        parser.error(
+            "--force-easter-eggs cannot be used together with --no-easter-eggs."
+        )
+    solver.EASTER_EGGS = not args.no_easter_eggs
+    solver.FORCED_EASTER_EGGS = args.force_easter_eggs
     if args.list:
         solver.list_problems()
     elif args.all:

@@ -4,11 +4,15 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **30 / 100** ✅
+**Current Progress:** **40 / 100** ✅
 
+```n/a
+████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  40%
 ```
-███████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  30%
-```
+
+> **Note**
+>
+> This project may occasionally surprise you. If you prefer perfectly reproducible output, use `--no-easter-eggs`.
 
 ---
 
@@ -30,7 +34,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 ## Currently Solved
 
 | Problem | Description | Status |
-|---------:|-------------|:------:|
+| ---------: | ------------- | :------: |
 | 0 | Sum of odd perfect squares up to 756000 *(starting challenge for account creation)* | ✅ |
 | 1 | Multiples of 3 or 5 | ✅ |
 | 2 | Even Fibonacci Numbers | ✅ |
@@ -62,12 +66,22 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 28 | Number Spiral Diagonals | ✅ |
 | 29 | Distinct Powers | ✅ |
 | 30 | Digit Fifth Powers | ✅ |
+| 31 | Coin Sums | ✅ |
+| 32 | Pandigital Products | ✅ |
+| 33 | Digit Cancelling Fractions | ✅ |
+| 34 | Digit Factorials | ✅ |
+| 35 | Circular Primes | ✅ |
+| 36 | Double-base Palindromes | ✅ |
+| 37 | Truncatable Primes | ✅ |
+| 38 | Pandigital Multiples | ✅ |
+| 39 | Integer Right Triangles | ✅ |
+| 40 | Champernowne's Constant | ✅ |
 
 ---
 
 ## Project Structure
 
-```
+```bash
 EulerProblems.py
 0022_names.txt  (The text file for Problem 22)
 ```
@@ -209,6 +223,22 @@ Project Euler offers problems that combine mathematics with programming. Rather 
 - Easy to benchmark and improve over time
 
 Every solved problem is another opportunity to learn something new.
+
+---
+
+## Easter Eggs
+
+This project contains a handful of hidden easter eggs for those who are lucky enough to find them.
+
+By default, easter eggs have a small chance of appearing during the execution of certain Project Euler problems.
+
+If you would like deterministic output for benchmarking, screenshots, or automated testing, you can disable them:
+
+```bash
+python EulerProblems.py --no-easter-eggs
+```
+
+> *Hint:* At least one easter egg is hidden in **Problem 39**(WIP)...
 
 ---
 
