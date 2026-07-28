@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import time
 import math
 import random
@@ -15,11 +16,13 @@ class EulerProblemError(Exception):
     """Base exception for Project Euler errors."""
 
 class EulerProblemNotImplemented(EulerProblemError):
+    """When a Euler Problem is not implemented and it's being called."""
     def __init__(self, problem_no:int) -> None:
         message = f"Euler Problem number {problem_no} Has not been implemented yet."
         super().__init__(message)
 
 class EulerProblemExecutionError(EulerProblemError):
+    """When something weird happens during code execution."""
     def __init__(self, problem_no: int, error: Exception):
         self.problem_no = problem_no
         self.error = error
@@ -30,6 +33,7 @@ class EulerProblemExecutionError(EulerProblemError):
         )
 
 class RequiredModulesNotFound(Exception):
+    """When required modules are not able to be imported due to it not being found."""
     def __init__(self, module) -> None:
         message = (
             f"The required module '{module}' for this script cannot be imported. "
@@ -38,11 +42,16 @@ class RequiredModulesNotFound(Exception):
         super().__init__(message)
 
 class ImportModulesFail(Exception):
+    """When importing modules fail to be imported."""
     def __init__(self, error) -> None:
         message = (
             f"An unexpected error occurred while trying to import the modules: {error}"
         )
         super().__init__(message)
+
+# ===========================
+# Try to import requirements
+# ===========================
 
 try:
     import colorama
@@ -62,6 +71,7 @@ class EulerSolver:
         self.GOAL = "100"
         self.EASTER_EGGS = easter_eggs
         self.FORCED_EASTER_EGGS = forced_easter_eggs
+        self._spinner_frames = itertools.cycle("|/-\\")
         self.terminal_width = shutil.get_terminal_size(fallback=(100, 24)).columns
         self.problem8_number = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
         self.problem11_grid = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08\n49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00\n81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65\n52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91\n22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80\n24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50\n32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70\n67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21\n24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72\n21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95\n78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92\n16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57\n86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58\n19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40\n04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66\n88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69\n04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36\n20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16\n20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54\n01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"
@@ -187,7 +197,7 @@ class EulerSolver:
     # Helper Methods
     # ==========================================================
 
-    def header(self, problem_number: int, description: str) -> None:
+    def header(self, problem_number, description: str) -> None:
         """Print a formatted problem header."""
         print(f"\nEuler's problem {problem_number}: {Fore.BLUE}{description}")
 
@@ -221,11 +231,74 @@ class EulerSolver:
                 print(f"{Fore.GREEN}{int(name[7:]):>3}{Fore.RESET} - {description}")
         return methods
 
+    def _typewriter(self, text: str, delay: float = 0.03, newline: bool = True):
+        """Print text progressively like a dialogue box."""
+
+        pauses = {
+            ".": 0.35,
+            "!": 0.35,
+            "?": 0.35,
+            ",": 0.15,
+            ":": 0.20,
+        }
+
+        for char in text:
+            print(char, end="", flush=True)
+
+            time.sleep(pauses.get(char, delay))
+
+        if newline:
+            print()
+
+    def _load(self, text:str, finish_text:str ,duration:float, fail:bool = False):
+        spinner_interval = 0.25
+        spinner = Halo(text, spinner="bouncingBar")
+        spinner.start()
+        frames = [f"{text}.", f"{text}..", f"{text}..."]
+        i = 0
+        while True:
+            spinner.text = frames[i % len(frames)]
+            i += 1
+            time.sleep(spinner_interval)
+            if i*spinner_interval >= duration:
+                break
+        match fail:
+            case False:
+                spinner.succeed(f"{finish_text} {Style.DIM}(?.??s){Style.NORMAL}")
+            case True:
+                spinner.fail(f"{finish_text} {Style.DIM}(?.??s){Style.NORMAL}")
+
+    def _wait(self, custom_text:str="[Press Enter to continue]"):
+        input(f"{Fore.LIGHTBLACK_EX}{custom_text}{Fore.RESET}")
+
+    def _progress_bar(self, current, total, title="Progress", bar_length=30):
+        """
+        Render a single-line progress bar to stdout.
+    
+        Format:
+            {spinning_bar} {title}: [#######          ] {current}/{total} {percentage}%
+    
+        Call this repeatedly with an increasing `current` value. It automatically
+        prints a trailing newline once current reaches total.
+        """
+        total = max(total, 1)  # avoid div by zero
+        percent = (current / total) * 100
+        filled = int(bar_length * current // total)
+        bar = "#" * filled + " " * (bar_length - filled)
+        spin = next(self._spinner_frames) if current < total else "#"
+    
+        sys.stdout.write(f"\r{spin} {title}: [{bar}] {current}/{total} {percent:.0f}%")
+        sys.stdout.flush()
+    
+        if current >= total:
+            sys.stdout.write("\n")
+ 
+
     # ==========================================================
     # Utility Functions
     # ==========================================================
 
-    def find_all_squares_until(self, limit):
+    def find_all_squares_until(self, limit:int):
         """Return every perfect square up to the given limit."""
         squares = []
 
@@ -245,7 +318,7 @@ class EulerSolver:
             yield index, a
             a, b = b, a + b
 
-    def fibonacci_sequence_limit(self, limit):
+    def fibonacci_sequence_limit(self, limit:int):
         """Yield Fibonacci numbers below the given limit."""
         a, b = 0, 1
 
@@ -272,7 +345,7 @@ class EulerSolver:
         """Checks if a number reads the same backward as forward."""
         return str(number) == str(number)[::-1]
     
-    def is_prime(self, n):
+    def is_prime(self, n) -> bool:
         """Checks if a number is prime."""
         if n < 2:
             return False
@@ -566,16 +639,73 @@ class EulerSolver:
                     return True
         return False
 
+    def word_value(self, word) -> int:
+        """Calculate the sum of letter positions (A=1, B=2, etc.)."""
+        return sum(ord(char) - ord('A') + 1 for char in word)
+
+    def is_triangle(self, n) -> bool:
+        """Check if n is a triangle number using 8n + 1 perfect square test."""
+        root = math.isqrt(8 * n + 1)
+        return root * root == 8 * n + 1 and root % 2 == 1
+
     # ==========================================================
     # Easter Eggs
     # ==========================================================
 
     def miku39(self):
-        "Easter egg for problem 39, 1 in 100 chance of activating. Crypton please don't sue me."
-        # TODO: Make a Miku Easter Egg here!!!
-        print(f"{Style.BRIGHT}{Fore.CYAN}Let's take a break from math...{Fore.RESET}{Style.NORMAL}")
-        print(f"{Fore.YELLOW}You have triggered an easter egg for the problem 39!{Fore.RESET}")
+        """
+        Display the hidden Project Euler Problem 39 easter egg.
 
+        This easter egg has a 1% chance of appearing when Problem 39
+        is executed unless disabled with --no-easter-eggs.
+
+        Crypton, please don't sue me.
+        """
+        # TODO: Make a Miku Easter Egg here!!!
+        print(Fore.CYAN + "=" * self.terminal_width)
+        print(f"{Fore.YELLOW}/// WARNING ///{Fore.RESET}")
+        print()
+        self._typewriter("An unexpected route has been discovered.")
+        time.sleep(0.2)
+        self._load("Loading hidden problem", "DONE!", 1.2)
+        self._wait()
+
+        self.header(
+            "39?",
+            "Find the world's greatest virtual singer."
+        )
+        result = self.run_task(
+            "Finding the world's greatest virtual singer...",
+            lambda: "Hatsune Miku"
+        )
+        self._typewriter(
+            f"The world's greatest virtual singer is: ",
+            newline=False
+        )
+        print(f"{Fore.GREEN}{result}{Fore.RESET}")
+        self._wait()
+        total = random.randint(50,200)
+        i = 0
+        while i < total:
+            self._progress_bar(i, total, title="GET miku.txt")
+            i += random.randint(0,5)
+            time.sleep(0.1)
+        i = None
+        self._load("Verifying", "Something went wrong...", 5, True)
+        time.sleep(1)
+        self._typewriter("She is in your computer...")
+        self._wait("[???]")
+        self._typewriter("SHE IS HERE...", 0.1)
+        self._wait("[What?]")
+        with open("miku.txt", "w") as f:
+            spinner = Halo("Writing...", spinner="bouncingBar")
+            spinner.start()
+            f.write("[Intro] \nOoh-ee-ooh \nOoh-ee-ooh \nOoh-ee-ooh \nOoh-ee-ooh \n\n[Verse 1] \nMiku, Miku, you can call me Miku \nBlue hair, blue tie, hiding in your Wi-Fi \nOpen secrets, anyone can find me \nHear your music running through my mind \n\n[Chorus] \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \n\n[Pre-Chorus] \nI'm on top of the world because of you \nAll I wanted to do is follow you \nI'll keep singing along to all of you \nI'll keep singing along \n\n[Chorus] \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \n\n[Verse 2] \nMiku, Miku, what's it like to be you? \n20/20, looking in the rear view \nPlay me, break me, make me feel like Superman \nYou can do anything you want \n\n[Pre-Chorus] \nI'm on top of the world because of you \nAll I wanted to do is follow you \nI'll keep singing along to all of you \nI'll keep singing along \nI'm on top of the world because of you \nI do nothing that they could never do \nI'll keep playing along with all of you \nI'll keep playing along \n\n[Chorus] \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \n\n[Bridge] \nWhere were we walking together? \nI will see you in the end \nI'll take you where you've never been \nAnd bring you back again \nListen to me with your eyes \nI'm watching you from in the sky \nIf you forget, I'll fade away \nI'm asking you to let me stay \nSo bathe me in your magic light \nAnd keep it on in darkest night \nI need you here to keep me strong \nTo live my life and sing along \nI'm waiting with you wide awake \nLike your expensive poison snake \nYou found me here inside a dream \nWalk through the fire straight to me \n\n[Outro] \n​tsap eht morf dnuos tsal ,erutuf eht morf dnuos tsriF")
+            time.sleep(1)
+            spinner.succeed("DONE! (NaNs)")
+        self._wait("[Continue to next problem]")
+
+        
 
     # ==========================================================
     # Project Euler Problems
@@ -1358,7 +1488,7 @@ class EulerSolver:
             "Find the perimeter that maximizes the number of integer right-angled triangle solutions for p ≤ 1000"
         )
         if self.FORCED_EASTER_EGGS or (
-                    self.EASTER_EGGS and random.randrange(100) == 39
+                    self.EASTER_EGGS and random.randint(1,100) == 39
                 ):
                     self.miku39()
                     return
@@ -1406,6 +1536,45 @@ class EulerSolver:
             task
         )
         print(f"The product in Champernowne's constant is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem41(self):
+        "Find the largest n-digit pandigital prime that exists"
+        self.header(
+            41,
+            "Find the largest n-digit pandigital prime that exists"
+        )
+        def task():
+            # Start with 7 digits since 9 and 8 digit pandigitals are always divisible by 3
+            digits = "7654321"
+            for p in itertools.permutations(digits):
+                num = int("".join(p))
+                if self.is_prime(num):
+                    return num
+        result = self.run_task(
+            "Finding the pandigital prime...",
+            task
+        )
+        print(f"The largest pandigital prime that exists is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem42(self):
+        "Find the number of triangle words in a text file."
+        self.header(
+            42,
+            "Find the number of triangle words in a text file."
+        )
+        def task():
+            with open("0042_words.txt", "r") as f:
+                content = f.read()
+            # Clean up and split the CSV-style quoted words
+            words = content.strip('"').split('","')
+            triangle_count = sum(1 for w in words if self.is_triangle(self.word_value(w)))
+            return triangle_count
+        result = self.run_task(
+            "Finding the number of triangle words...",
+            task
+        )
+        print(f"The number of triangle words in the text file is: {Fore.GREEN}{result}{Fore.RESET}")
+
 
 
     # ==========================================================

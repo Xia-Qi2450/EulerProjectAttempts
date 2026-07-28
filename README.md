@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **40 / 100** ✅
+**Current Progress:** **42 / 100** ✅
 
-```n/a
-████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  40%
+```text
+█████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  42%
 ```
 
 > **Note**
@@ -76,6 +76,8 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 38 | Pandigital Multiples | ✅ |
 | 39 | Integer Right Triangles | ✅ |
 | 40 | Champernowne's Constant | ✅ |
+| 41 | Pandigital Prime | ✅ |
+| 42 | Coded Triangle Numbers | ✅ |
 
 ---
 
@@ -238,7 +240,7 @@ If you would like deterministic output for benchmarking, screenshots, or automat
 python EulerProblems.py --no-easter-eggs
 ```
 
-> *Hint:* At least one easter egg is hidden in **Problem 39**(WIP)...
+> *Hint:* At least one easter egg is hidden in **Problem 39**...
 
 ---
 
