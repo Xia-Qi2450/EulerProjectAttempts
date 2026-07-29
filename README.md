@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **42 / 100** ✅
+**Current Progress:** **50 / 100** ✅
 
 ```text
-█████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  42%
+████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░  50%
 ```
 
 > **Note**
@@ -78,6 +78,14 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 40 | Champernowne's Constant | ✅ |
 | 41 | Pandigital Prime | ✅ |
 | 42 | Coded Triangle Numbers | ✅ |
+| 43 | Sub-string Divisibility | ✅ |
+| 44 | Pentagon Numbers | ✅ |
+| 45 | Triangular, Pentagonal, and Hexagonal | ✅ |
+| 46 | Goldbach's Other Conjecture | ✅ |
+| 47 | Distinct Primes Factors | ✅ |
+| 48 | Self Powers | ✅ |
+| 49 | Prime Permutations | ✅ |
+| 50 | Consecutive Prime Sum | ✅ |
 
 ---
 
