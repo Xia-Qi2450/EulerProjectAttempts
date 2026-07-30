@@ -671,6 +671,35 @@ class EulerSolver:
     # Easter Eggs
     # ==========================================================
 
+    def _try_easter_egg(self, problem: int) -> bool:
+        if not self.FORCED_EASTER_EGGS:
+            if not self.EASTER_EGGS or random.randrange(100) != problem % 100:
+                return False
+
+        easter_eggs = {
+            5: self.nakano5,
+            39: self.miku39,
+            41: self.teto41,
+        }
+
+        egg = easter_eggs.get(problem)
+        if egg:
+            egg()
+            return True
+
+        return False
+
+    def nakano5(self):
+        """
+        Display the hidden Project Euler Problem 5 easter egg.
+        
+        This easter egg has a 1% chance of appearing when Problem 5
+        is executed unless disabled with --no-easter-eggs.
+        
+        Who know why quintuplets could be so amazing?
+        """
+        # TODO: Make a Quintessential Quintuplets easter egg here!
+
     def miku39(self):
         """
         Display the hidden Project Euler Problem 39 easter egg.
@@ -732,7 +761,17 @@ class EulerSolver:
         self._load("Recovering", "Recovered! A txt file has been created.", 2)
         self._wait("[Continue to next problem]")
         print(Fore.CYAN + "=" * self.terminal_width)
+    
+    def teto41(self):
+        """
+        Display the hidden Project Euler Problem 41 easter egg.
         
+        This easter egg has a 1% chance of appearing when Problem 41
+        is executed unless disabled with --no-easter-eggs.
+        
+        Teto word of the day! Mathematics!
+        """
+        # TODO: Make a Kasane Teto easter egg here!
 
     # ==========================================================
     # Project Euler Problems
@@ -821,6 +860,8 @@ class EulerSolver:
             5,
             "Find the smallest positive number that is evenly divisible by all numbers from 1 to 20."
         )
+        if self._try_easter_egg(5):
+            return
         result = self.run_task(
             "Finding the least common multiple...",
             math.lcm,
@@ -1514,11 +1555,8 @@ class EulerSolver:
             39,
             "Find the perimeter that maximizes the number of integer right-angled triangle solutions for p ≤ 1000"
         )
-        if self.FORCED_EASTER_EGGS or (
-                    self.EASTER_EGGS and random.randint(1,100) == 39
-                ):
-                    self.miku39()
-                    return
+        if self._try_easter_egg(39):
+            return
         def task(max_p=1000):
             perimeters = []
             for a in range(1, max_p // 3):
@@ -1570,6 +1608,8 @@ class EulerSolver:
             41,
             "Find the largest n-digit pandigital prime that exists"
         )
+        if self._try_easter_egg(41):
+            return
         def task():
             # Start with 7 digits since 9 and 8 digit pandigitals are always divisible by 3
             digits = "7654321"
