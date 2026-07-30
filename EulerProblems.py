@@ -1872,6 +1872,9 @@ class EulerSolver:
                 except Exception as e:
                     print(f"{Fore.RED}Problem {number} ran into an error during execution.{Fore.RESET}")
                     raise EulerProblemExecutionError(number, e) from e
+                except KeyboardInterrupt:
+                    print(f"{Style.DIM}{Fore.YELLOW}\nProgram interrupted by user{Fore.RESET}{Style.NORMAL}")
+                    return
             else:
                 print(f"{Fore.RED}Problem {number} has not been implemented.{Fore.RESET}")
                 raise EulerProblemNotImplemented(number)
