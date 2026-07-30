@@ -17,7 +17,7 @@ import shutil
 class EulerProblemError(Exception):
     """Base exception for Project Euler errors."""
 
-class EulerProblemNotImplemented(EulerProblemError):
+class EulerProblemNotImplemented(EulerProblemError, NotImplementedError):
     """When a Euler Problem is not implemented and it's being called."""
     def __init__(self, problem_no:int) -> None:
         message = f"Euler Problem number {problem_no} Has not been implemented yet."
@@ -69,7 +69,7 @@ class EulerSolver:
 
     def __init__(self, easter_eggs=True, forced_easter_eggs = False):
         colorama.init(autoreset=True)
-        self.VERSION = "0.5"
+        self.VERSION = "0.6_a"
         self.GOAL = "100"
         self.EASTER_EGGS = easter_eggs
         self.FORCED_EASTER_EGGS = forced_easter_eggs
@@ -678,6 +678,7 @@ class EulerSolver:
 
         easter_eggs = {
             5: self.nakano5,
+            37: self.march37,
             39: self.miku39,
             41: self.teto41,
         }
@@ -696,9 +697,22 @@ class EulerSolver:
         This easter egg has a 1% chance of appearing when Problem 5
         is executed unless disabled with --no-easter-eggs.
         
-        Who know why quintuplets could be so amazing?
+        Who knew quintuplets could be so amazing?
         """
         # TODO: Make a Quintessential Quintuplets easter egg here!
+        raise NotImplementedError("The Quintessential Quintuplets easter egg hasn't been implemented yet, go watch this peak fiction.")
+
+    def march37(self):
+        """
+        Display the hidden Project Euler Problem 37 easter egg.
+                
+        This easter egg has a 1% chance of appearing when Problem 37
+        is executed unless disabled with --no-easter-eggs.
+                
+        March 7th is An enthusiastic girl who was saved from eternal ice by the Astral Express Crew, and......
+        """
+        # TODO: Make a March 7th from Honkai: Star Rail easter egg here!
+        raise NotImplementedError("The March 7th easter egg hasn't been implemented yet, go grind for Stellar Jade or Passes instead.")
 
     def miku39(self):
         """
@@ -772,6 +786,7 @@ class EulerSolver:
         Teto word of the day! Mathematics!
         """
         # TODO: Make a Kasane Teto easter egg here!
+        raise NotImplementedError("The Kasane Teto easter egg hasn't been implemented yet, but you can still go listen to her!")
 
     # ==========================================================
     # Project Euler Problems
@@ -1505,6 +1520,8 @@ class EulerSolver:
             37,
             "Find the sum of the only eleven primes that are both truncatable from left to right and right to left."
         )
+        if self._try_easter_egg(37):
+            return
         def task():
             limit = 1000000
             is_prime = self.sieve_of_eratosthenes_list(limit)
