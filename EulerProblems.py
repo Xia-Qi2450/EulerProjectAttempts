@@ -5,6 +5,7 @@ import time
 import math
 import random
 import itertools
+from datetime import datetime
 from collections import Counter
 from typing import Any
 import argparse
@@ -17,13 +18,13 @@ import shutil
 class EulerProblemError(Exception):
     """Base exception for Project Euler errors."""
 
-class EulerProblemNotImplemented(EulerProblemError, NotImplementedError):
+class EulerProblemNotImplemented(NotImplementedError, EulerProblemError):
     """When a Euler Problem is not implemented and it's being called."""
     def __init__(self, problem_no:int) -> None:
         message = f"Euler Problem number {problem_no} Has not been implemented yet."
         super().__init__(message)
 
-class EulerProblemExecutionError(EulerProblemError):
+class EulerProblemExecutionError(RuntimeError, EulerProblemError):
     """When something weird happens during code execution."""
     def __init__(self, problem_no: int, error: Exception):
         self.problem_no = problem_no
@@ -31,7 +32,7 @@ class EulerProblemExecutionError(EulerProblemError):
 
         super().__init__(
             f"Euler Problem {problem_no} failed during execution.\n"
-            f"Caused by {type(error).__name__}: {error}"
+            f"Caused by {Style.BRIGHT}{Fore.MAGENTA}{type(error).__name__}{Fore.RESET}{Style.NORMAL}: {Fore.MAGENTA}{error}{Fore.MAGENTA}"
         )
 
 class RequiredModulesNotFound(Exception):
@@ -69,7 +70,7 @@ class EulerSolver:
 
     def __init__(self, easter_eggs=True, forced_easter_eggs = False):
         colorama.init(autoreset=True)
-        self.VERSION = "0.6_a"
+        self.VERSION = "0.6_b"
         self.GOAL = "100"
         self.EASTER_EGGS = easter_eggs
         self.FORCED_EASTER_EGGS = forced_easter_eggs
@@ -195,7 +196,8 @@ class EulerSolver:
             [63, 66,  4, 68, 89, 53, 67, 30, 73, 16, 69, 87, 40, 31],
             [4, 62, 98, 27, 23,  9, 70, 98, 73, 93, 38, 53, 60,  4, 23]
         ]
-
+        self.CARD_VALUES = {str(n): n for n in range(2, 10)}
+        self.CARD_VALUES.update({'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14})
     # ==========================================================
     # Helper Methods
     # ==========================================================
@@ -633,7 +635,7 @@ class EulerSolver:
                     
         return total_sum
 
-    def has_pandigital_product(self, n):
+    def has_pandigital_product(self, n:int) -> bool:
         # Find all factors of the product n
         for i in range(1, math.isqrt(n) + 1):
             if n % i == 0:
@@ -642,16 +644,16 @@ class EulerSolver:
                     return True
         return False
 
-    def word_value(self, word) -> int:
+    def word_value(self, word:str) -> int:
         """Calculate the sum of letter positions (A=1, B=2, etc.)."""
         return sum(ord(char) - ord('A') + 1 for char in word)
 
-    def is_triangle(self, n) -> bool:
+    def is_triangle(self, n:int) -> bool:
         """Check if n is a triangle number using 8n + 1 perfect square test."""
         root = math.isqrt(8 * n + 1)
         return root * root == 8 * n + 1 and root % 2 == 1
 
-    def is_substring_divisible(self, num) -> bool:
+    def is_substring_divisible(self, num:tuple) -> bool:
         primes = [2, 3, 5, 7, 11, 13, 17]
         for i, p in enumerate(primes):
             # Extract 3-digit substring starting at index i + 1
@@ -660,12 +662,63 @@ class EulerSolver:
                 return False
         return True
 
-    def is_pentagonal(self, n) -> bool:
+    def is_pentagonal(self, n:int) -> bool:
         # Check if n is a pentagonal number using the inverse formula
         # P_k = k(3k - 1)/2 => 3k^2 - k - 2P = 0
         # k = (1 + sqrt(1 + 24 * n)) / 6
         temp = (1 + (1 + 24 * n) ** 0.5) / 6
         return temp.is_integer()
+
+    def evaluate_hand(self, hand:list) -> tuple[int, list[int]]:
+        """
+        Evaluates a 5-card hand and returns a score tuple: (hand_rank, [tie_breakers])
+        Higher hand_rank wins. If equal, Python automatically compares the elements 
+        inside the tie_breakers list from left to right.
+        """
+        ranks = sorted([self.CARD_VALUES[card[0]] for card in hand], reverse=True)
+        suits = [card[1] for card in hand]
+        is_flush = len(set(suits)) == 1
+        is_straight = len(set(ranks)) == 5 and (ranks[0] - ranks[4] == 4)
+        frequencies = sorted([(ranks.count(r), r) for r in set(ranks)], reverse=True)
+        counts_pattern = [f[0] for f in frequencies]
+        tie_breakers = [f[1] for f in frequencies]
+        
+        # Hand Rank Categories:
+        # 8: Straight Flush (and Royal Flush if top card is Ace)
+        # 7: Four of a Kind
+        # 6: Full House
+        # 5: Flush
+        # 4: Straight
+        # 3: Three of a Kind
+        # 2: Two Pair
+        # 1: One Pair
+        # 0: High Card
+        
+        if is_straight and is_flush:
+            return (8, tie_breakers)
+        if counts_pattern == [4, 1]:
+            return (7, tie_breakers)
+        if counts_pattern == [3, 2]:
+            return (6, tie_breakers)
+        if is_flush:
+            return (5, tie_breakers)
+        if is_straight:
+            return (4, tie_breakers)
+        if counts_pattern == [3, 1, 1]:
+            return (3, tie_breakers)
+        if counts_pattern == [2, 2, 1]:
+            return (2, tie_breakers)
+        if counts_pattern == [2, 1, 1, 1]:
+            return (1, tie_breakers)
+        return (0, tie_breakers)
+
+    def is_lychrel(self, n:int) -> bool:
+        # Checks if a number is a Lychrel number
+        for _ in range(50):
+            n += int(str(n)[::-1])
+            if str(n) == str(n)[::-1]:
+                return False 
+        return True 
 
     # ==========================================================
     # Easter Eggs
@@ -699,8 +752,142 @@ class EulerSolver:
         
         Who knew quintuplets could be so amazing?
         """
+        from colorama import Back
+        quints = ["Ichika", "Nino", "Miku", "Yotsuba", "Itsuki"]
+        colors = [Fore.YELLOW, Fore.MAGENTA, Fore.BLUE, Fore.GREEN, Fore.RED]
         # TODO: Make a Quintessential Quintuplets easter egg here!
-        raise NotImplementedError("The Quintessential Quintuplets easter egg hasn't been implemented yet, go watch this peak fiction.")
+        print(Fore.CYAN + "=" * self.terminal_width)
+        print(f"{Fore.YELLOW}/// WARNING ///{Fore.RESET}")
+        print()
+        self._typewriter("An unexpected route has been discovered.")
+        time.sleep(0.2)
+        self._load("Loading hidden problem", "DONE!", 1.2)
+        self._wait()
+
+        print(f"\nEuler's problem 5?: ")
+        time.sleep(1)
+        self._typewriter("No.")
+        time.sleep(0.2)
+        self._typewriter("Euler's Problem 5(x5): ", 0.05)
+        print(f"{Fore.YELLOW}Select your answer{Fore.RESET}:")
+        print()
+        print(f"1. {Fore.BLACK}{Back.YELLOW}Ichika{Back.RESET}{Fore.RESET} \n2. {Fore.WHITE}{Back.MAGENTA}Nino{Back.RESET}{Fore.RESET} \n3. {Fore.WHITE}{Back.BLUE}Miku{Back.RESET}{Fore.RESET} \n4. {Fore.BLACK}{Back.GREEN}Yotsuba{Back.RESET}{Fore.RESET} \n5. {Fore.BLACK}{Back.RED}Itsuki{Back.RESET}{Fore.RESET}")
+        ans = input(f"{Fore.CYAN}>>> {Fore.RESET}")
+        try:
+            ans = int(ans)
+        except ValueError:
+            print(f"{Fore.RED}Answer entered does not correspond to any quintuplets. Defaulting to Miku...{Fore.RESET}")
+            ans = 3
+        if not 1 <= ans <= 5:
+            print(f"{Fore.RED}Answer entered does not correspond to any quintuplets. Defaulting to Miku...{Fore.RESET}")
+            ans = 3
+            print(f"You have entered {ans}. {colors[int(ans)-1]}{quints[int(ans)-1]}{Fore.RESET}")
+        time.sleep(1)
+        self._typewriter("...")
+        self._typewriter("Interesting choice.")
+        self._load("Evaluating your selection", "Finished!", random.uniform(0.5, 3))
+        match ans:
+            case 1:
+                self._typewriter("You have chosen Ichika...")
+                self._wait()
+                self._typewriter("Big sister energy detected.")
+                self._typewriter("A respectable choice.")
+            case 2:
+                self._typewriter("You have chosen Nino...")
+                self._wait()
+                self._typewriter("You like tsunderes, don't you?")
+                self._typewriter("I won't judge.")
+            case 3:
+                self._typewriter("You have chosen Miku...")
+                self._wait()
+                self._typewriter("Excellent taste.")
+                self._typewriter("I completely agree.")
+            case 4:
+                self._typewriter("You have chosen Yotsuba...")
+                self._wait()
+                self._typewriter("Positive energy levels are off the charts.")
+                self._typewriter("Smile detected.")
+            case 5:
+                self._typewriter("You have chosen Itsuki...")
+                self._wait()
+                self._typewriter("Snack inventory increased by 500%.")
+                self._typewriter("Food budget exceeded.")
+        self._wait()
+        self._load("Sending answer to for logging", "Something went wrong!", random.uniform(1, 5), True)
+        self._typewriter("...")
+        self._typewriter("Unfortunately...")
+        self._wait()
+
+        self._typewriter("This problem has multiple equally valid solutions.")
+        time.sleep(3)
+        print(f"Traceback (most recent call last):")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1068{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
+        print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(5){Fore.RESET}")
+        print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}741{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
+        print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}823{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
+        print(f"    {Fore.MAGENTA}raise BestGirlConflictError{Fore.RED}(\"Expected one answer, received five.\"){Fore.RESET}")
+        print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^{Fore.RESET}")
+        print(f"{Fore.MAGENTA}{Style.BRIGHT}BestGirlConflictError{Fore.RESET}{Style.NORMAL}: {Fore.RED}Expected one answer, received five. {Fore.RESET}")
+        input()
+
+        choice = "N/A"
+        verdict = "NIL"
+        notes = "NIL"
+        with open("nakano.txt", "w") as f:
+            match ans:
+                case 1:
+                    choice = "Ichika"
+                    verdict = "Responsible"
+                    notes = "Big sister energy detected."
+                case 2:
+                    choice = "Nino"
+                    verdict = "Determined"
+                    notes = "High tsundere tolerance confirmed."
+                case 3:
+                    choice = "Miku"
+                    verdict = "Cultured"
+                    notes = "History buff detected."
+                case 4:
+                    choice = "Yotsuba"
+                    verdict = "Optimistic"
+                    notes = "Energy levels exceed safe operating limits."
+                case 5:
+                    choice = "Itsuki"
+                    verdict = "Hungry"
+                    notes = "Food expenditure expected to increase."
+
+            f.write(
+                f"""Nakano Compatibility Report
+=============================
+
+Generated: {datetime.now():%Y-%m-%d %H:%M:%S}
+
+Selected Candidate : {choice}
+Evaluation Result  : {verdict}
+
+Notes
+-----
+{notes}
+
+Conclusion
+----------
+The Project Euler solver is unable to mathematically prove
+which Nakano sister is objectively the best.
+
+Reason:
+All five solutions satisfy the constraints.
+
+Status: INCONCLUSIVE
+
+Thank you for participating."""
+            )
+
+        self._load("Recovering", "Recovered! A txt file has been created.", 2)
+        self._wait("[Continue to next problem]")
+        print(Fore.CYAN + "=" * self.terminal_width)
 
     def march37(self):
         """
@@ -759,10 +946,13 @@ class EulerSolver:
         self._typewriter("SHE IS HERE...", 0.1)
         self._wait("[What?]")
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1526{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
-        print(f"    {Fore.MAGENTA}self.miku39{Fore.RED}(){Fore.RESET}")
-        print(f"    {Fore.MAGENTA}~~~~~~~~~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}729{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1745{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
+        print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(39){Fore.RESET}")
+        print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}741{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
+        print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}948{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}miku.start_runtime{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~{Fore.RED}^^{Fore.RESET}")
         print(f"  File \"<miku_runtime>\", line {Fore.RED}???{Fore.RESET}, in {Fore.RED}try_install{Fore.RESET}")
@@ -1861,6 +2051,123 @@ class EulerSolver:
             1_000_000
         )
         print(f"The prime below the limit that is the sum of the most consecutive primes is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem51(self):
+        "Find the smallest prime that is part of an eight-prime-value family generated by replacing identical digit positions."
+        self.header(
+            51,
+            "Find the smallest prime that is part of an eight-prime-value family generated by replacing identical digit positions."
+        )
+        def task():
+            limit = 1000000
+            is_prime = self.sieve_of_eratosthenes_list(limit)
+            for p in range(100000, limit):
+                if not is_prime[p]:
+                    continue
+                s_p = str(p)
+                digits_to_check = set(s_p[:-1]) 
+                for d in digits_to_check:
+                    indices = [i for i, char in enumerate(s_p) if char == d]
+                    for r in range(1, len(indices) + 1):
+                        for combo in itertools.combinations(indices, r):
+                            family_size = 0
+                            primes_in_family = []
+                            for repl in range(10):
+                                # Prevent leading zeros
+                                if 0 in combo and repl == 0:
+                                    continue
+                                lst = list(s_p)
+                                for idx in combo:
+                                    lst[idx] = str(repl)
+                                num = int("".join(lst))
+                                if is_prime[num]:
+                                    family_size += 1
+                                    primes_in_family.append(num)
+                            if family_size >= 8:
+                                return primes_in_family
+        result = self.run_task(
+            "Finding the prime in the sieve...",
+            task
+        )
+        print(f"The primes that is part of that family is: {Fore.GREEN}{result}{Fore.RESET}")
+        print(f"With the smallest being: {Fore.GREEN}{result[0]}{Fore.RESET}")
+
+    def problem52(self):
+        "Find the smallest integer x where x, 2x, 3x, 4x, 5x, and 6x share digits."
+        self.header(
+            52,
+            "Find the smallest integer x where x, 2x, 3x, 4x, 5x, and 6x share digits."
+        )
+        def task():
+            for i in itertools.count(1):
+                base_digits = sorted(str(i))
+                # Check if 2*i through 6*i have the exact same sorted digits
+                if all(sorted(str(j * i)) == base_digits for j in range(2, 7)):
+                    return i
+        result =self.run_task(
+            "Finding the integer...",
+            task
+        )
+        print(f"The smallest integer where they all share digits is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem53(self):
+        "Find the number of combinatoric selections (n choose r) greater than one million for 1 <= n <= 100."
+        self.header(
+            53,
+            "Find the number of combinatoric selections (n choose r) greater than one million for 1 <= n <= 100."
+        )
+        def task():
+            count = 0
+            for n in range(1, 101):
+                for r in range(0, n + 1):
+                    if math.comb(n, r) > 1_000_000:
+                        count += 1
+            return count
+        result = self.run_task(
+            "Finding the number...",
+            task
+        )
+        print(f"The number of combinatoric selections greater than one million for 1 <= n <= 100 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem54(self):
+        "Find out how many poker hands Player 1 wins out of 1000 random matches against Player 2."
+        self.header(
+            54,
+            "Find out how many poker hands Player 1 wins out of 1000 random matches against Player 2."
+        )
+        def task():
+            p1_wins = 0
+            with open("0054_poker.txt", "r") as f:
+                lines = f.read().strip().split('\n')
+                for line in lines:
+                    cards = line.split()
+                    if len(cards) != 10:
+                        continue
+                    player1_hand = cards[:5]
+                    player2_hand = cards[5:]
+                    if self.evaluate_hand(player1_hand) > self.evaluate_hand(player2_hand):
+                        p1_wins += 1
+            return p1_wins
+        result = self.run_task(
+            "Combing through the file and evaluating hands...",
+            task
+        )
+        print(f"The number of poker hands Player 1 wins out of 1000 random matches against Player 2 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem55(self):
+        "Find out how many numbers from 0 to 9999 are Lychrel numbers"
+        self.header(
+            55,
+            "Find out how many numbers from 0 to 9999 are Lychrel numbers"
+        )
+        def task():
+            lychrel_count = sum(1 for i in range(10000) if self.is_lychrel(i))
+            return lychrel_count
+        result = self.run_task(
+            "Finding all Lychrel numbers below 10000...",
+            task
+        )
+        print(f"The number of Lychrel numbers from 0 to 9999 is: {Fore.GREEN}{result}{Fore.RESET}")
 
     # ==========================================================
     # Runner
