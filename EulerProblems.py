@@ -68,15 +68,16 @@ except Exception as e:
 class EulerSolver:
     """A collection of Project Euler solutions."""
 
-    def __init__(self, easter_eggs=True, forced_easter_eggs = False):
+    def __init__(self, easter_eggs=True, forced_easter_eggs = False) -> None:
         colorama.init(autoreset=True)
         self.VERSION = "0.6_b"
         self.GOAL = "100"
-        self.EASTER_EGGS = easter_eggs
-        self.FORCED_EASTER_EGGS = forced_easter_eggs
-        self._spinner_frames = itertools.cycle("|/-\\")
-        self.terminal_width = shutil.get_terminal_size(fallback=(100, 24)).columns
-        self.current_file = os.path.realpath(__file__)
+        self.EASTER_EGGS: bool = easter_eggs
+        self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
+        self._spinner_frames: itertools.cycle = itertools.cycle("|/-\\")
+        self.terminal_width: int = shutil.get_terminal_size(fallback=(100, 24)).columns
+        self.problem_times:dict[int, float] = {}
+        self.current_file: str = os.path.realpath(__file__)
         self.problem8_number = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
         self.problem11_grid = "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08\n49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00\n81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65\n52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91\n22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80\n24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50\n32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70\n67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21\n24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72\n21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95\n78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92\n16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57\n86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58\n19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40\n04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66\n88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69\n04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36\n20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16\n20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54\n01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"
         self.problem13_numbers = """37107287533902102798797998220837590246510135740250
@@ -198,6 +199,13 @@ class EulerSolver:
         ]
         self.CARD_VALUES = {str(n): n for n in range(2, 10)}
         self.CARD_VALUES.update({'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14})
+
+    def __str__(self):
+        return (
+            f"EulerSolver v{self.VERSION} "
+            f"({len(self.list_problems(False)) - 1}/{self.GOAL} solved)"
+        )
+
     # ==========================================================
     # Helper Methods
     # ==========================================================
@@ -236,7 +244,14 @@ class EulerSolver:
                 print(f"{Fore.GREEN}{int(name[7:]):>3}{Fore.RESET} - {description}")
         return methods
 
-    def _typewriter(self, text: str, delay: float = 0.03, newline: bool = True):
+    def save_output(self, problem: int, suffix: str, text: str) -> str:
+        filename = f"{problem:04d}_{suffix}.txt"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(text)
+
+        return filename
+
+    def _typewriter(self, text: str, delay: float = 0.03, newline: bool = True) -> None:
         """Print text progressively like a dialogue box."""
 
         pauses = {
@@ -255,7 +270,7 @@ class EulerSolver:
         if newline:
             print()
 
-    def _load(self, text:str, finish_text:str ,duration:float, fail:bool = False):
+    def _load(self, text:str, finish_text:str ,duration:float, fail:bool = False) -> None:
         spinner_interval = 0.25
         spinner = Halo(text, spinner="bouncingBar")
         spinner.start()
@@ -273,10 +288,10 @@ class EulerSolver:
             case True:
                 spinner.fail(f"{finish_text} {Style.DIM}(?.??s){Style.NORMAL}")
 
-    def _wait(self, custom_text:str="[Press Enter to continue]"):
+    def _wait(self, custom_text:str="[Press Enter to continue]") -> None:
         input(f"{Fore.LIGHTBLACK_EX}{custom_text}{Fore.RESET}")
 
-    def _progress_bar(self, current, total, title="Progress", bar_length=30):
+    def _progress_bar(self, current, total, title="Progress", bar_length=30) -> None:
         """
         Render a single-line progress bar to stdout.
     
@@ -821,13 +836,13 @@ class EulerSolver:
         self._typewriter("This problem has multiple equally valid solutions.")
         time.sleep(3)
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1068{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1083{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
         print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(5){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}741{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}756{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
         print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}823{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}838{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
         print(f"    {Fore.MAGENTA}raise BestGirlConflictError{Fore.RED}(\"Expected one answer, received five.\"){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^{Fore.RESET}")
         print(f"{Fore.MAGENTA}{Style.BRIGHT}BestGirlConflictError{Fore.RESET}{Style.NORMAL}: {Fore.RED}Expected one answer, received five. {Fore.RESET}")
@@ -946,13 +961,13 @@ Thank you for participating."""
         self._typewriter("SHE IS HERE...", 0.1)
         self._wait("[What?]")
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1745{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1782{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(39){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}741{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}754{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
         print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}948{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}963{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}miku.start_runtime{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~{Fore.RED}^^{Fore.RESET}")
         print(f"  File \"<miku_runtime>\", line {Fore.RED}???{Fore.RESET}, in {Fore.RED}try_install{Fore.RESET}")
@@ -1710,8 +1725,10 @@ Thank you for participating."""
             37,
             "Find the sum of the only eleven primes that are both truncatable from left to right and right to left."
         )
+        """
         if self._try_easter_egg(37):
-            return
+                    return
+        """
         def task():
             limit = 1000000
             is_prime = self.sieve_of_eratosthenes_list(limit)
@@ -1815,8 +1832,10 @@ Thank you for participating."""
             41,
             "Find the largest n-digit pandigital prime that exists"
         )
+        """
         if self._try_easter_egg(41):
             return
+        """
         def task():
             # Start with 7 digits since 9 and 8 digit pandigitals are always divisible by 3
             digits = "7654321"
@@ -2169,12 +2188,164 @@ Thank you for participating."""
         )
         print(f"The number of Lychrel numbers from 0 to 9999 is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem56(self):
+        "Find the maximum digital sum of a^b for natural numbers a, b < 100"
+        self.header(
+            56,
+            "Find the maximum digital sum of a^b for natural numbers a, b < 100"
+        )
+        def task():
+            return max(sum(int(c) for c in str(a**b)) for a in range(100) for b in range(100))
+        result = self.run_task(
+            "Finding the maximum power...",
+            task
+        )
+        print(f"The maximum digital sum of a^b for natural numbers is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem57(self):
+        "Find out how many of the first 1000 square root of 2 expansions have a longer numerator than denominator."
+        self.header(
+            57,
+            "Find out how many of the first 1000 square root of 2 expansions have a longer numerator than denominator."
+        )
+        def task():
+            limit = 1000
+            count = 0
+            p, q = 3, 2
+            for _ in range(2, limit + 1):
+                p, q = p + 2 * q, p + q
+                if len(str(p)) > len(str(q)):
+                    count += 1
+            first_p, first_q = 3, 2
+            initial_count = 1 if len(str(first_p)) > len(str(first_q)) else 0
+            return count + initial_count
+        result = self.run_task(
+            "Looking through square root expansions...",
+            task
+        )
+        print(f"The number of the first 1000 square root of 2 expansions is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem58(self):
+        "Find out the side length of the square spiral for which the ratio of primes along both diagonals first falls below 10%"
+        self.header(
+            58,
+            "Find out the side length of the square spiral for which the ratio of primes along both diagonals first falls below 10%"
+        )
+        def task():
+            prime_count = 0
+            side_length = 1
+            current_val = 1
+            while True:
+                side_length += 2
+                step = side_length - 1
+                for _ in range(4):
+                    current_val += step
+                    if self.is_prime(current_val):
+                        prime_count += 1
+                total_diagonal_elements = 2 * side_length - 1
+                if prime_count * 10 < total_diagonal_elements:
+                    return side_length
+        result = self.run_task(
+            "Looking through spirals...",
+            task
+        )
+        print(f"The side length of the square spiral is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem59(self):
+        "Decrypt the message by brute-forcing a repeating three-letter XOR key and return the sum of its ASCII values."
+        self.header(
+            59,
+            "Decrypt the message by brute-forcing a repeating three-letter XOR key and return the sum of its ASCII values."
+        )
+        with open("0059_cipher.txt", "r") as f:
+            cipher = f.read()
+        def brute_force(cipher_text_str):
+            ciphertext = [int(x) for x in cipher_text_str.strip().split(',')]
+            best_score = -1
+            best_plaintext = []
+            lowercase_ascii = range(97, 123)
+            for key in itertools.product(lowercase_ascii, repeat=3):
+                decrypted_chars = []
+                space_count = 0
+                is_valid_text = True
+                for i, cipher_byte in enumerate(ciphertext):
+                    plain_byte = cipher_byte ^ key[i % 3]
+                    if plain_byte < 32 or plain_byte > 126:
+                        is_valid_text = False
+                        break
+                    if plain_byte == 32: # ASCII for space ' '
+                        space_count += 1
+                    decrypted_chars.append(plain_byte)
+                if is_valid_text and space_count > best_score:
+                    best_score = space_count
+                    best_plaintext = decrypted_chars
+            readable_text = "".join(chr(b) for b in best_plaintext)
+            preview = f"Decrypted Message Preview: {Fore.CYAN}{readable_text[:(self.terminal_width-40)]}...{Fore.RESET}"
+            return sum(best_plaintext), preview, readable_text
+        result, text_preview, full_text = self.run_task(
+            "Brute forcing attempts...",
+            brute_force,
+            cipher
+        )
+        print(f"Sum of ASCII values decrypted: {Fore.GREEN}{result}{Fore.RESET}")
+        print(text_preview)
+        filename = self.save_output(59, "decrypted", full_text)
+        print(f"Saved decrypted message to {Fore.GREEN}{filename}{Fore.RESET}")
+
+    def problem60(self):
+        "Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime."
+        self.header(
+            60,
+            "Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime."
+        )
+        pair_cache = {}
+        IS_PRIME_LOOKUP = self.sieve_of_eratosthenes_list(30000)
+
+        def check_pair(p1, p2):
+            """Returns True if both concatenations of p1 and p2 are prime."""
+            key = (p1, p2) if p1 < p2 else (p2, p1)
+            if key in pair_cache:
+                return pair_cache[key]
+            
+            c1 = int(f"{p1}{p2}")
+            c2 = int(f"{p2}{p1}")
+            
+            result = self.is_prime(c1) and self.is_prime(c2)
+            pair_cache[key] = result
+            return result
+
+        def solve():
+            base_primes = [i for i in range(3, 10000) if IS_PRIME_LOOKUP[i] and i != 5]
+            partners = {}
+            for i, p1 in enumerate(base_primes):
+                partners[p1] = []
+                for p2 in base_primes[i + 1:]:
+                    if check_pair(p1, p2):
+                        partners[p1].append(p2)
+            for p1 in base_primes:
+                for p2 in partners[p1]:
+                    p3_candidates = [p for p in partners[p2] if p in partners[p1]]
+                    for p3 in p3_candidates:
+                        p4_candidates = [p for p in partners[p3] if p in p3_candidates]
+                        for p4 in p4_candidates:
+                            p5_candidates = [p for p in partners[p4] if p in p4_candidates]
+                            for p5 in p5_candidates:
+                                subset = [p1, p2, p3, p4, p5]
+                                return subset, sum(subset)
+        prime_set, lowest_sum = self.run_task(
+            "Combing through prime sets...",
+            solve
+        )
+        print(f"The lowest sum for a set of five primes is: {Fore.GREEN}{lowest_sum}{Fore.RESET}")
+        print(f"With the set being: {Fore.GREEN}{prime_set}{Fore.RESET}")
+
+
     # ==========================================================
     # Runner
     # ==========================================================
 
     def run(self, problems=None):
-        start_time = 0
+        start_time = None
         if problems is None:
             start_time = time.perf_counter()
             problems = sorted(
@@ -2187,25 +2358,47 @@ Thank you for participating."""
 
             if callable(method):
                 try:
+                    problem_start = time.perf_counter()
                     method()
+                    elapsed = time.perf_counter() - problem_start
+                    self.problem_times[number] = elapsed
+                except KeyboardInterrupt:
+                    print(f"{Style.DIM}{Fore.YELLOW}\nProgram interrupted by user{Fore.RESET}{Style.NORMAL}")
+                    return
                 except ZeroDivisionError as e:
                     raise EulerProblemExecutionError(
                         number,
-                        ZeroDivisionError("Attempted calculation contains division by 0. Calculation fails.")
+                        ZeroDivisionError(
+                            "Attempted calculation contains division by 0. Calculation fails."
+                            "Yes, this is a nod towards the TI-84 Plus CE error when dividing by zero."
+                            )
                     ) from e
                 except Exception as e:
                     print(f"{Fore.RED}Problem {number} ran into an error during execution.{Fore.RESET}")
                     raise EulerProblemExecutionError(number, e) from e
-                except KeyboardInterrupt:
-                    print(f"{Style.DIM}{Fore.YELLOW}\nProgram interrupted by user{Fore.RESET}{Style.NORMAL}")
-                    return
             else:
                 print(f"{Fore.RED}Problem {number} has not been implemented.{Fore.RESET}")
                 raise EulerProblemNotImplemented(number)
-        if start_time != 0: 
+        if start_time is not None: 
             runtime = time.perf_counter() - start_time
-            print(Fore.CYAN + "="*self.terminal_width)
-            print(Fore.CYAN + f"Total Runtime: {runtime:.4f}s")
+            average = runtime / len(problems)
+
+            print(Fore.CYAN + "=" * self.terminal_width)
+            print(Fore.CYAN + f"Total Runtime   : {runtime:.4f}s")
+            print(Fore.CYAN + f"Average/problem : {average:.4f}s")
+
+            print(Fore.CYAN + "-" * self.terminal_width)
+            print(f"{Style.BRIGHT}Top 3 Slowest Problems{Style.NORMAL}")
+
+            slowest = sorted(
+                self.problem_times.items(),
+                key=lambda item: item[1],
+                reverse=True
+            )[:3]
+
+            print(f"{'Problem':<8}{'Runtime':>12}")
+            for problem, elapsed in slowest:
+                print(f"{problem:<8}{elapsed:>11.4f}s")
 
 # ================
 # Argparse Configs
