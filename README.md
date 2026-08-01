@@ -103,9 +103,14 @@ The goal of this project isn't just to get the correct answers—it's also an op
 
 ## Project Structure
 
-```bash
-EulerProblems.py
-0022_names.txt  (The text file for Problem 22)
+```text
+EulerProblems.py (The entire script)
+0022_names.txt   (The names for Problem 22)
+0042_words.txt   (The words for Problem 42)
+0054_poker.txt   (The poker hands for Problem 54)
+0059_cipher.txt  (The encrypted message for Problem 59)
+README.md        (This file)
+LICENSE.txt      (The MIT License)
 ```
 
 Everything currently lives inside one file:
