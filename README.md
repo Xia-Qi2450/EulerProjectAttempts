@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **50 / 100** ✅
+**Current Progress:** **60 / 100** ✅
 
 ```text
-████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░  50%
+█████████████████████████████░░░░░░░░░░░░░░░░░░░░░  60%
 ```
 
 > **Note**
@@ -40,7 +40,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 2 | Even Fibonacci Numbers | ✅ |
 | 3 | Largest Prime Factor | ✅ |
 | 4 | Largest Palindrome Product | ✅ |
-| 5 | Smallest Multiple | ✅ |
+| *5* | ✦ Smallest Multiple | ✅ |
 | 6 | Sum Square Difference | ✅ |
 | 7 | 10,001st Prime | ✅ |
 | 8 | Largest Product in a Series | ✅ |
@@ -74,7 +74,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 36 | Double-base Palindromes | ✅ |
 | 37 | Truncatable Primes | ✅ |
 | 38 | Pandigital Multiples | ✅ |
-| 39 | Integer Right Triangles | ✅ |
+| *39* | ✦ Integer Right Triangles | ✅ |
 | 40 | Champernowne's Constant | ✅ |
 | 41 | Pandigital Prime | ✅ |
 | 42 | Coded Triangle Numbers | ✅ |
@@ -86,6 +86,18 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 48 | Self Powers | ✅ |
 | 49 | Prime Permutations | ✅ |
 | 50 | Consecutive Prime Sum | ✅ |
+| 51 | Prime Digit Replacements | ✅ |
+| 52 | Permuted Multiples | ✅ |
+| 53 | Combinatoric Selections | ✅ |
+| 54 | Poker Hands | ✅ |
+| 55 | Lychrel Numbers | ✅ |
+| 56 | Powerful Digit Sum | ✅ |
+| 57 | Square Root Convergents | ✅ |
+| 58 | Spiral Primes | ✅ |
+| 59 | XOR Decryption | ✅ |
+| 60 | Prime Pair Sets | ✅ |
+
+✦ Some solved problems contain optional surprises.
 
 ---
 
@@ -217,7 +229,7 @@ Finish all **100** Project Euler problems while continually improving:
 - [ ] Export benchmark results to CSV
 - [ ] Unit tests
 - [ ] More optimized algorithms for later problems
-- [ ] Progress statistics
+- [x] Progress statistics
 - [ ] Separate helper functions into their own module
 
 ---
@@ -236,7 +248,7 @@ Every solved problem is another opportunity to learn something new.
 
 ---
 
-## Easter Eggs
+## ✦ Easter Eggs
 
 This project contains a handful of hidden easter eggs for those who are lucky enough to find them.
 
