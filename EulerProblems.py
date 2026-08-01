@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+"""
+Project Euler Attempts
+======================
+
+A command-line Project Euler solver written in Python.
+
+This module contains the `EulerSolver` class, which implements solutions
+to the first 100 Project Euler problems. It includes an interactive CLI,
+performance benchmarking, custom exception handling, progress reporting,
+optional easter eggs, and utilities for displaying and running individual
+or multiple problems.
+
+Features
+--------
+- Solve individual or all implemented Project Euler problems.
+- Measure per-problem and total execution time.
+- List implemented problems from the command line.
+- Custom exception hierarchy for clearer error reporting.
+- Optional hidden easter eggs.
+- Export selected problem outputs when applicable.
+
+Author: Xia Qi
+License: MIT
+"""
+
 import sys
 import os
 import time
@@ -66,11 +91,30 @@ except Exception as e:
     raise ImportModulesFail(e) from e
 
 class EulerSolver:
-    """A collection of Project Euler solutions."""
+    """
+    Solve and manage Project Euler problems.
+
+    The solver provides implementations of the first 100 Project Euler
+    problems together with utilities for execution, benchmarking,
+    progress tracking, and command-line interaction.
+
+    Attributes
+    ----------
+    VERSION : str
+        Current version of the solver.
+    GOAL : int
+        Target number of Project Euler problems.
+    EASTER_EGGS : bool
+        Whether random easter eggs are enabled.
+    FORCED_EASTER_EGGS : bool
+        Force easter eggs to appear regardless of probability.
+    problem_times : dict[int, float]
+        Runtime statistics collected for executed problems.
+    """
 
     def __init__(self, easter_eggs=True, forced_easter_eggs = False) -> None:
         colorama.init(autoreset=True)
-        self.VERSION = "0.6_b"
+        self.VERSION = "0.6"
         self.GOAL = "100"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
@@ -836,13 +880,13 @@ class EulerSolver:
         self._typewriter("This problem has multiple equally valid solutions.")
         time.sleep(3)
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1083{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1129{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
         print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(5){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}756{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}800{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
         print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}838{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}882{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
         print(f"    {Fore.MAGENTA}raise BestGirlConflictError{Fore.RED}(\"Expected one answer, received five.\"){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^{Fore.RESET}")
         print(f"{Fore.MAGENTA}{Style.BRIGHT}BestGirlConflictError{Fore.RESET}{Style.NORMAL}: {Fore.RED}Expected one answer, received five. {Fore.RESET}")
@@ -906,6 +950,7 @@ Thank you for participating."""
 
     def march37(self):
         """
+        (WIP)
         Display the hidden Project Euler Problem 37 easter egg.
                 
         This easter egg has a 1% chance of appearing when Problem 37
@@ -961,13 +1006,13 @@ Thank you for participating."""
         self._typewriter("SHE IS HERE...", 0.1)
         self._wait("[What?]")
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1782{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1828{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(39){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}754{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}800{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
         print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}963{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1008{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}miku.start_runtime{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~{Fore.RED}^^{Fore.RESET}")
         print(f"  File \"<miku_runtime>\", line {Fore.RED}???{Fore.RESET}, in {Fore.RED}try_install{Fore.RESET}")
@@ -983,6 +1028,7 @@ Thank you for participating."""
     
     def teto41(self):
         """
+        (WIP)
         Display the hidden Project Euler Problem 41 easter egg.
         
         This easter egg has a 1% chance of appearing when Problem 41
