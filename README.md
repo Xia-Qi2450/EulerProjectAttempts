@@ -72,7 +72,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 34 | Digit Factorials | ✅ |
 | 35 | Circular Primes | ✅ |
 | 36 | Double-base Palindromes | ✅ |
-| 37 | Truncatable Primes | ✅ |
+| *37* | ✦ Truncatable Primes | ✅ |
 | 38 | Pandigital Multiples | ✅ |
 | *39* | ✦ Integer Right Triangles | ✅ |
 | 40 | Champernowne's Constant | ✅ |

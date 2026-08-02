@@ -314,8 +314,9 @@ class EulerSolver:
         if newline:
             print()
 
-    def _load(self, text:str, finish_text:str ,duration:float, fail:bool = False) -> None:
+    def _load(self, text:str, finish_text:str ,duration:float, fail:bool = False, fake_duration=None) -> None:
         spinner_interval = 0.25
+        duration_str = fake_duration or "??.?"
         spinner = Halo(text, spinner="bouncingBar")
         spinner.start()
         frames = [f"{text}.", f"{text}..", f"{text}..."]
@@ -328,12 +329,13 @@ class EulerSolver:
                 break
         match fail:
             case False:
-                spinner.succeed(f"{finish_text} {Style.DIM}(?.??s){Style.NORMAL}")
+                spinner.succeed(f"{finish_text} {Style.DIM}({duration_str}s){Style.NORMAL}")
             case True:
-                spinner.fail(f"{finish_text} {Style.DIM}(?.??s){Style.NORMAL}")
+                spinner.fail(f"{finish_text} {Style.DIM}({duration_str}s){Style.NORMAL}")
 
     def _wait(self, custom_text:str="[Press Enter to continue]") -> None:
-        input(f"{Fore.LIGHTBLACK_EX}{custom_text}{Fore.RESET}")
+        print(f"{Fore.LIGHTBLACK_EX}{custom_text}{Fore.RESET}", end="", flush=True)
+        input()
 
     def _progress_bar(self, current, total, title="Progress", bar_length=30) -> None:
         """
@@ -880,13 +882,13 @@ class EulerSolver:
         self._typewriter("This problem has multiple equally valid solutions.")
         time.sleep(3)
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1129{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1253{Fore.RESET}, in {Fore.RED}problem5{Fore.RESET}")
         print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(5){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}800{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}802{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
         print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}882{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}884{Fore.RESET}, in {Fore.RED}nakano5{Fore.RESET}")
         print(f"    {Fore.MAGENTA}raise BestGirlConflictError{Fore.RED}(\"Expected one answer, received five.\"){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^{Fore.RESET}")
         print(f"{Fore.MAGENTA}{Style.BRIGHT}BestGirlConflictError{Fore.RESET}{Style.NORMAL}: {Fore.RED}Expected one answer, received five. {Fore.RESET}")
@@ -950,7 +952,6 @@ Thank you for participating."""
 
     def march37(self):
         """
-        (WIP)
         Display the hidden Project Euler Problem 37 easter egg.
                 
         This easter egg has a 1% chance of appearing when Problem 37
@@ -959,7 +960,130 @@ Thank you for participating."""
         March 7th is An enthusiastic girl who was saved from eternal ice by the Astral Express Crew, and......
         """
         # TODO: Make a March 7th from Honkai: Star Rail easter egg here!
-        raise NotImplementedError("The March 7th easter egg hasn't been implemented yet, go grind for Stellar Jade or Passes instead.")
+        def dialog(charname:str,  message:str, speed:float, charcolor=Fore.WHITE, auto=False):
+            print(f"{charcolor}{charname}{Fore.RESET}: ", end="", flush=True)
+            time.sleep(0.3)
+            self._typewriter(message, 0.03/speed, True)
+            time.sleep(0.3)
+            if not auto:
+                self._wait()
+        print(Fore.CYAN + "=" * self.terminal_width)
+        self.header("37?", "Connect with March on the Astral Express")
+        time.sleep(2)
+
+        self._load("Connecting to Astral Express", "Connected!", random.uniform(3,8), False, f"{random.randint(200,500)}m")
+        self._typewriter("....................")
+        total = 100
+        i = 0
+        while i < total:
+            self._progress_bar(i, total, title="Testing connection")
+            i += random.randint(0,2)
+            time.sleep(0.1)
+        i = None
+        self._load("Waiting for reciever", "Connection timed out, retrying...", 15, True, "Nil")
+        time.sleep(0.5)
+        self._load("Waiting for reciever", "Reciever March 7th connected!", random.uniform(5,15), False, f"{round(random.uniform(5,15), 2)}")
+        time.sleep(0.5)
+
+        dialog("March 7th", "Hello, is this working?", 0.7, Fore.CYAN)
+        dialog("You", "Yep.", 1.2, Fore.GREEN)
+        dialog("March 7th", "Wait..", 0.7, Fore.CYAN, True)
+        dialog("March 7th", "Why can't I see you?", 0.7, Fore.CYAN)
+        dialog("You", "This is a terminal.", 1.2, Fore.GREEN)
+        dialog("March 7th", "...", 0.7, Fore.CYAN, True)
+        dialog("March 7th", "What's a terminal?", 0.7, Fore.CYAN)
+        dialog("You", "March, I don't want to explain that again.", 1.2, Fore.GREEN)
+        dialog("March 7th", "Hmph, you meanie!", 0.7, Fore.CYAN)
+        time.sleep(1)
+        dialog("March 7th", "Project Euler Problem 37?", 0.7, Fore.CYAN, True)
+        dialog("March 7th", "Is that a train route?", 0.7, Fore.CYAN, True)
+        dialog("You", "No.", 1.2, Fore.GREEN)
+        dialog("March 7th", "Is it food?", 0.7, Fore.CYAN, True)
+        dialog("You", "No.", 1.2, Fore.GREEN)
+        dialog("March 7th", "Is it one of Himeko's coffee recipes?", 0.7, Fore.CYAN, True)
+        dialog("You", "Definitely not.", 1.2, Fore.GREEN)
+        dialog("March 7th", "Then what IS it??", 0.5, Fore.CYAN)
+        dialog("You", "I'm finding truncatable primes.", 1.2, Fore.GREEN)
+        dialog("March 7th", "...", 0.7, Fore.CYAN, True)
+        dialog("March 7th", "That sounds incredibly fake.", 0.7, Fore.CYAN)
+        dialog("You", "It's real.", 1.2, Fore.GREEN)
+        dialog("March 7th", "Math people scare me.", 0.7, Fore.CYAN)
+        time.sleep(1)
+        dialog("March 7th", "Oh and before I go...", 0.7, Fore.CYAN, True)
+        dialog("March 7th", "Smile!", 0.7, Fore.CYAN)
+        dialog("You", "March, you know this is all text right?", 1.2, Fore.GREEN, True)
+        print("📸 *click*")
+
+        with open("march.txt", "w") as convo:
+            convo.write("""
+Astral Express Conversation Log
+
+Subject:
+A programmer solving Project Euler.
+
+Mood:
+Concentrating very hard.
+
+Result:
+Photo acquired successfully.
+
+Rating:
+★★★★★
+
+Conversation:
+March 7th: Hello, is this working?
+
+You: Yep.
+
+March 7th: Wait..
+March 7th: Why can't I see you?
+
+You: This is a terminal.
+
+March 7th: ...
+March 7th: What's a terminal?
+
+You: March, I don't want to explain that again.
+
+March 7th: Hmph, you meanie!
+
+March 7th: Project Euler Problem 37?
+March 7th: Is that a train route?
+You: No.
+
+March 7th: Is it food?
+You: No.
+
+March 7th: Is it one of Himeko's coffee recipes?
+You: Definitely not.
+
+March 7th: Then what IS it??
+
+You: I'm finding truncatable primes.
+
+March 7th: ...
+March 7th: That sounds incredibly fake.
+
+You: It's real.
+
+March 7th: Math people scare me.
+
+March 7th: Oh and before I go...
+March 7th: Smile!
+
+You: March, you know this is all text right?
+                           
+            """)
+        self._load("Saving conversation", "Saved at march.txt!", random.uniform(1,2))
+
+        dialog("You", "Oh, at least she know how to save text.", 1.2, Fore.GREEN)
+        time.sleep(2)
+        self._load("Waiting for reciever to respond", "ERROR: Reciever currently unreachable, terminating session...", 5, True, f"NA m")
+        time.sleep(1)
+        print(f"{Fore.RED}Session Terminated{Fore.RESET}")
+        time.sleep(1)
+        self._wait("[Continue to next problem]")
+        print(Fore.CYAN + "=" * self.terminal_width)
 
     def miku39(self):
         """
@@ -1006,13 +1130,13 @@ Thank you for participating."""
         self._typewriter("SHE IS HERE...", 0.1)
         self._wait("[What?]")
         print(f"Traceback (most recent call last):")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1828{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1952{Fore.RESET}, in {Fore.RED}problem39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}self._try_easter_egg{Fore.RED}(39){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~~~{Fore.RED}^^^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}800{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}802{Fore.RESET}, in {Fore.RED}_try_easter_egg{Fore.RESET}")
         print(f"    {Fore.MAGENTA}egg{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^^{Fore.RESET}")
-        print(f"  File \"{self.current_file}\", line {Fore.RED}1008{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
+        print(f"  File \"{self.current_file}\", line {Fore.RED}1132{Fore.RESET}, in {Fore.RED}miku39{Fore.RESET}")
         print(f"    {Fore.MAGENTA}miku.start_runtime{Fore.RED}(){Fore.RESET}")
         print(f"    {Fore.MAGENTA}~~~~~~~~~~~~~~~~~~{Fore.RED}^^{Fore.RESET}")
         print(f"  File \"<miku_runtime>\", line {Fore.RED}???{Fore.RESET}, in {Fore.RED}try_install{Fore.RESET}")
