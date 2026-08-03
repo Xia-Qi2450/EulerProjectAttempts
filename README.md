@@ -35,7 +35,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 
 | Problem | Description | Status |
 | ---------: | ------------- | :------: |
-| 0 | Sum of odd perfect squares up to 756000 *(starting challenge for account creation)* | ✅ |
+| 0 | Sum of odd perfect squares up to 756000 | ✅ |
 | 1 | Multiples of 3 or 5 | ✅ |
 | 2 | Even Fibonacci Numbers | ✅ |
 | 3 | Largest Prime Factor | ✅ |
@@ -103,7 +103,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 65 | Convergents of *e* | ✅ |
 
 ✦ Some solved problems contain optional surprises.
-
+> Note: Problem 0 is the starting challenge for account creation
 ---
 
 ## Project Structure

@@ -1233,10 +1233,11 @@ You: March, you know this is all text right?
             1,
             "Find the sum of all multiples of 3 or 5 below 1000"
         )
-        total = sum(
+        total = self.run_task("Finding the sum of the multiple...", lambda: sum(
             number
             for number in range(1000)
             if number % 3 == 0 or number % 5 == 0
+        )
         )
         print(f"Sum of multiples of 3 or 5 below 1000: {Fore.GREEN}{total}")
 
