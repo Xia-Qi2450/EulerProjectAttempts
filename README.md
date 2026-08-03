@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **60 / 100** ✅
+**Current Progress:** **65 / 100** ✅
 
 ```text
-█████████████████████████████░░░░░░░░░░░░░░░░░░░░░  60%
+████████████████████████████████░░░░░░░░░░░░░░░░░░  65%
 ```
 
 > **Note**
@@ -96,6 +96,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 58 | Spiral Primes | ✅ |
 | 59 | XOR Decryption | ✅ |
 | 60 | Prime Pair Sets | ✅ |
+| 61 | Cyclical Figurate Numbers | ✅ |
+| 62 | Cubic Permutations | ✅ |
+| 63 | Powerful Digit Counts | ✅ |
+| 64 | Odd Period Square Roots | ✅ |
+| 65 | Convergents of *e* | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 

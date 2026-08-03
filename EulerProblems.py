@@ -31,7 +31,7 @@ import math
 import random
 import itertools
 from datetime import datetime
-from collections import Counter
+import collections
 from typing import Any
 import argparse
 import shutil
@@ -780,6 +780,50 @@ class EulerSolver:
             if str(n) == str(n)[::-1]:
                 return False 
         return True 
+
+    def generate_polygonal_numbers(self):
+        """Generates polygonal numbers from triangles to octagons"""
+        # Formulas mapped from 3 (Triangle) to 8 (Octagonal)
+        formulas = {
+            3: lambda n: n * (n + 1) // 2,
+            4: lambda n: n * n,
+            5: lambda n: n * (3 * n - 1) // 2,
+            6: lambda n: n * (2 * n - 1),
+            7: lambda n: n * (5 * n - 3) // 2,
+            8: lambda n: n * (3 * n - 2)
+        }
+        poly_map = collections.defaultdict(list)
+        for sides, formula in formulas.items():
+            n = 1
+            while True:
+                val = formula(n)
+                if val >= 10000:
+                    break
+                if val >= 1000:
+                    if val % 100 >= 10:
+                        poly_map[sides].append(val)
+                n += 1
+        return poly_map
+
+    def get_period_length(self, n):
+        """
+        Computes the period length of the continued fraction for sqrt(n).
+        Returns 0 if n is a perfect square.
+        """
+        a0 = math.isqrt(n)
+        if a0 * a0 == n:
+            return 0  # Perfect squares have no periodic fractional part
+        m = 0
+        d = 1
+        a = a0
+        period = 0
+        
+        while a != 2 * a0:
+            m = d * a - m
+            d = (n - m * m) // d
+            a = (a0 + m) // d
+            period += 1
+        return period
 
     # ==========================================================
     # Easter Eggs
@@ -1961,7 +2005,7 @@ You: March, you know this is all text right?
                         p = a + b + c
                         if p <= max_p:
                             perimeters.append(p)
-            frequency_map = Counter(perimeters)
+            frequency_map = collections.Counter(perimeters)
             most_common_p, max_solutions = frequency_map.most_common(1)[0]
             return most_common_p, max_solutions
         result, _max = self.run_task(
@@ -2509,6 +2553,128 @@ You: March, you know this is all text right?
         print(f"The lowest sum for a set of five primes is: {Fore.GREEN}{lowest_sum}{Fore.RESET}")
         print(f"With the set being: {Fore.GREEN}{prime_set}{Fore.RESET}")
 
+    def problem61(self):
+        "Find the sum of the only ordered set of six cyclic 4-digit numbers for which each polygonal type."
+        self.header(
+            61,
+            "Find the sum of the only ordered set of six cyclic 4-digit numbers for which each polygonal type."
+        )
+        def task():
+            poly_map = self.generate_polygonal_numbers()
+            def dfs(current_num, remaining_types, current_cycle):
+                if not remaining_types:
+                    # Check if the cycle closes back to the very first number
+                    if current_num % 100 == current_cycle[0] // 100:
+                        return sum(current_cycle)
+                    return None
+                suffix = current_num % 100
+                for next_type in list(remaining_types):
+                    for candidate in poly_map[next_type]:
+                        if candidate // 100 == suffix:
+                            remaining_types.remove(next_type)
+                            current_cycle.append(candidate)
+                            
+                            result = dfs(candidate, remaining_types, current_cycle)
+                            if result:
+                                return result
+                            current_cycle.pop()
+                            remaining_types.add(next_type)
+                return None
+            # Kick off DFS from every available 4-digit Octagonal number
+            for start_num in poly_map[8]:
+                initial_types = {3, 4, 5, 6, 7}
+                result = dfs(start_num, initial_types, [start_num])
+                if result:
+                    return result
+        result = self.run_task(
+            "Finding all cyclic 4-digit numbers...",
+            task
+        )
+        print(f"The sum of the only ordered set of six cyclic 4-digit numbers for which each polygonal type is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem62(self):
+        "Find the smallest cube for which exactly five permutations of its digits are cube."
+        self.header(
+            62,
+            "Find the smallest cube for which exactly five permutations of its digits are cube."
+        )
+        def task():
+            # Store sorted digit fingerprints as keys and a list of their cubes as values
+            cube_tracker = collections.defaultdict(list)
+            root = 1
+            while True:
+                cube = root ** 3
+                fingerprint = ''.join(sorted(str(cube)))
+                cube_tracker[fingerprint].append(cube)
+                if len(cube_tracker[fingerprint]) == 5:
+                    return cube_tracker[fingerprint][0]
+                root += 1
+        result = self.run_task(
+            "Finding all cube permutations...",
+            task
+        )
+        print(f"The smallest cube for which exactly five permutations of its digits are cube is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem63(self):
+        "Find the number of n-digit positive integers exist which are also an nth power."
+        self.header(
+            63,
+            "Find the number of n-digit positive integers exist which are also an nth power."
+        )
+        def task():
+            total = 0
+            for b in range(1, 10):
+                for e in range(1, 22):
+                    if len(str(b ** e)) == e:
+                        total += 1
+            return total
+        result = self.run_task(
+            "Looking through powers...",
+            task
+        )
+        print(f"The number of n-digit positive integers exist which are also an nth power is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem64(self):
+        "Find the number of odd-period continued fractions for square roots up to 10000."
+        self.header(
+            64,
+            "Find the number of odd-period continued fractions for square roots up to 10000."
+        )
+        def task():
+            odd_period_count = sum(1 for i in range(1, 10001) if self.get_period_length(i) % 2 == 1)
+            return odd_period_count
+        result = self.run_task(
+            "Iterating through periods...",
+            task
+        )
+        print(f"The number of odd-period continued fractions for square roots up to 10000 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem65(self):
+        "Find the sum of digits in the numerator of the 100th convergent of the continued fraction for e."
+        self.header(
+            65,
+            "Find the sum of digits in the numerator of the 100th convergent of the continued fraction for e."
+        )
+        def task():
+            terms = [2]
+            k = 1
+            while len(terms) < 100:
+                terms.extend([1, 2 * k, 1])
+                k += 1
+            terms = terms[:100]
+            
+            numerator = 1
+            denominator = terms.pop() 
+            for term in reversed(terms):
+                denominator, numerator = term * denominator + numerator, denominator
+            final_numerator = denominator
+            
+            return sum(int(digit) for digit in str(final_numerator))
+        result = self.run_task(
+            "Looking through Euler's Number...",
+            task
+        )
+        print(f"The sum of digits in the numerator of the 100th convergent of the continued fraction for e is: {Fore.GREEN}{result}{Fore.RESET}")
 
     # ==========================================================
     # Runner
