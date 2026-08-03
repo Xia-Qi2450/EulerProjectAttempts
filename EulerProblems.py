@@ -420,6 +420,10 @@ class EulerSolver:
                 return False
         return True
 
+    def is_square(self, n):
+        s = int(math.isqrt(n))
+        return s * s == n
+
     def get_largest_palindrome_product(self, digits: int) -> tuple:
         """
         Finds the largest palindrome made from the product of two N-digit numbers.
@@ -824,6 +828,26 @@ class EulerSolver:
             a = (a0 + m) // d
             period += 1
         return period
+
+    def solve_pell(self, d):
+        # Returns the fundamental x for x^2 - d*y^2 = 1 using continued fractions
+        m = 0
+        d_denom = 1
+        a0 = int(math.isqrt(d))
+        a = a0
+        
+        num1, num = 1, a0
+        den1, den = 0, 1
+        
+        while num * num - d * den * den != 1:
+            m = d_denom * a - m
+            d_denom = (d - m * m) // d_denom
+            a = (a0 + m) // d_denom
+            
+            num1, num = num, a * num + num1
+            den1, den = den, a * den + den1
+            
+        return num
 
     # ==========================================================
     # Easter Eggs
@@ -2676,6 +2700,157 @@ You: March, you know this is all text right?
             task
         )
         print(f"The sum of digits in the numerator of the 100th convergent of the continued fraction for e is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem66(self):
+        "Find the value of D ≤ 1000 for which Pell's equation x^2 - Dy^2 = 1 yields the largest minimal solution in x."
+        self.header(
+            66,
+            "Find the value of D ≤ 1000 for which Pell's equation x^2 - Dy^2 = 1 yields the largest minimal solution in x."
+        )
+        def task():
+            max_x = 0
+            result_d = 0
+            for d in range(2, 1001):
+                if not self.is_square(d):
+                    x = self.solve_pell(d)
+                    if x > max_x:
+                        max_x = x
+                        result_d = d
+            return result_d
+        result = self.run_task(
+            "Trying Pell's equation...",
+            task
+        )
+        print(f"The value of D for which Pell's equation gives the largest minimal solution is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem67(self):
+        "Find the maximum total from top to bottom in a triangle with one-hundred rows."
+        self.header(
+            67,
+            "Find the maximum total from top to bottom in a triangle with one-hundred rows."
+        )
+        def task():
+            with open("0067_triangle.txt", "r") as f:
+                triangle = [[int(num) for num in line.split()] for line in f]
+            for row in range(len(triangle) - 2, -1, -1):
+                for col in range(len(triangle[row])):
+                    max_child = max(triangle[row + 1][col], triangle[row + 1][col + 1])
+                    triangle[row][col] += max_child
+
+            return triangle[0][0]
+        result = self.run_task(
+            "Combing through all possibilities...",
+            task
+        )
+        print(f"The maximum total from top to bottom in a triangle with one-hundred rows is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem68(self):
+        "Find out the maximum 16-digit string for a \"magic\" 5-gon ring."
+        self.header(
+            68,
+            "Find out the maximum 16-digit string for a \"magic\" 5-gon ring."
+        )
+        def solve_magic_5gon():
+            nums = list(range(1, 11))
+            max_string = ""
+            
+            # Generate all permutations of 10 numbers
+            # For optimisation, we only evaluate configurations where 10 is an outer node
+            for p in itertools.permutations(nums):
+                x0, x1, x2, x3, x4 = p[0], p[1], p[2], p[3], p[4]
+                y0, y1, y2, y3, y4 = p[5], p[6], p[7], p[8], p[9]
+                if 10 in (y0, y1, y2, y3, y4):
+                    continue
+                if x0 > min(x1, x2, x3, x4):
+                    continue
+                line1 = x0 + y0 + y1
+                line2 = x1 + y1 + y2
+                line3 = x2 + y2 + y3
+                line4 = x3 + y3 + y4
+                line5 = x4 + y4 + y0
+                
+                if line1 == line2 == line3 == line4 == line5:
+                    candidate_str = (
+                        f"{x0}{y0}{y1}"
+                        f"{x1}{y1}{y2}"
+                        f"{x2}{y2}{y3}"
+                        f"{x3}{y3}{y4}"
+                        f"{x4}{y4}{y0}"
+                    )
+                    if candidate_str > max_string:
+                        max_string = candidate_str
+                        
+            return max_string
+        result = self.run_task(
+            "Working out \"magic\" 5-gon rings...",
+            solve_magic_5gon
+        )
+        print(f"The maximum 16-digit string for a \"magic\" 5-gon ring is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem69(self):
+        "Find the value of n ≤ 1,000,000 for which the ratio n/φ(n) is maximised."
+        self.header(
+            69,
+            "Find the value of n ≤ 1,000,000 for which the ratio n/φ(n) is maximised."
+        )
+        def task(limit=1_000_000):
+            # Initialize phi array where φ[i] = i
+            φ = list(range(limit + 1))
+            for i in range(2, limit + 1):
+                if φ[i] == i:  # i is a prime number
+                    for j in range(i, limit + 1, i):
+                        φ[j] -= φ[j] // i  # Apply the formula factor (1 - 1/p)
+            max_ratio = 0
+            best_n = 0
+            for n in range(2, limit + 1):
+                ratio = n / φ[n]
+                if ratio > max_ratio:
+                    max_ratio = ratio
+                    best_n = n
+                    
+            return best_n
+        result = self.run_task(
+            "φ...",
+            task
+        )
+        print(f"The value of n ≤ 1,000,000 for which the ratio n/φ(n) is maximised is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem70(self):
+        "Find the value of n < 10^7 for which φ(n) is a permutation of n and the ratio n/φ(n) is minimised."
+        self.header(
+            70,
+            "Find the value of n < 10^7 for which φ(n) is a permutation of n and the ratio n/φ(n) is minimised."
+        )
+        def task():
+            limit = 10_000_000
+            is_prime = self.sieve_of_eratosthenes_list(limit)
+            primes = [i for i, prime in enumerate(is_prime) if prime]
+            min_ratio = float('inf')
+            best_n = 0
+            
+            for i in range(len(primes)):
+                p1 = primes[i]
+                if p1 * p1 >= limit:
+                    break
+                for j in range(i, len(primes)):
+                    p2 = primes[j]
+                    n = p1 * p2
+                    if n >= limit:
+                        break
+                        
+                    phi = (p1 - 1) * (p2 - 1)
+                    if sorted(str(n)) == sorted(str(phi)):
+                        ratio = n / phi
+                        if ratio < min_ratio:
+                            min_ratio = ratio
+                            best_n = n
+                            
+            return best_n
+        result = self.run_task(
+            "Inspecting through primes...",
+            task
+        )
+        print(f"The value of n for which φ(n) is a permutation of n and the ratio n/φ(n) is minimised is: {Fore.GREEN}{result}{Fore.RESET}")
 
     # ==========================================================
     # Runner

@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **65 / 100** ✅
+**Current Progress:** **70 / 100** ✅
 
 ```text
-████████████████████████████████░░░░░░░░░░░░░░░░░░  65%
+███████████████████████████████████░░░░░░░░░░░░░░░  70%
 ```
 
 > **Note**
@@ -101,6 +101,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 63 | Powerful Digit Counts | ✅ |
 | 64 | Odd Period Square Roots | ✅ |
 | 65 | Convergents of *e* | ✅ |
+| 66 | Diophantine Equation | ✅ |
+| 67 | Maximum Path Sum II | ✅ |
+| 68 | Magic 5-gon Ring | ✅ |
+| 69 | Totient Maximum | ✅ |
+| 70 | Totient Permutation | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation
@@ -109,13 +114,14 @@ The goal of this project isn't just to get the correct answers—it's also an op
 ## Project Structure
 
 ```text
-EulerProblems.py (The entire script)
-0022_names.txt   (The names for Problem 22)
-0042_words.txt   (The words for Problem 42)
-0054_poker.txt   (The poker hands for Problem 54)
-0059_cipher.txt  (The encrypted message for Problem 59)
-README.md        (This file)
-LICENSE.txt      (The MIT License)
+EulerProblems.py  (The entire script)
+0022_names.txt    (The names for Problem 22)
+0042_words.txt    (The words for Problem 42)
+0054_poker.txt    (The poker hands for Problem 54)
+0059_cipher.txt   (The encrypted message for Problem 59)
+0067_triangle.txt (The triangle for Problem 67)
+README.md         (This file)
+LICENSE.txt       (The MIT License)
 ```
 
 Everything currently lives inside one file:
