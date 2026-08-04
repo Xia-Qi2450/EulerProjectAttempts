@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **70 / 100** ✅
+**Current Progress:** **75 / 100** ✅
 
 ```text
-███████████████████████████████████░░░░░░░░░░░░░░░  70%
+██████████████████████████████████████░░░░░░░░░░░░  75%
 ```
 
 > **Note**
@@ -106,6 +106,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 68 | Magic 5-gon Ring | ✅ |
 | 69 | Totient Maximum | ✅ |
 | 70 | Totient Permutation | ✅ |
+| 71 | Ordered Fractions | ✅ |
+| 72 | Counting Fractions | ✅ |
+| 73 | Counting Fractions in a Range | ✅ |
+| 74 | Digit Factorial Chains | ✅ |
+| 75 | Singular Integer Right Triangles | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation

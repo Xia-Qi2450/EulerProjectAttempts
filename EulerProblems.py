@@ -2852,6 +2852,157 @@ You: March, you know this is all text right?
         )
         print(f"The value of n for which φ(n) is a permutation of n and the ratio n/φ(n) is minimised is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem71(self):
+        "Find the numerator of the fraction immediately to the left of 3/7, by listing the set of reduced proper fractions for d ≤ 1,000,000 in ascending order of size."
+        self.header(
+            71,
+            "Find the numerator of the fraction immediately to the left of 3/7, by listing the set of reduced proper fractions for d ≤ 1,000,000 in ascending order of size."
+        )
+        def task(max_d:int = 1_000_000):
+            best_n, best_d = 0, 1
+            target_n, target_d = 3, 7
+            
+            for d in range(1, max_d + 1):
+                # Find the largest numerator n such that n/d < 3/7
+                n = (target_n * d - 1) // target_d
+                
+                if n * best_d > best_n * d:
+                    best_n, best_d = n, d
+                    
+            return best_n
+        result = self.run_task(
+            "Reducing proper fractions...",
+            task
+        )
+        print(f"The numerator of the fraction immediately to the left of 3/7 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem72(self):
+        "Find the number of elements in the set of reduced proper fractions n/d for d ≤ 1,000,000"
+        self.header(
+            72,
+            "Find the number of elements in the set of reduced proper fractions n/d for d ≤ 1,000,000"
+        )
+        def task(limit:int=1_000_000):
+            # Initialize phi array where phi[i] initially equals i
+            φ = list(range(limit + 1))
+            
+            for i in range(2, limit + 1):
+                if φ[i] == i:  # i is prime
+                    for j in range(i, limit + 1, i):
+                        φ[j] -= φ[j] // i
+                        
+            # Sum all totients from d = 2 to limit
+            return sum(φ[2:])
+        result = self.run_task(
+            "Looking through the set...",
+            task
+        )
+        print(f"The number of elements in the set of reduced proper fractions n/d is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem73(self):
+        "Find how many reduced proper fractions lie strictly between 1/3 and 1/2 for denominators d ≤ 12,000."
+        self.header(
+            73,
+            "Find how many reduced proper fractions lie strictly between 1/3 and 1/2 for denominators d ≤ 12,000."
+        )
+        def task(limit:int=12_000):
+            count = 0
+            stack = [(1, 3, 1, 2)]
+            while stack:
+                n1, d1, n2, d2 = stack.pop()
+                nm, dm = n1 + n2, d1 + d2
+                if dm <= limit:
+                    count += 1
+                    # Push both halves to the stack to explore further
+                    stack.append((n1, d1, nm, dm))
+                    stack.append((nm, dm, n2, d2))
+                    
+            return count
+        result = self.run_task(
+            "Reducing proper fractions... ",
+            task
+        )
+        print(f"The number of reduced proper fractions lie strictly between 1/3 and 1/2 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem74(self):
+        "Find the number of chains with a starting number below one million that contain exactly 60 non-repeating terms"
+        self.header(
+            74,
+            "Find the number of chains with a starting number below one million that contain exactly 60 non-repeating terms"
+        )
+        # Precompute factorials for digits 0 through 9
+        FACTORIAL = [math.factorial(i) for i in range(10)]
+
+        def next_number(n):
+            total = 0
+            while n > 0:
+                total += FACTORIAL[n % 10]
+                n //= 10
+            return total
+
+        def get_chain_length(n, cache):
+            original_n = n
+            seen = []
+            while n not in cache:
+                if n in seen:
+                    break
+                seen.append(n)
+                n = next_number(n)
+            
+            # Calculate length for the visited sequence
+            length = cache.get(n, 0)
+            for i in reversed(seen):
+                length += 1
+                cache[i] = length
+            return cache[original_n]
+
+        def solve():
+            cache = {}
+            limit = 1000000
+            count = 0
+            for i in range(limit):
+                if get_chain_length(i, cache) == 60:
+                    count += 1
+            return count
+        result = self.run_task(
+            "Iterating Factorials...",
+            solve
+        )
+        print(f"The number of chains with a starting number below one million is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem75(self):
+        "Find the number of wire lengths up to 1,500,000 that can be bent into a right-angled triangle in exactly one way."
+        self.header(
+            75,
+            "Find the number of wire lengths up to 1,500,000 that can be bent into a right-angled triangle in exactly one way."
+        )
+        def primitive_perimeter_generator(limit):
+            """Generates the perimeter of unique primitive Pythagorean triples."""
+            # The perimeter formula is P = s * (s + t)
+            # Since t > 0, s^2 is always less than the limit
+            max_s = math.isqrt(limit) + 1
+            for s in range(3, max_s, 2):
+                for t in range(s - 2, 0, -2):
+                    if math.gcd(s, t) == 1:
+                        perimeter = s * (s + t)
+                        if perimeter <= limit:
+                            yield perimeter
+
+        def solve():
+            LIMIT = 1500000
+            perimeter_counts = [0] * (LIMIT + 1)
+            
+            # Consume perimeters from the generator
+            for prim_p in primitive_perimeter_generator(LIMIT):
+                for multiple_p in range(prim_p, LIMIT + 1, prim_p):
+                    perimeter_counts[multiple_p] += 1
+            return perimeter_counts.count(1)
+        result = self.run_task(
+            "Combing through Pythagorean Triples...",
+            solve
+        )
+        print(f"The number of wire lengths that can be bent into a right-angled triangle in exactly one way is: {Fore.GREEN}{result}{Fore.RESET}")
+
     # ==========================================================
     # Runner
     # ==========================================================
