@@ -142,7 +142,7 @@ class EasterEggs(Helpers):
         choice = "N/A"
         verdict = "NIL"
         notes = "NIL"
-        with open("nakano.txt", "w") as f:
+        with open("nakano.txt", "w", encoding="utf-8") as f:
             match ans:
                 case 1:
                     choice = "Ichika"
@@ -259,7 +259,7 @@ Thank you for participating."""
         dialog("You", "March, you know this is all text right?", 1.2, Fore.GREEN, True)
         print("📸 *click*")
 
-        with open("march.txt", "w") as convo:
+        with open("march.txt", "w", encoding="utf-8") as convo:
             convo.write("""
 Astral Express Conversation Log
 
@@ -389,7 +389,7 @@ You: March, you know this is all text right?
         print(f"    {Fore.MAGENTA}~~~{Fore.RED}^{Fore.MAGENTA}~~~~~~~~{Fore.RED}^^^{Fore.MAGENTA}~~~~~{Fore.RED}^^{Fore.MAGENTA}~~~~~{Fore.RED}^^^^^^{Fore.MAGENTA}~~~~~{Fore.RESET}")
         print(f"{Fore.MAGENTA}{Style.BRIGHT}MikuIsHidingInYourWiFi{Fore.RESET}{Style.NORMAL}: {Fore.RED}Thank you(39) for using EulerProblems.py, ありがとうございます。{Fore.RESET}")
         input()
-        with open("miku.txt", "w") as f:
+        with open("miku.txt", "w", encoding="utf-8") as f:
             f.write("[Intro] \nOoh-ee-ooh \nOoh-ee-ooh \nOoh-ee-ooh \nOoh-ee-ooh \n\n[Verse 1] \nMiku, Miku, you can call me Miku \nBlue hair, blue tie, hiding in your Wi-Fi \nOpen secrets, anyone can find me \nHear your music running through my mind \n\n[Chorus] \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \n\n[Pre-Chorus] \nI'm on top of the world because of you \nAll I wanted to do is follow you \nI'll keep singing along to all of you \nI'll keep singing along \n\n[Chorus] \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \n\n[Verse 2] \nMiku, Miku, what's it like to be you? \n20/20, looking in the rear view \nPlay me, break me, make me feel like Superman \nYou can do anything you want \n\n[Pre-Chorus] \nI'm on top of the world because of you \nAll I wanted to do is follow you \nI'll keep singing along to all of you \nI'll keep singing along \nI'm on top of the world because of you \nI do nothing that they could never do \nI'll keep playing along with all of you \nI'll keep playing along \n\n[Chorus] \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \nI'm thinkin' Miku, Miku (Ooh-ee-ooh) \n\n[Bridge] \nWhere were we walking together? \nI will see you in the end \nI'll take you where you've never been \nAnd bring you back again \nListen to me with your eyes \nI'm watching you from in the sky \nIf you forget, I'll fade away \nI'm asking you to let me stay \nSo bathe me in your magic light \nAnd keep it on in darkest night \nI need you here to keep me strong \nTo live my life and sing along \nI'm waiting with you wide awake \nLike your expensive poison snake \nYou found me here inside a dream \nWalk through the fire straight to me \n\n[Outro] \n​tsap eht morf dnuos tsal ,erutuf eht morf dnuos tsriF")
         self._load("Recovering", "Recovered! A txt file has been created.", 2)
         self._wait("[Continue to next problem]")
