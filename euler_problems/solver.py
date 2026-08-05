@@ -67,6 +67,7 @@ class EulerSolver(
         self.GOAL = "100"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
+        self._spinner_frames: itertools.cycle = itertools.cycle("|/-\\")
         self.terminal_width: int = shutil.get_terminal_size(fallback=(100, 24)).columns
         self.problem_times: dict[int, float] = {}
         self.current_file: str = os.path.realpath(__file__)

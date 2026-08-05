@@ -310,10 +310,8 @@ class Problems26To50(UtilsMixin, EasterEggs):
             37,
             "Find the sum of the only eleven primes that are both truncatable from left to right and right to left."
         )
-        """
         if self._try_easter_egg(37):
                     return
-        """
         def task():
             limit = 1000000
             is_prime = self.sieve_of_eratosthenes_list(limit)

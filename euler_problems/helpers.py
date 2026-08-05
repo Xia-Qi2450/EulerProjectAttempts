@@ -9,7 +9,8 @@ here can freely use `self.` attributes defined in EulerSolver.__init__
 
 import sys
 import time
-from typing import Any, Iterator
+from typing import Any
+import itertools
 
 from colorama import Fore, Style
 from halo import Halo
@@ -22,7 +23,7 @@ class Helpers:
     # purely so Pylance/Pyright knows these exist on self - this is just a
     # type annotation, it doesn't run or set anything at import time.
     terminal_width: int
-    _spinner_frames: Iterator[str]
+    _spinner_frames: itertools.cycle
 
     def header(self, problem_number, description: str) -> None:
         """Print a formatted problem header."""
