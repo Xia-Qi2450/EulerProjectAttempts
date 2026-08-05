@@ -1,11 +1,10 @@
 """
 Project Euler solutions: problem0 through problem25.
 
-Problems00To25Mixin is combined into EulerSolver in solver.py. It
+Problems00To25 is combined into EulerSolver in solver.py. It
 genuinely inherits from UtilsMixin and EasterEggsMixin (which itself
 inherits HelpersMixin) since these problems call self.header,
-self.run_task, self.is_prime, self._try_easter_egg, and so on - real
-inheritance is what lets Pylance/Pyright resolve those calls.
+self.run_task, self.is_prime, self._try_easter_egg, and so on.
 """
 
 import math

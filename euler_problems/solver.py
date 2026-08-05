@@ -5,9 +5,9 @@ This class is deliberately thin - almost all of its behavior comes from
 the mixins below. Each mixin lives in its own file so no single file in
 this package needs to hold the entire solver:
 
-    HelpersMixin        -> helpers.py       (CLI/output helpers)
-    UtilsMixin           -> utils.py         (math helper functions)
-    EasterEggsMixin       -> easter_eggs.py   (hidden easter eggs; inherits HelpersMixin)
+    HelpersMixin        -> helpers.py          (CLI/output helpers)
+    UtilsMixin           -> utils.py           (math helper functions)
+    EasterEggsMixin       -> easter_eggs.py    (hidden easter eggs; inherits HelpersMixin)
     Problems00To25Mixin   -> problems_00_25.py (inherits UtilsMixin, EasterEggsMixin)
     Problems26To50Mixin   -> problems_26_50.py (inherits UtilsMixin, EasterEggsMixin)
     Problems51To75Mixin   -> problems_51_75.py (inherits UtilsMixin, HelpersMixin)

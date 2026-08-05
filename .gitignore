@@ -1,8 +1,21 @@
-checksums.json
-__pycache__
+# Python
+__pycache__/
+
+# macOS
 .DS_Store
-test.py
+
+# Generated files
+# Produced by 'pyhash', my other Python project
+checksums.json
+
+# Project Euler output files
+0059_decrypted.txt
+
+# Easter egg output files
 miku.txt
 nakano.txt
-0059_decrypted.txt
 march.txt
+
+# Dev stuff
+# Local testing script
+test.py

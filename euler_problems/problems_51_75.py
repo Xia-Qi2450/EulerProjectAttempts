@@ -1,18 +1,10 @@
 """
 Project Euler solutions: problem51 through problem75.
 
-Problems51To75Mixin is combined into EulerSolver in solver.py. It
-genuinely inherits from UtilsMixin and HelpersMixin since these problems
+Problems51To75 is combined into EulerSolver in solver.py. It
+genuinely inherits from UtilsMixin and EasterEggs since these problems
 call self.header, self.run_task, self.is_prime, self.evaluate_hand, and
-so on - real inheritance is what lets Pylance/Pyright resolve those
-calls. (Unlike the 0-25 and 26-50 ranges, no problem here triggers an
-easter egg, so EasterEggsMixin isn't needed.)
-
-Base order note: UtilsMixin is listed before HelpersMixin here to match
-the [UtilsMixin, ..., HelpersMixin] ordering that EasterEggsMixin forces
-in the other two problem mixins - keeping this consistent everywhere is
-what lets Python compute one consistent MRO once solver.py combines all
-three problem mixins together.
+so on.
 """
 
 import math
