@@ -28,6 +28,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 - Colored terminal output using **Colorama**
 - Execution time displayed for computationally intensive problems
 - Clean and readable code with docstrings
+- Modular package structure (`euler_problems/`) split by responsibility for easier maintenance
 
 ---
 
@@ -119,7 +120,19 @@ The goal of this project isn't just to get the correct answers—it's also an op
 ## Project Structure
 
 ```text
-EulerProblems.py  (The entire script)
+EulerProblems.py         (Thin entry point - run this, same CLI as always)
+euler_problems/          (Package containing all solver logic)
+    __init__.py           (Dependency check + package exports)
+    exceptions.py          (Custom exception hierarchy)
+    data.py                (Large static data blobs - problems 8, 11, 13, 18)
+    helpers.py             (CLI/output helpers - spinners, progress bar, etc.)
+    utils.py               (Reusable math helper functions)
+    easter_eggs.py          (Hidden easter egg behavior)
+    problems_00_25.py       (Solutions: problem0 - problem25)
+    problems_26_50.py       (Solutions: problem26 - problem50)
+    problems_51_75.py       (Solutions: problem51 - problem75)
+    solver.py               (EulerSolver class, combining everything above)
+    cli.py                  (argparse setup + main entry point)
 0022_names.txt    (The names for Problem 22)
 0042_words.txt    (The words for Problem 42)
 0054_poker.txt    (The poker hands for Problem 54)
@@ -129,13 +142,17 @@ README.md         (This file)
 LICENSE.txt       (The MIT License)
 ```
 
-Everything currently lives inside one file:
+This project used to live entirely inside one ~3,100-line file. It's now split
+across the `euler_problems/` package, with each piece combined into a single
+`EulerSolver` class via mixins:
 
-- Utility/helper methods
-- Individual Project Euler solutions
-- Runner
+- Utility/helper methods → `helpers.py`, `utils.py`
+- Hidden easter eggs → `easter_eggs.py`
+- Individual Project Euler solutions → `problems_00_25.py`, `problems_26_50.py`, `problems_51_75.py`
+- Runner / CLI → `solver.py`, `cli.py`
 
-As the project grows, it may eventually be split into multiple modules.
+Nothing changes about how you run it - `python EulerProblems.py ...` still works
+exactly like before; it's now just a thin entry point into the package.
 
 ---
 
@@ -251,7 +268,8 @@ Finish all **100** Project Euler problems while continually improving:
 - [ ] Unit tests
 - [ ] More optimized algorithms for later problems
 - [x] Progress statistics
-- [ ] Separate helper functions into their own module
+- [x] Separate helper functions into their own module
+- [x] Split codebase into multiple modules
 
 ---
 
