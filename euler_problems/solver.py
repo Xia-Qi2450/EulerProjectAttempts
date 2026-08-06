@@ -32,12 +32,14 @@ from .exceptions import EulerProblemNotImplemented, EulerProblemExecutionError
 from .problems_00_25 import Problems00To25
 from .problems_26_50 import Problems26To50
 from .problems_51_75 import Problems51To75
+from .problems_76_100 import Problems76To100
 
 
 class EulerSolver(
     Problems00To25,
     Problems26To50,
     Problems51To75,
+    Problems76To100
 ):
     """
     Solve and manage Project Euler problems.
