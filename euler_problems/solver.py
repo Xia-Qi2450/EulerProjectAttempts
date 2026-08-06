@@ -65,7 +65,7 @@ class EulerSolver(
     def __init__(self, easter_eggs=True, forced_easter_eggs=False) -> None:
         import colorama
         colorama.init(autoreset=True)
-        self.VERSION = "0.6"
+        self.VERSION = "0.8"
         self.GOAL = "100"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs

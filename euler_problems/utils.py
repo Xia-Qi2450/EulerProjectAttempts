@@ -335,7 +335,6 @@ class UtilsMixin:
         return sundays
     
     def sum_proper_divisors(self, n):
-
         """Calculates the sum of all proper divisors of n."""
         if n <= 1:
             return 0
@@ -381,7 +380,7 @@ class UtilsMixin:
         return True
 
     def is_pentagonal(self, n:int) -> bool:
-        # Check if n is a pentagonal number using the inverse formula
+        """Check if n is a pentagonal number using the inverse formula"""
         # P_k = k(3k - 1)/2 => 3k^2 - k - 2P = 0
         # k = (1 + sqrt(1 + 24 * n)) / 6
         temp = (1 + (1 + 24 * n) ** 0.5) / 6
@@ -431,7 +430,7 @@ class UtilsMixin:
         return (0, tie_breakers)
 
     def is_lychrel(self, n:int) -> bool:
-        # Checks if a number is a Lychrel number
+        """Checks if a number is a Lychrel number"""
         for _ in range(50):
             n += int(str(n)[::-1])
             if str(n) == str(n)[::-1]:
@@ -483,7 +482,7 @@ class UtilsMixin:
         return period
 
     def solve_pell(self, d):
-        # Returns the fundamental x for x^2 - d*y^2 = 1 using continued fractions
+        """Returns the fundamental x for x^2 - d*y^2 = 1 using continued fractions"""
         m = 0
         d_denom = 1
         a0 = int(math.isqrt(d))
@@ -502,7 +501,4 @@ class UtilsMixin:
             
         return num
 
-    # ==========================================================
-    # Easter Eggs
-    # ==========================================================
 

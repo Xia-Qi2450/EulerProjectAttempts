@@ -407,7 +407,3 @@ You: March, you know this is all text right?
         """
         # TODO: Make a Kasane Teto easter egg here!
         raise NotImplementedError("The Kasane Teto easter egg hasn't been implemented yet, but you can still go listen to her!")
-
-    # ==========================================================
-    # Project Euler Problems
-    # ==========================================================
