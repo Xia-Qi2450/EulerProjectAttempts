@@ -20,12 +20,15 @@ resolve calls like self.header(...) inside a problem method: it's now
 real inheritance, not an assumption baked in only at combination time.
 """
 
+from encodings import utf_8
 import os
 import time
 import itertools
 import shutil
 
 from colorama import Fore, Style
+
+from euler_problems.easter_eggs import EasterEggs
 
 from . import data
 from .exceptions import EulerProblemNotImplemented, EulerProblemExecutionError
@@ -98,6 +101,44 @@ class EulerSolver(
                 for name in dir(self)
                 if name.startswith("problem") and name[7:].isdigit()
             )
+        elif problems == ["anime"]:
+            if not os.path.isfile("animeRan"):
+                print("NO... Just No!")
+                time.sleep(1)
+                print(f"{self.current_file} doesn't even have any relation to anime except easter eggs!")
+                time.sleep(1)
+                print("Don't tell me that you are that depraved...")
+                time.sleep(3)
+                print("Alright fine, how about this. ", end="", flush=True)
+                time.sleep(1)
+                print("You may use this to navigate through easter eggs.")
+                time.sleep(1)
+                print("Here you go...")
+                time.sleep(3)
+                with open("animeRan", "w", encoding="utf-8") as flag:
+                    flag.write("""
+This is the flag for when you wrote "anime" as the problem argument.
+
+You may delete this to replay the sequence.
+""")
+            print(Fore.CYAN + "=" * self.terminal_width)
+            print(f"{Fore.GREEN}Select the Easter Egg you want to run: {Fore.RESET}\n")
+            print(f"{Style.BRIGHT}1.{Style.NORMAL} The Quintessential Quintuplets (Problem 5)")
+            print(f"{Style.BRIGHT}2.{Style.NORMAL} Honkai Star Rail / March 7th (Problem 37)")
+            print(f"{Style.BRIGHT}3.{Style.NORMAL} Vocal Synth / Hatsune Miku (Problem 39)")
+            print(f"{Style.BRIGHT}4.{Style.NORMAL} Vocal Synth / Kasane Teto (Problem 41)")
+            print()
+            easterEgg = input(f"{Fore.CYAN}>>>{Fore.RESET} ")
+            match easterEgg:
+                case "1":
+                    self.nakano5()
+                case "2": 
+                    self.march37()
+                case "3":
+                    self.miku39()
+                case "4":
+                    self.teto41()
+            return
         for number in problems:
             method = getattr(self, f"problem{number}", None)
 

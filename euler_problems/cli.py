@@ -26,7 +26,7 @@ def build_parser(solver: EulerSolver) -> argparse.ArgumentParser:
     parser.add_argument(
         "problems",
         nargs="*",
-        type=int,
+        type=str,
         metavar="N",
         help="Problem numbers to run",
     )
