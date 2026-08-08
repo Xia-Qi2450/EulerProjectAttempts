@@ -3,12 +3,14 @@ Project Euler solutions: problem76 through problem100.
 
 Problems76To100 is combined into EulerSolver in solver.py. It
 genuinely inherits from UtilsMixin and EasterEggs since these problems
-call self.header, self.run_task, 
+call self.header, self.run_task, self.simulate_monopoly, self.sieve_of_eratosthenes_list 
+and so on.
 """
 
 import math
 import itertools
 import collections
+import heapq
 
 from colorama import Fore
 
@@ -18,6 +20,9 @@ from .easter_eggs import EasterEggs
 
 class Problems76To100(UtilsMixin, EasterEggs):
     """Problem solutions 76-100."""
+
+    problem81_matrix: list[list[int]]
+    monopoly_squares: list[str]
 
     def problem76(self):
         "Find the number of ways can one hundred be written as a sum of at least two positive integers."
@@ -161,3 +166,132 @@ class Problems76To100(UtilsMixin, EasterEggs):
             task
         )
         print(f"The sum of the first 100 decimal digits of the first 100 natural number's irrational square roots is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem81(self):
+        "Find the minimal path sum from the top left to the bottom right by only moving right and down in 0081_matrix.txt"
+        self.header(
+            81,
+            "Find the minimal path sum from the top left to the bottom right by only moving right and down in 0081_matrix.txt"
+        )
+        def solve_matrix_path(matrix):
+            rows = len(matrix)
+            cols = len(matrix[0])
+            for j in range(1, cols):
+                matrix[0][j] += matrix[0][j - 1]
+            for i in range(1, rows):
+                matrix[i][0] += matrix[i - 1][0]
+            for i in range(1, rows):
+                for j in range(1, cols):
+                    matrix[i][j] += min(matrix[i - 1][j], matrix[i][j - 1])
+            return matrix[-1][-1]
+
+        result = self.run_task(
+            "Looking through the 80 by 80 matrix...",
+            solve_matrix_path,
+            self.problem81_matrix
+        )
+        print(f"The minimal path sum the top left to the bottom right is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem82(self):
+        "Find the minimal path sum from the left column to the right column in 0081_matrix.txt"
+        self.header(
+            82,
+            "Find the minimal path sum from the left column to the right column in 0081_matrix.txt"
+        )
+        def solve(matrix):
+            n = len(matrix)
+            dp = [row[-1] for row in matrix]
+
+            for col in range(n - 2, -1, -1):
+                next_dp = [matrix[row][col] + dp[row] for row in range(n)]
+                for row in range(1, n):
+                    next_dp[row] = min(next_dp[row], next_dp[row - 1] + matrix[row][col])
+                for row in range(n - 2, -1, -1):
+                    next_dp[row] = min(next_dp[row], next_dp[row + 1] + matrix[row][col])
+                dp = next_dp
+
+            return min(dp)
+        result = self.run_task(
+            "Looking through the 80 by 80 matrix... again...",
+            solve,
+            self.problem81_matrix
+        )
+        print(f"The minimal path sum from the left column to the right column is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem83(self):
+        "Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in 0081_matrix.txt"
+        self.header(
+            83,
+            "Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in 0081_matrix.txt"
+        )
+        def solve(mat):
+            n = len(mat)
+            m = len(mat[0])
+            
+            # Priority queue stores tuples of (cumulative_sum, row, col)
+            pq = [(mat[0][0], 0, 0)]
+            dist = [[float('inf')] * m for _ in range(n)]
+            dist[0][0] = mat[0][0]
+            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+            
+            while pq:
+                current_sum, r, c = heapq.heappop(pq)
+                if r == n - 1 and c == m - 1:
+                    return current_sum
+                if current_sum > dist[r][c]:
+                    continue
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < n and 0 <= nc < m:
+                        new_sum = current_sum + mat[nr][nc]
+                        if new_sum < dist[nr][nc]:
+                            dist[nr][nc] = new_sum
+                            heapq.heappush(pq, (new_sum, nr, nc))
+        result = self.run_task(
+            "Looking through the 80 by 80 matrix... again... and again...",
+            solve,
+            self.problem81_matrix
+        )
+        print(f"The minimal path sum from the top left to the bottom right by moving left, right, up, and down is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem84(self):
+        "Simulate a Monopoly board game using a Monte Carlo approach to find the three most frequently visited squares."
+        self.header(
+            84,
+            "Simulate a Monopoly board game using a Monte Carlo approach to find the three most frequently visited squares."
+        )
+        modal_string, sorted_squares = self.run_task(
+            "Simulating a monopoly game...",
+            self.simulate_monopoly,
+            self.monopoly_squares
+        )
+        print(f"The three most visited squares are: {Fore.GREEN}{sorted_squares}{Fore.RESET}")
+        print(f"With their modal string being: {Fore.GREEN}{modal_string}{Fore.RESET}")
+
+    def problem85(self):
+        "Find an m x n grid where the number of sub-rectangles is closest to 2,000,000"
+        self.header(
+            85,
+            "Find an m x n grid where the number of sub-rectangles is closest to 2,000,000"
+        )
+        def solve():
+            target = 2000000
+            closest_diff = target
+            best_area = 0
+            # Max m or n won't exceed roughly sqrt(2 * target) + 1 ≈ 2000
+            for m in range(1, 2000):
+                for n in range(m, 2000):  # start from m to avoid duplicate pairs
+                    num_rects = (m * (m + 1) * n * (n + 1)) // 4
+                    diff = abs(num_rects - target)
+                    if diff < closest_diff:
+                        closest_diff = diff
+                        best_area = m * n
+                    # If the count exceeds the target significantly, break inner loop
+                    if num_rects > target + target:
+                        break
+            return best_area
+        result = self.run_task(
+            "Counting rectangles...",
+            solve
+        )
+        print(f"The dimensions of a grid were the number of sub-rectangles is closest ti 2 million is: {Fore.GREEN}{result}{Fore.RESET}")

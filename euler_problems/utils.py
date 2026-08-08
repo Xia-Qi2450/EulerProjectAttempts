@@ -7,6 +7,7 @@ UtilsMixin is combined into EulerSolver in solver.py.
 
 import math
 import collections
+import random
 
 from colorama import Fore
 
@@ -501,4 +502,116 @@ class UtilsMixin:
             
         return num
 
+    def simulate_monopoly(self, squares, rolls=1000000, sides=4):
+        def handle_chance(card, pos):
+            # 0: Advance to GO
+            if card == 0:
+                return 0
+            # 1: Go to JAIL
+            elif card == 1:
+                return 10
+            # 2: Advance to C1
+            elif card == 2:
+                return 11
+            # 3: Advance to E3
+            elif card == 3:
+                return 24
+            # 4: Advance to H2
+            elif card == 4:
+                return 39
+            # 5: Advance to R1
+            elif card == 5:
+                return 5
 
+            # 6 & 7: Go to next Railroad (R1=5, R2=15, R3=25, R4=35)
+            elif card in (6, 7):
+                if pos == 7:
+                    return 15  # CH1 -> R2
+                if pos == 22:
+                    return 25  # CH2 -> R3
+                if pos == 36:
+                    return 5  # CH3 -> R1 (wraps around)
+
+            # 8: Go to next Utility (U1=12, U2=28)
+            elif card == 8:
+                if pos in (7, 36):
+                    return 12  # CH1 or CH3 -> U1
+                if pos == 22:
+                    return 28  # CH2 -> U2
+
+            # 9: Go back 3 squares
+            elif card == 9:
+                new_pos = (pos - 3) % 40
+                # Special edge case: If CH3 (36) sends you back 3, you land on CC3 (33).
+                # You must immediately pull a Community Chest card.
+                if new_pos == 33:
+                # This is handled inside the main loop.
+                    pass
+                return new_pos
+            # 10-15: Do nothing (player stays on the Chance square)
+            return pos
+
+        pos = 0
+        doubles_count = 0
+        counts = {sq: 0 for sq in squares}
+
+        cc_deck = list(range(16))
+        ch_deck = list(range(16))
+        random.shuffle(cc_deck)
+        random.shuffle(ch_deck)
+
+        for _ in range(rolls):
+            d1 = random.randint(1, sides)
+            d2 = random.randint(1, sides)
+
+            if d1 == d2:
+                doubles_count += 1
+            else:
+                doubles_count = 0
+
+            if doubles_count == 3:
+                pos = 10  # JAIL
+                doubles_count = 0
+            else:
+                pos = (pos + d1 + d2) % 40
+
+            # Process square rules
+            current_sq = squares[pos]
+            if "CH" in current_sq:
+                card = ch_deck.pop(0)
+                ch_deck.append(card)
+                pos = handle_chance(card, pos)
+                # CRITICAL: If Chance sends you back 3 from CH3, you are now on CC3!
+                # You must immediately resolve a Community Chest card.
+                if pos == 33: 
+                    card = cc_deck.pop(0)
+                    cc_deck.append(card)
+                    if card == 0: pos = 0
+                    elif card == 1: pos = 10
+
+            elif "CC" in current_sq:
+                card = cc_deck.pop(0)
+                cc_deck.append(card)
+                if card == 0: pos = 0
+                elif card == 1: pos = 10
+
+            if squares[pos] == "G2J":
+                pos = 10
+                
+            # Check again in case Chance moved the player to Go to Jail or Community Chest
+            current_sq = squares[pos]
+            if current_sq == "G2J":
+                pos = 10
+            elif "CC" in current_sq:
+                card = cc_deck.pop(0)
+                cc_deck.append(card)
+                if card == 0:
+                    pos = 0
+                elif card == 1:
+                    pos = 10
+
+            counts[squares[pos]] += 1
+
+        sorted_sqs = sorted(counts.keys(), key=lambda x: counts[x], reverse=True)
+        res = [str(squares.index(sq)) for sq in sorted_sqs[:3]]
+        return "".join([num.zfill(2) for num in res]), sorted_sqs[:3]

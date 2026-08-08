@@ -4,10 +4,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **75 / 100** ✅
+**Current Progress:** **85 / 100** ✅
 
 ```text
-██████████████████████████████████████░░░░░░░░░░░░  75%
+███████████████████████████████████████████░░░░░░░  85%
 ```
 
 > **Note**
@@ -112,6 +112,16 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 73 | Counting Fractions in a Range | ✅ |
 | 74 | Digit Factorial Chains | ✅ |
 | 75 | Singular Integer Right Triangles | ✅ |
+| 76 | Counting Summations | ✅ |
+| 77 | Prime Summations | ✅ |
+| 78 | Coin Partitions | ✅ |
+| 79 | Passcode Derivation | ✅ |
+| 80 | Square Root Digital Expansion | ✅ |
+| 81 | Path Sum: Two Ways | ✅ |
+| 82 | Path Sum: Three Ways | ✅ |
+| 83 | Path Sum: Four Ways | ✅ |
+| 84 | Monopoly Odds | ✅ |
+| 85 | Counting Rectangles | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation
@@ -122,24 +132,27 @@ The goal of this project isn't just to get the correct answers—it's also an op
 ```text
 EulerProblems.py         (Thin entry point - run this, same CLI as always)
 euler_problems/          (Package containing all solver logic)
-    __init__.py           (Dependency check + package exports)
-    exceptions.py          (Custom exception hierarchy)
-    data.py                (Large static data blobs - problems 8, 11, 13, 18)
-    helpers.py             (CLI/output helpers - spinners, progress bar, etc.)
-    utils.py               (Reusable math helper functions)
+    __init__.py             (Dependency check + package exports)
+    exceptions.py           (Custom exception hierarchy)
+    data.py                 (Large static data blobs - problems 8, 11, 13, 18)
+    helpers.py              (CLI/output helpers - spinners, progress bar, etc.)
+    utils.py                (Reusable math helper functions)
     easter_eggs.py          (Hidden easter egg behavior)
     problems_00_25.py       (Solutions: problem0 - problem25)
     problems_26_50.py       (Solutions: problem26 - problem50)
     problems_51_75.py       (Solutions: problem51 - problem75)
+    problems_76_100.py      (Solutions: problem76 - problem100)
     solver.py               (EulerSolver class, combining everything above)
     cli.py                  (argparse setup + main entry point)
-0022_names.txt    (The names for Problem 22)
-0042_words.txt    (The words for Problem 42)
-0054_poker.txt    (The poker hands for Problem 54)
-0059_cipher.txt   (The encrypted message for Problem 59)
-0067_triangle.txt (The triangle for Problem 67)
-README.md         (This file)
-LICENSE.txt       (The MIT License)
+0022_names.txt           (The names for Problem 22)
+0042_words.txt           (The words for Problem 42)
+0054_poker.txt           (The poker hands for Problem 54)
+0059_cipher.txt          (The encrypted message for Problem 59)
+0067_triangle.txt        (The triangle for Problem 67)
+0079_keylog.txt          (The keyslogs for Problem 79)
+0081_matrix.txt          (The matrix for Problems 81-83)
+README.md                (This file)
+LICENSE.txt              (The MIT License)
 ```
 
 This project used to live entirely inside one ~3,100-line file. It's now split
@@ -148,7 +161,7 @@ across the `euler_problems/` package, with each piece combined into a single
 
 - Utility/helper methods → `helpers.py`, `utils.py`
 - Hidden easter eggs → `easter_eggs.py`
-- Individual Project Euler solutions → `problems_00_25.py`, `problems_26_50.py`, `problems_51_75.py`
+- Individual Project Euler solutions → `problems_00_25.py`, `problems_26_50.py`, `problems_51_75.py`, `problems_76_100.py`
 - Runner / CLI → `solver.py`, `cli.py`
 
 Nothing changes about how you run it - `python EulerProblems.py ...` still works

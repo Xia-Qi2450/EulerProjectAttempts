@@ -16,6 +16,9 @@ miku.txt
 nakano.txt
 march.txt
 
+# Runtime Flags
+/animeRan
+
 # Dev stuff
 # Local testing script
 test.py
