@@ -406,4 +406,115 @@ You: March, you know this is all text right?
         Teto word of the day! Mathematics!
         """
         # TODO: Make a Kasane Teto easter egg here!
-        raise NotImplementedError("The Kasane Teto easter egg hasn't been implemented yet, but you can still go listen to her!")
+
+        print(Fore.CYAN + "=" * self.terminal_width)
+        print(f"{Fore.YELLOW}/// WARNING ///{Fore.RESET}")
+        print()
+        self._typewriter("An unexpected route has been discovered.")
+        time.sleep(0.2)
+        self._load(
+            "Loading hidden problem",
+            "ERROR: Necessary libraries are not installed",
+            5,
+            True
+        )
+        self._wait()
+
+        self._load(
+            "Preparing to download necessary libraries",
+            "Done!",
+            3,
+            False,
+            3
+        )
+
+        time.sleep(1)
+        total = random.randint(int(5e8), int(2e9))
+        i = 0
+        while i < total:
+            self._progress_bar(i, total, title="Downloading bagettes...")
+            i += random.randint(int(5e6), int(15e6))
+            time.sleep(0.1)
+        print(
+            f"\rDownloaded bagettes, fetched {(total / 1e6):.2f} MB, "
+            f"Checksum OK!                                             "
+        )
+
+        total = random.randint(int(1e11), int(9e13))
+        i = 0
+        while i < total:
+            self._progress_bar(i, total, title="Downloading Teto...")
+            i += random.randint(int(9e6), int(25e6))
+            time.sleep(0.1)
+            if i > int(5e9):
+                time.sleep(5)
+                break
+        print()
+        print(
+            f"{Fore.RED}{Style.BRIGHT}FATAL ERROR{Style.NORMAL}: "
+            f"Download cannot write to output file because "
+            f"No space left on device"
+        )
+
+        time.sleep(2)
+        self._typewriter("Attempting to diagnose storage issue...")
+        time.sleep(1)
+        self._load(
+            "Checking available storage",
+            "Complete!",
+            2,
+            False
+        )
+        time.sleep(1)
+        print(f"{Fore.RED}Available storage: {Fore.YELLOW}0 bytes{Fore.RESET}")
+        print(f"{Fore.RED}Required storage:  {Fore.YELLOW}{total / 1e12:.2f} TB{Fore.RESET}")
+        time.sleep(2)
+        self._typewriter("...")
+        time.sleep(1)
+        self._typewriter("Maybe downloading Teto was a bad idea.")
+        self._wait()
+
+        with open("teto.txt", "w", encoding="utf-8") as f:
+            f.write(f"""
+TETO INSTALLATION REPORT
+========================
+
+Status: FATAL ERROR
+
+Package: kasane_teto
+Version: 41.0
+
+Downloading...
+    bagettes.................... OK
+    songs....................... OK
+    teto........................ OK
+
+Extracting...
+    teto.zip.................... OK
+
+Writing files...
+    teto.py..................... OK
+    teto_voicebank.............. OK
+    teto_baguette............... OK
+    teto̴̴̪̰̗̬̪̰̗̬̎̈́̅̎̈́̅̕̕͜͜
+
+FATAL ERROR:
+    No space left on device
+
+Attempted allocation: {total} bytes
+Available space:      0 bytes
+
+Teto installation aborted.
+
+Teto word of the day: Mathematics!
+
+""")
+        self._load(
+            "Recovering",
+            "Recovered! A txt file has been created.",
+            2
+        )
+        self._wait("[Continue to next problem]")
+        print(Fore.CYAN + "=" * self.terminal_width)
+
+        

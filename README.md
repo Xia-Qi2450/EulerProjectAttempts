@@ -77,7 +77,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 38 | Pandigital Multiples | ✅ |
 | *39* | ✦ Integer Right Triangles | ✅ |
 | 40 | Champernowne's Constant | ✅ |
-| 41 | Pandigital Prime | ✅ |
+| 41 | ✦ Pandigital Prime | ✅ |
 | 42 | Coded Triangle Numbers | ✅ |
 | 43 | Sub-string Divisibility | ✅ |
 | 44 | Pentagon Numbers | ✅ |

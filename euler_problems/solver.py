@@ -68,7 +68,7 @@ class EulerSolver(
     def __init__(self, easter_eggs=True, forced_easter_eggs=False) -> None:
         import colorama
         colorama.init(autoreset=True)
-        self.VERSION = "0.8.5b"
+        self.VERSION = "0.9"
         self.GOAL = "100"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
@@ -129,7 +129,7 @@ You may delete this to replay the sequence.
             print(f"{Style.BRIGHT}1.{Style.NORMAL} The Quintessential Quintuplets (Problem 5)")
             print(f"{Style.BRIGHT}2.{Style.NORMAL} Honkai Star Rail / March 7th (Problem 37)")
             print(f"{Style.BRIGHT}3.{Style.NORMAL} Vocal Synth / Hatsune Miku (Problem 39)")
-            print(f"{Style.BRIGHT}4.{Style.NORMAL} Vocal Synth / Kasane Teto (Problem 41) {Style.DIM}(WIP){Style.NORMAL}")
+            print(f"{Style.BRIGHT}4.{Style.NORMAL} Vocal Synth / Kasane Teto (Problem 41)")
             print()
             easterEgg = input(f"{Fore.CYAN}>>>{Fore.RESET} ")
             match easterEgg:
