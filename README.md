@@ -122,6 +122,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 83 | Path Sum: Four Ways | ✅ |
 | 84 | Monopoly Odds | ✅ |
 | 85 | Counting Rectangles | ✅ |
+| 86 | Cuboid Route | ✅ |
+| 87 | Prime Power Triples | ✅ |
+| 88 | Product-sum Numbers | ✅ |
+| 89 | Roman Numerals | ✅ |
+| 90 | Cube Digit Pairs | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation
@@ -134,7 +139,7 @@ EulerProblems.py         (Thin entry point - run this, same CLI as always)
 euler_problems/          (Package containing all solver logic)
     __init__.py             (Dependency check + package exports)
     exceptions.py           (Custom exception hierarchy)
-    data.py                 (Large static data blobs - problems 8, 11, 13, 18)
+    data.py                 (Large static data blobs - problems 8, 11, 13, 18, etc.)
     helpers.py              (CLI/output helpers - spinners, progress bar, etc.)
     utils.py                (Reusable math helper functions)
     easter_eggs.py          (Hidden easter egg behavior)

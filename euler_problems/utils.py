@@ -17,6 +17,7 @@ class UtilsMixin:
 
     # Set in EulerSolver.__init__; declared here for the type checker only.
     CARD_VALUES: dict
+    ROMAN_MAP: dict[str, int]
 
     def find_all_squares_until(self, limit:int):
         """Return every perfect square up to the given limit."""
@@ -615,3 +616,28 @@ class UtilsMixin:
         sorted_sqs = sorted(counts.keys(), key=lambda x: counts[x], reverse=True)
         res = [str(squares.index(sq)) for sq in sorted_sqs[:3]]
         return "".join([num.zfill(2) for num in res]), sorted_sqs[:3]
+
+    def roman_to_int(self, s: str) -> int:
+        """Converts a Roman numeral string to an integer."""
+        total = 0
+        i = 0
+        while i < len(s):
+            # Check two character subtractive pairs first
+            if i + 1 < len(s) and s[i:i+2] in self.ROMAN_MAP:
+                total += self.ROMAN_MAP[s[i:i+2]]
+                i += 2
+            else:
+                total += self.ROMAN_MAP[s[i]]
+                i += 1
+        return total
+
+    def int_to_roman(self, num: int) -> str:
+        """Converts an integer to its minimal Roman numeral string."""
+        result = []
+        for token, val in self.ROMAN_MAP.items():
+            count = num // val
+            result.append(token * count)
+            num %= val
+        return "".join(result)
+
+

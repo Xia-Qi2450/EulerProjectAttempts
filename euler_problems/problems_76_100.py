@@ -295,3 +295,173 @@ class Problems76To100(UtilsMixin, EasterEggs):
             solve
         )
         print(f"The dimensions of a grid were the number of sub-rectangles is closest ti 2 million is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem86(self):
+        "Find the least value of M such that the number of solutions first exceeds one million."
+        self.header(
+            86,
+            "Find the least value of M such that the number of solutions first exceeds one million."
+        )
+        def solve():
+            count = 0
+            M = 0
+            target_limit = 1000000
+            while count <= target_limit:
+                M += 1
+                for S in range(2, 2 * M + 1):
+                    path_squared = M * M + S * S
+                    root = math.isqrt(path_squared)
+                    if root * root == path_squared:
+                        if S <= M:
+                            count += S // 2
+                        else:
+                            count += (S // 2) - (S - M) + 1
+                            
+            return M
+        result = self.run_task(
+            "Counting solutions...",
+            solve
+        )
+        print(f"The least value of M such that the number of solutions first exceeds one million is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem87(self):
+        "Find out how many numbers below the limit can be expressed as the sum of a prime square, prime cube, and prime fourth power."
+        self.header(
+            87,
+            "Find out how many numbers below the limit can be expressed as the sum of a prime square, prime cube, and prime fourth power."
+        )
+        def solve(limit=50_000_000):
+            # The largest prime needed is just under the square root of the limit
+            max_prime_limit = int(math.isqrt(limit)) + 1
+            is_prime_list = self.sieve_of_eratosthenes_list(max_prime_limit)
+            primes = [p for p, is_prime in enumerate(is_prime_list) if is_prime]
+            valid_numbers = set()
+            
+            for a in primes:
+                p4 = a**4
+                if p4 >= limit:
+                    break
+                for b in primes:
+                    p3 = b**3
+                    if p4 + p3 >= limit:
+                        break
+                    for c in primes:
+                        p2 = c**2
+                        total = p4 + p3 + p2
+                        if total >= limit:
+                            break
+                        valid_numbers.add(total)
+                        
+            return len(valid_numbers)
+        result = self.run_task(
+            "Sieve of Eratosthenes coming in clutch...",
+            solve
+        )
+        print(f"The number of numbers below the limit is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem88(self):
+        "Find the sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000"
+        self.header(
+            88,
+            "Find the sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000"
+        )
+        def solve(max_k=12000):
+            limit = 2 * max_k
+            min_product_sum = [float('inf')] * (max_k + 1)
+            def search(product, sum_val, count, start):
+                k = count + (product - sum_val)
+                if k <= max_k:
+                    if product < min_product_sum[k]:
+                        min_product_sum[k] = product
+                
+                i = start
+                while True:
+                    next_prod = product * i
+                    if next_prod > limit:
+                        break
+                    search(next_prod, sum_val + i, count + 1, i)
+                    i += 1
+
+            search(1, 0, 0, 2)
+            
+            unique_numbers = set(min_product_sum[2:])
+            return sum(unique_numbers)
+        result = self.run_task(
+            "Why is there so many sums to solve...",
+            solve
+        )
+        print(f"The sum of all the minimal product-sum numbers is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem89(self):
+        "Find the number of characters saved by writing each of these in their minimal form in Roman numerals."
+        self.header(
+            89,
+            "Find the number of characters saved by writing each of these in their minimal form in Roman numerals."
+        )
+        def solve():
+            chars_saved = 0
+    
+            with open("0089_roman.txt", "r") as file:
+                for line in file:
+                    original = line.strip()
+                    integer_value = self.roman_to_int(original)
+                    minimal_roman = self.int_to_roman(integer_value)
+                    chars_saved += len(original) - len(minimal_roman)
+            return chars_saved
+        result = self.run_task(
+            "Roman numerals vs Arabic numerals...",
+            solve
+        )
+        print(f"The number of characters saved is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem90(self):
+        "Find the number of distinct arrangements of the two cubes allow for all of the square numbers to be displayed"
+        self.header(
+            90,
+            "Find the number of distinct arrangements of the two cubes allow for all of the square numbers to be displayed"
+        )
+        def can_form_squares(die1, die2):
+            # Target 2-digit squares under 100
+            squares = [
+                ('0', '1'), ('0', '4'), ('0', '9'), 
+                ('1', '6'), ('2', '5'), ('3', '6'), 
+                ('4', '9'), ('6', '4'), ('8', '1')
+            ]
+            d1 = set(str(x) for x in die1)
+            if '6' in d1 or '9' in d1:
+                d1.add('6')
+                d1.add('9')
+            d2 = set(str(x) for x in die2)
+            if '6' in d2 or '9' in d2:
+                d2.add('6')
+                d2.add('9')
+            # Check if every single square number can be formed by the two dice
+            for digit1, digit2 in squares:
+                if not (
+                    (digit1 in d1 and digit2 in d2) or 
+                    (digit1 in d2 and digit2 in d1)
+                ):
+                    return False
+            return True
+
+        def task():
+            # Generate all unique combinations of 6 digits from 0-9
+            all_dice = list(itertools.combinations(range(10), 6))
+            valid_pairs = 0
+            
+            # Iterate over all unique unordered pairs of dice
+            for i in range(len(all_dice)):
+                for j in range(i, len(all_dice)):
+                    if can_form_squares(all_dice[i], all_dice[j]):
+                        valid_pairs += 1
+                        
+            return valid_pairs
+
+        result = self.run_task(
+            "Rolling the two cubes a.k.a. dice...",
+            task
+        )
+        print(f"The number of distict arrangements if the dice is: {Fore.GREEN}{result}{Fore.RESET}")
+
+
+    

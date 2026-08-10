@@ -83,6 +83,7 @@ class EulerSolver(
         self.CARD_VALUES = dict(data.CARD_VALUES)
         self.problem81_matrix = data.PROBLEM81_MATRIX
         self.monopoly_squares = data.MONOPOLY_SQUARES
+        self.ROMAN_MAP = data.ROMAN_MAP
 
     def __str__(self):
         return (
