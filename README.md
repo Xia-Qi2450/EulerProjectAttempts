@@ -176,7 +176,7 @@ exactly like before; it's now just a thin entry point into the package.
 
 ## Requirements
 
-Python **3.14+** is recommended.
+Python 3.9+ is supported, with Python 3.14+ recommended for the best experience.
 
 Install dependencies:
 
