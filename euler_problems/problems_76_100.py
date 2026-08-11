@@ -9,6 +9,7 @@ and so on.
 
 import math
 import itertools
+import fractions
 import collections
 import heapq
 
@@ -462,6 +463,242 @@ class Problems76To100(UtilsMixin, EasterEggs):
             task
         )
         print(f"The number of distict arrangements if the dice is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem91(self):
+        "Find the number of right triangles that can be formed in a 50x50 grid with one vertex at the origin."
+        self.header(
+            91,
+            "Find the number of right triangles that can be formed in a 50x50 grid with one vertex at the origin."
+        )
+        def task(limit=50):
+            count = 0
+            # Loop over all possible positions for point P (x1, y1)
+            for x1 in range(limit + 1):
+                for y1 in range(limit + 1):
+                    if x1 == 0 and y1 == 0:
+                        continue
+                        
+                    # Loop over all possible positions for point Q (x2, y2)
+                    for x2 in range(limit + 1):
+                        for y2 in range(limit + 1):
+                            if x2 == 0 and y2 == 0:
+                                continue
+                            
+                            # Prevent duplicate combinations and overlapping lines
+                            # This ensures angle(P) > angle(Q)
+                            if y2 * x1 < y1 * x2:
+                                # Calculate squared side lengths
+                                op_sq = x1**2 + y1**2
+                                oq_sq = x2**2 + y2**2
+                                pq_sq = (x2 - x1)**2 + (y2 - y1)**2
+                                
+                                # Check if it satisfies the Pythagorean theorem
+                                if (op_sq + oq_sq == pq_sq) or (op_sq + pq_sq == oq_sq) or (oq_sq + pq_sq == op_sq):
+                                    count += 1
+            return count
+        result = self.run_task(
+            "Counting right triangles...",
+            task
+        )
+        print(f"The number of right triangles that can be formed is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem92(self):
+        "Find out how many starting numbers below 10,000,000 have a square digit sum chain that ends in 89."
+        self.header(
+            92,
+            "Find out how many starting numbers below 10,000,000 have a square digit sum chain that ends in 89."
+        )
+        def task():
+            # Precompute terminal endpoints for numbers up to 567 
+            terminal = {1: 1, 89: 89}
+            def get_terminal(n):
+                if n in terminal:
+                    return terminal[n]
+                path = []
+                while n not in terminal:
+                    path.append(n)
+                    n = sum(int(d)**2 for d in str(n))
+                t = terminal[n]
+                for p in path:
+                    terminal[p] = t
+                return t
+            count_89 = 0
+            
+            # Generate all unique combinations of 7 digits (0-9) with replacement
+            for combo in itertools.combinations_with_replacement(range(10), 7):
+                if combo == (0, 0, 0, 0, 0, 0, 0):
+                    continue  # Skip zero as the problem asks for starting numbers
+                sq_sum = sum(d**2 for d in combo)
+                if get_terminal(sq_sum) == 89:
+                    counts = collections.Counter(combo)
+                    perms = math.factorial(7)
+                    for c in counts.values():
+                        perms //= math.factorial(c)
+                    count_89 += perms
+            return count_89
+        result = self.run_task(
+            "Counting numbers ending in 89...",
+            task
+        )
+        print(f"The number of starting numbers below 10,000,000 that have a square digit sum chain that ends in 89 is: {Fore.GREEN}{result}{Fore.RESET} ")
+
+    def problem93(self):
+        "Find the set of four distinct digits that can produce the longest consecutive sequence of positive integers using standard arithmetic operators."
+        self.header(
+            93,
+            "Find the set of four distinct digits that can produce the longest consecutive sequence of positive integers using standard arithmetic operators."
+        )
+        def task():
+            def get_expressions(a, b, c, d):
+                # Generate all unique numeric values obtainable from 4 numbers
+                def compute(nums):
+                    if len(nums) == 1:
+                        return {nums[0]}
+                    results = set()
+                    for i in range(1, len(nums)):
+                        left_vals = compute(nums[:i])
+                        right_vals = compute(nums[i:])
+                        for l in left_vals:
+                            for r in right_vals:
+                                results.add(l + r)
+                                results.add(l - r)
+                                results.add(l * r)
+                                if r != 0:
+                                    results.add(l / r)
+                    return results
+                all_values = set()
+                for p in set(itertools.permutations((a, b, c, d))):
+                    # Convert to Fraction to handle division cleanly
+                    frac_nums = [fractions.Fraction(x) for x in p]
+                    all_values.update(compute(frac_nums))
+                    
+                # Extract positive integers
+                int_values = set()
+                for val in all_values:
+                    if val.denominator == 1 and val.numerator > 0:
+                        int_values.add(val.numerator)
+                        
+                return int_values
+            def longest_streak(nums):
+                n = 1
+                while n in nums:
+                    n += 1
+                return n - 1
+            max_streak = 0
+            best_digits = ""
+            combined = ""
+            for a in range(1, 10):
+                for b in range(a + 1, 10):
+                    for c in range(b + 1, 10):
+                        for d in range(c + 1, 10):
+                            vals = get_expressions(a, b, c, d)
+                            streak = longest_streak(vals)
+                            if streak > max_streak:
+                                max_streak = streak
+                                best_digits = f"{a}, {b}, {c}, {d}"
+                                combined = f"{a}{b}{c}{d}"
+                                
+            return best_digits, combined
+
+        result, combined = self.run_task(
+            "Doing some arithmetic...",
+            task
+        )
+        print(f"The set of four distinct digits that can produce the longest consecutive sequence of positive integers is: {Fore.GREEN}{result}{Fore.RESET}")
+        print(f"Which combined together is: {Fore.GREEN}{combined}{Fore.RESET}")
+
+    def problem94(self):
+        "Find the sum of perimeters for almost equilateral triangles with integer sides and area up to a perimeter limit."
+        self.header(
+            94,
+            "Find the sum of perimeters for almost equilateral triangles with integer sides and area up to a perimeter limit."
+        )
+        def task(limit=1_000_000_000):
+            # Initial solution for x^2 - 3y^2 = 4
+            x, y = 4, 2
+            total_perimeter_sum = 0
+            while True:
+                # Generate the next Pell solution using transformation rules
+                next_x = 2 * x + 3 * y
+                next_y = x + 2 * y
+                x, y = next_x, next_y
+                if (x - 1) % 3 == 0:
+                    a = (x - 1) // 3
+                    perimeter = 3 * a + 1
+                    if perimeter > limit:
+                        break
+                    if a > 1: # Triangle must have positive area and physical meaning
+                        total_perimeter_sum += perimeter
+                if (x + 1) % 3 == 0:
+                    a = (x + 1) // 3
+                    perimeter = 3 * a - 1
+                    if perimeter > limit:
+                        break
+                    if a > 1:
+                        total_perimeter_sum += perimeter
+            return total_perimeter_sum
+        result = self.run_task(
+            "Pell's matrix transformation...",
+            task
+        )
+        print(f"The sum of perimeters for almost equilateral triangles is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem95(self):
+        "Find the smallest member of the longest amicable chain with no element exceeding one million."
+        self.header(
+            95,
+            "Find the smallest member of the longest amicable chain with no element exceeding one million."
+        )
+        def task(limit=1_000_000):
+            # Generate primes using sieve method
+            is_prime = self.sieve_of_eratosthenes_list(limit + 1)
+            primes = [i for i, prime in enumerate(is_prime) if prime]
+
+            # Compute divisor sums linearly using prime factorization
+            div_sum = [1] * (limit + 1)
+            for p in primes:
+                p_pow = p
+                while p_pow <= limit:
+                    term = (p_pow * p - 1) // (p - 1)
+                    for j in range(p_pow, limit + 1, p_pow):
+                        if (j // p_pow) % p != 0:
+                            div_sum[j] *= term
+                    p_pow *= p
+            for i in range(2, limit + 1):
+                div_sum[i] -= i
+
+            # Find longest amicable chain (same loop logic as before)
+            max_len = 0
+            best_min_element = 0
+            visited = [0] * (limit + 1)
+            for i in range(2, limit + 1):
+                if visited[i] != 0:
+                    continue
+                curr = i
+                chain = []
+                chain_set = set() 
+                while curr <= limit and visited[curr] == 0:
+                    visited[curr] = 2  
+                    chain.append(curr)
+                    chain_set.add(curr)
+                    curr = div_sum[curr]              
+                if curr <= limit and curr in chain_set:
+                    loop_start_idx = chain.index(curr)
+                    loop_elements = chain[loop_start_idx:]
+                    loop_len = len(loop_elements)
+                    
+                    if loop_len > max_len:
+                        max_len = loop_len
+                        best_min_element = min(loop_elements)        
+                for element in chain:
+                    visited[element] = 1
+            return best_min_element
+
+        result = self.run_task(
+            "Counting amicable chains...",
+            task
+        )
+        print(f"The smallest member of the longest amicable chain is: {Fore.GREEN}{result}{Fore.RESET}")
 
 
     

@@ -10,10 +10,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **90 / 100** ✅
+**Current Progress:** **95 / 100** ✅
 
 ```text
-█████████████████████████████████████████████░░░░░  90%
+████████████████████████████████████████████████░░  95%
 ```
 
 > **Note**
@@ -83,7 +83,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 38 | Pandigital Multiples | ✅ |
 | *39* | ✦ Integer Right Triangles | ✅ |
 | 40 | Champernowne's Constant | ✅ |
-| 41 | ✦ Pandigital Prime | ✅ |
+| *41* | ✦ Pandigital Prime | ✅ |
 | 42 | Coded Triangle Numbers | ✅ |
 | 43 | Sub-string Divisibility | ✅ |
 | 44 | Pentagon Numbers | ✅ |
@@ -133,6 +133,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 88 | Product-sum Numbers | ✅ |
 | 89 | Roman Numerals | ✅ |
 | 90 | Cube Digit Pairs | ✅ |
+| 91 | Right Triangles with Integer Coordinates | ✅ |
+| 92 | Square Digit Chains | ✅ |
+| 93 | Arithmetic Expressions | ✅ |
+| 94 | Almost Equilateral Triangles | ✅ |
+| 95 | Amicable Chains | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation
@@ -142,6 +147,8 @@ The goal of this project isn't just to get the correct answers—it's also an op
 
 ```text
 EulerProblems.py         (Thin entry point - run this, same CLI as always)
+ci_smoke.py              (The CI test script to make sure everyting works)
+requirements.txt         (The requirements)
 euler_problems/          (Package containing all solver logic)
     __init__.py             (Dependency check + package exports)
     exceptions.py           (Custom exception hierarchy)
@@ -162,6 +169,7 @@ euler_problems/          (Package containing all solver logic)
 0067_triangle.txt        (The triangle for Problem 67)
 0079_keylog.txt          (The keyslogs for Problem 79)
 0081_matrix.txt          (The matrix for Problems 81-83)
+0089_roman.txt           (The Roman numerals for Problem 89)
 README.md                (This file)
 LICENSE.txt              (The MIT License)
 ```
