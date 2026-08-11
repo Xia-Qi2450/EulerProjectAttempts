@@ -7,6 +7,7 @@ triggering argument parsing as a side effect of import.
 """
 
 import argparse
+import sys
 
 from colorama import Fore
 
@@ -20,9 +21,10 @@ def build_parser(solver: EulerSolver) -> argparse.ArgumentParser:
             f"Euler Project Attempts {Fore.CYAN}v{solver.VERSION}{Fore.RESET} - "
             f"A Script with the first {solver.GOAL} Project Euler questions solved using Python."
         ),
-        epilog=f"Currently having {len(solver.list_problems(False)) - 1}/{solver.GOAL} problems sloved!",
-        suggest_on_error=True,
+        epilog=f"Currently having {len(solver.list_problems(False)) - 1}/{solver.GOAL} problems solved!",
     )
+    if sys.version_info >= (3, 14):
+        parser.suggest_on_error = True
     parser.add_argument(
         "problems",
         nargs="*",
