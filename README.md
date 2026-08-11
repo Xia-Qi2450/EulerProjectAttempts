@@ -1,6 +1,10 @@
 # Project Euler Solutions in Python
 
-[![Release](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml)[![Python Backwards Compatibility](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml)
+[![GitHub release](https://img.shields.io/github/v/release/Xia-Qi2450/EulerProjectAttempts)](https://github.com/Xia-Qi2450/EulerProjectAttempts/releases)
+[![License](https://img.shields.io/github/license/Xia-Qi2450/EulerProjectAttempts)](LICENSE.txt)
+[![Python](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/)
+[![Release](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml)
+[![Python Backwards Compatibility](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml)
 
 A collection of my solutions to the first **100 Project Euler** problems, written in Python.
 
