@@ -66,7 +66,7 @@ class UtilsMixin:
         """Checks if a number reads the same backward as forward."""
         return str(number) == str(number)[::-1]
     
-    def is_prime(self, n) -> bool:
+    def is_prime(self, n:int) -> bool:
         """Checks if a number is prime."""
         if n < 2:
             return False
@@ -75,11 +75,11 @@ class UtilsMixin:
                 return False
         return True
 
-    def is_square(self, n):
+    def is_square(self, n:int) -> bool:
         s = int(math.isqrt(n))
         return s * s == n
 
-    def get_largest_palindrome_product(self, digits: int) -> tuple:
+    def get_largest_palindrome_product(self, digits: int) -> tuple[int, tuple[int, int]]:
         """
         Finds the largest palindrome made from the product of two N-digit numbers.
         Returns a tuple containing: (largest_palindrome, factor_1, factor_2)
@@ -103,7 +103,7 @@ class UtilsMixin:
 
         return max_palindrome, best_factors
     
-    def sum_square_difference(self, n=100):
+    def sum_square_difference(self, n:int=100):
         """
         Returns the difference between the square of the the sum and the sum of the square
         """
@@ -157,7 +157,7 @@ class UtilsMixin:
                 max_product = current_product
         return max_product
     
-    def find_pythagorean_triplets(self, limit):
+    def find_pythagorean_triplets(self, limit:int) -> list[tuple[int, int, int]]:
         """
         Find all Pythagorean triplets where all numbers are less than or equal to the limit
         """
@@ -189,7 +189,7 @@ class UtilsMixin:
                         sieve[multiple] = False
         return sum(primes)
     
-    def grid_adjacent_digit_multiplier(self, grid):
+    def grid_adjacent_digit_multiplier(self, grid:list[list[int]]):
         """
         Returns the max product of the 4 adjacent numbers in every direction in a grid
         """
@@ -213,7 +213,7 @@ class UtilsMixin:
                     max_product = max(max_product, grid[r][c] * grid[r+1][c-1] * grid[r+2][c-2] * grid[r+3][c-3])
         return max_product
     
-    def count_divisors(self, n):
+    def count_divisors(self, n:int):
         """Finds the number of divisors for a given integer."""
         divisors = 0
         end = math.isqrt(n)
@@ -252,7 +252,7 @@ class UtilsMixin:
                 best_start = i
         return best_start, max_len
     
-    def count_lattice_paths(self, grid_size):
+    def count_lattice_paths(self, grid_size:int):
         """
         Creates a grid and populates each node with the sum of the paths from its right and bottom neighbors.
         """
@@ -266,7 +266,7 @@ class UtilsMixin:
                 dp[r][c] = dp[r + 1][c] + dp[r][c + 1]
         return dp[0][0]
     
-    def number_to_words(self, n):
+    def number_to_words(self, n:int):
         "Returns the pronounced version of words up to 1000. The English language sucks."
         # Dictionaries to map the irregular patterns of the English language
         ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", 
@@ -291,7 +291,7 @@ class UtilsMixin:
             
         return " ".join(words)
     
-    def solve_maximum_path(self, triangle):
+    def solve_maximum_path(self, triangle:list[list[int]]):
         "Returns the path with the max value"
         # Iterate from the second-to-last row up to the top row (row index 0)
         for row in reversed(range(len(triangle) - 1)):
@@ -301,7 +301,7 @@ class UtilsMixin:
                 
         return triangle[0][0]
     
-    def is_leap_year(self, year):
+    def is_leap_year(self, year:int) -> bool:
         # A leap year occurs on any year evenly divisible by 4, 
         # but not on a century unless it is divisible by 400.
         if year % 400 == 0:
@@ -336,7 +336,7 @@ class UtilsMixin:
                 
         return sundays
     
-    def sum_proper_divisors(self, n):
+    def sum_proper_divisors(self, n:int):
         """Calculates the sum of all proper divisors of n."""
         if n <= 1:
             return 0
@@ -463,7 +463,7 @@ class UtilsMixin:
                 n += 1
         return poly_map
 
-    def get_period_length(self, n):
+    def get_period_length(self, n:int):
         """
         Computes the period length of the continued fraction for sqrt(n).
         Returns 0 if n is a perfect square.
@@ -483,7 +483,7 @@ class UtilsMixin:
             period += 1
         return period
 
-    def solve_pell(self, d):
+    def solve_pell(self, d:int):
         """Returns the fundamental x for x^2 - d*y^2 = 1 using continued fractions"""
         m = 0
         d_denom = 1
