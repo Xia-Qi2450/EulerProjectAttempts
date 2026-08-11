@@ -1,13 +1,15 @@
 # Project Euler Solutions in Python
 
+[![Release](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml)[![Python Backwards Compatibility](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml)
+
 A collection of my solutions to the first **100 Project Euler** problems, written in Python.
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **85 / 100** ✅
+**Current Progress:** **90 / 100** ✅
 
 ```text
-███████████████████████████████████████████░░░░░░░  85%
+█████████████████████████████████████████████░░░░░  90%
 ```
 
 > **Note**
