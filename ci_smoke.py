@@ -16,6 +16,7 @@ def main():
     solver = EulerSolver()
     solver.EASTER_EGGS = False
     solver.FORCED_EASTER_EGGS = False
+    solver.SPINNERS = False
 
     problems = sorted(
         int(name[7:])

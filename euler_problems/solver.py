@@ -61,17 +61,20 @@ class EulerSolver(
         Whether random easter eggs are enabled.
     FORCED_EASTER_EGGS : bool
         Force easter eggs to appear regardless of probability.
+    SPINNERS : bool
+        Enables spinners, disable for faster execution
     problem_times : dict[int, float]
         Runtime statistics collected for executed problems.
     """
 
-    def __init__(self, easter_eggs=True, forced_easter_eggs=False) -> None:
+    def __init__(self, easter_eggs=True, forced_easter_eggs=False, spinners_enabled=True) -> None:
         import colorama
         colorama.init(autoreset=True)
         self.VERSION = "0.9"
         self.GOAL = "100"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
+        self.SPINNERS:bool = spinners_enabled
         self._spinner_frames: itertools.cycle = itertools.cycle("|/-\\")
         self.terminal_width: int = shutil.get_terminal_size(fallback=(100, 24)).columns
         self.problem_times: dict[int, float] = {}

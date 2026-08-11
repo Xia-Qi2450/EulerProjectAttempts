@@ -22,6 +22,7 @@ class Helpers:
     # Set in EulerSolver.__init__. Declared here (with no value assigned)
     # purely so Pylance/Pyright knows these exist on self - this is just a
     # type annotation, it doesn't run or set anything at import time.
+    SPINNERS:bool
     terminal_width: int
     _spinner_frames: itertools.cycle
 
@@ -31,14 +32,26 @@ class Helpers:
 
     def run_task(self, text: str, function, *args) -> Any:
         """Run a function with a Halo spinner and timer."""
-        spinner = Halo(text=text, spinner="bouncingBar")
-        start = time.time()
-        spinner.start()
-        time.sleep(0.5)
-        result = function(*args)
+        result:Any
+        if self.SPINNERS:
+            spinner = Halo(text=text, spinner="bouncingBar")
+            start = time.perf_counter()
+            spinner.start()
+            result = function(*args)
+            runtime = time.perf_counter() - start
+            additional = 0.5 - runtime
+            if additional >=0:
+                time.sleep(abs(additional))
 
-        spinner.succeed(f"DONE! {Style.DIM}({time.time() - 0.5 - start:.4f}s){Style.NORMAL}")
-        return result
+            spinner.succeed(f"DONE! {Style.DIM}({runtime:.4f}s){Style.NORMAL}")
+            return result
+        else: 
+            print(text, end="\r", flush=True)
+            start = time.perf_counter()
+            result = function(*args)
+            runtime = time.perf_counter() - start
+            print(f"DONE! {Style.DIM}({runtime:.4f}s){Style.NORMAL}", " "*(self.terminal_width-len("DONE! {Style.DIM}({runtime:.4f}s){Style.NORMAL}")-2))
+            return result
     
     def list_problems(self, print_out=True) -> list:
         """List every implemented Project Euler problem."""
