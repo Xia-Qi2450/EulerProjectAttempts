@@ -2,7 +2,7 @@
 CLI/output helper methods for EulerSolver: headers, spinners, progress bar,
 typewriter-style text, and other console presentation utilities.
 
-HelpersMixin is combined into EulerSolver in solver.py, so every method
+Helpers is combined into EulerSolver in solver.py, so every method
 here can freely use `self.` attributes defined in EulerSolver.__init__
 (e.g. self.terminal_width, self._spinner_frames).
 """

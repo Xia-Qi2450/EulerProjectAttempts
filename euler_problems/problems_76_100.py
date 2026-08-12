@@ -700,5 +700,192 @@ class Problems76To100(UtilsMixin, EasterEggs):
         )
         print(f"The smallest member of the longest amicable chain is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem96(self):
+        "Solves 50 Sudoku puzzles and returns the sum of their top-left 3-digit numbers."
+        self.header(
+            96,
+            "Solves 50 Sudoku puzzles and returns the sum of their top-left 3-digit numbers."
+        )
+        def task():
+            puzzles = self.load_sudoku_puzzles("0096_sudoku.txt")
+            total_sum = 0
+            for i, grid in enumerate(puzzles):
+                if self.solve_sudoku(grid):
+                    # Extract the 3-digit number from the top-left corner
+                    corner_value = grid[0][0] * 100 + grid[0][1] * 10 + grid[0][2]
+                    total_sum += corner_value
+            return total_sum
+        result = self.run_task(
+            "Solving sudokus...",
+            task
+        )
+        print(f"The sum of there top-left 3-digit numbers is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem97(self):
+        "Find the last ten digits of 28433 x 2^(7830457) + 1"
+        self.header(
+            97,
+            "Find the last ten digits of 28433 x 2^(7830457) + 1"
+        )
+        def solve():
+            MOD = 10**10
+            ans = (28433 * pow(2, 7830457, MOD) + 1) % MOD
+            return ans
+        result = self.run_task(
+            "Huge Number Alert...",
+            solve
+        )
+        print(f"The last ten digits of 28433 x 2^(7830457) + 1 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem98(self):
+        "Find the maximum square number formed by an anagramic word pair."
+        self.header(
+            98,
+            "Find the maximum square number formed by an anagramic word pair."
+        )
+        def task(words_list):
+            # Group words by length and find anagram groups
+            words_by_len = collections.defaultdict(list)
+            for word in words_list:
+                words_by_len[len(word)].append(word)
+                
+            anagram_pairs = []
+            for length, words in words_by_len.items():
+                if length < 2: 
+                    continue
+                # Group by sorted characters to find anagrams
+                signature_map = collections.defaultdict(list)
+                for word in words:
+                    sig = "".join(sorted(word))
+                    signature_map[sig].append(word)
+                
+                # Keep pairs/groups of anagrams
+                for sig, matches in signature_map.items():
+                    if len(matches) > 1:
+                        anagram_pairs.append((length, matches))
+
+            # Precompute perfect squares grouped by character length
+            max_len = max([length for length, _ in anagram_pairs]) if anagram_pairs else 0
+            squares_by_len = collections.defaultdict(list)
+            limit = 10**max_len
+            i = 1
+            while True:
+                sq = i * i
+                if sq >= limit:
+                    break
+                sq_str = str(sq)
+                squares_by_len[len(sq_str)].append(sq_str)
+                i += 1
+
+            max_square = 0
+
+            # Match patterns between words and square strings
+            for length, word_list in anagram_pairs:
+                squares = squares_by_len[length]
+                
+                # Test every unique pair of words in the anagram group
+                for i in range(len(word_list)):
+                    for j in range(i + 1, len(word_list)):
+                        word1 = word_list[i]
+                        word2 = word_list[j]
+                        
+                        for sq_str in squares:
+                            letter_to_digit = {}
+                            digit_to_letter = {}
+                            possible = True
+                            
+                            for char, digit in zip(word1, sq_str):
+                                if char in letter_to_digit:
+                                    if letter_to_digit[char] != digit:
+                                        possible = False
+                                        break
+                                else:
+                                    if digit in digit_to_letter:
+                                        possible = False
+                                        break
+                                    letter_to_digit[char] = digit
+                                    digit_to_letter[digit] = char
+                            
+                            if not possible:
+                                continue
+                            
+                            # Convert word2 using the same mapping
+                            word2_mapped = "".join(letter_to_digit[char] for char in word2)
+                            if word2_mapped[0] == '0':
+                                continue
+                            if word2_mapped in squares:
+                                val1 = int(sq_str)
+                                val2 = int(word2_mapped)
+                                max_square = max(max_square, val1, val2)
+                                
+            return max_square
+        with open("0098_words.txt", "r") as f:
+            raw_words = f.read()
+            parsed_words = [w.strip('"') for w in raw_words.split(',')]
+
+        result = self.run_task(
+            "Looking through words",
+            task,
+            parsed_words
+        )
+        print(f"The maximum square number formed by an anagramic word pair is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem99(self):
+        "Find out which line number in a given text file has the largest numerical value when evaluated as base^(exponent)"
+        self.header(
+            99,
+            "Find out which line number in a given text file has the largest numerical value when evaluated as base^(exponent)"
+        )
+        def task():
+            max_value = 0.0
+            best_line_number = 0
+            with open("0099_base_exp.txt", "r") as file:
+                for line_idx, line in enumerate(file, start=1):
+                    if not line.strip():
+                        continue
+                    base_str, exp_str = line.split(",")
+                    base = int(base_str)
+                    exponent = int(exp_str)
+                    
+                    # Compute score using log properties
+                    current_value = exponent * math.log(base)
+                    
+                    # Keep track of the maximum value seen so far
+                    if current_value > max_value:
+                        max_value = current_value
+                        best_line_number = line_idx
+            return best_line_number, max_value
+        result, max_val = self.run_task(
+            "Exponents are fun...",
+            task
+        )
+        print(f"The number that has the largest numerical valye is: {Fore.GREEN}{result}{Fore.RESET}")
+        print(f"With their score being: {Fore.GREEN}{max_val}{Fore.RESET}")
+
+    def problem100(self):
+        "Find the number of blue discs in a box of over 10^12 total discs where the probability of picking two blue discs is exactly 50%."
+        self.header(
+            100,
+            "Find the number of blue discs in a box of over 10^12 total discs where the probability of picking two blue discs is exactly 50%."
+        )
+        def task():
+            # Base case provided in the problem description (15 blue, 21 total)
+            b = 15
+            n = 21
+            limit = 10**12
+            
+            # Generate larger pairs using Pell's equation recurrence relations
+            while n <= limit:
+                next_b = 3 * b + 2 * n - 2
+                next_n = 4 * b + 3 * n - 3
+                
+                b, n = next_b, next_n
+                
+            return b
+        result = self.run_task(
+            "Calculating probabilities...",
+            task
+        )
+        print(f"The number of blue disks is: {Fore.GREEN}{result}{Fore.RESET}")
+        
     

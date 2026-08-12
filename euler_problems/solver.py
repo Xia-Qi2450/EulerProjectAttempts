@@ -5,12 +5,13 @@ This class is deliberately thin - almost all of its behavior comes from
 the mixins below. Each mixin lives in its own file so no single file in
 this package needs to hold the entire solver:
 
-    HelpersMixin        -> helpers.py          (CLI/output helpers)
-    UtilsMixin           -> utils.py           (math helper functions)
-    EasterEggsMixin       -> easter_eggs.py    (hidden easter eggs; inherits HelpersMixin)
-    Problems00To25Mixin   -> problems_00_25.py (inherits UtilsMixin, EasterEggsMixin)
-    Problems26To50Mixin   -> problems_26_50.py (inherits UtilsMixin, EasterEggsMixin)
-    Problems51To75Mixin   -> problems_51_75.py (inherits UtilsMixin, HelpersMixin)
+    Helpers          -> helpers.py         (CLI/output helpers)
+    UtilsMixin       -> utils.py           (math helper functions)
+    EasterEggs       -> easter_eggs.py     (hidden easter eggs; inherits HelpersMixin)
+    Problems00To25   -> problems_00_25.py  (inherits UtilsMixin, EasterEggs)
+    Problems26To50   -> problems_26_50.py  (inherits UtilsMixin, EasterEggs)
+    Problems51To75   -> problems_51_75.py  (inherits UtilsMixin, EasterEggs)
+    Problems76To100  -> problems_76_100.py (inherits UtilsMixin, EasterEggs)
 
 Each mixin genuinely inherits the other mixins whose methods it calls
 (rather than just assuming they'll be mixed in later), so only the three
@@ -20,7 +21,6 @@ resolve calls like self.header(...) inside a problem method: it's now
 real inheritance, not an assumption baked in only at combination time.
 """
 
-from encodings import utf_8
 import os
 import time
 import itertools
@@ -144,6 +144,8 @@ You may delete this to replay the sequence.
                     self.miku39()
                 case "4":
                     self.teto41()
+                case _ :
+                    print(f"{Fore.RED}Not a valid input, dummy. Input the number corresponding to the easter egg to continue.{Fore.RESET}")
             return
         for number in problems:
             method = getattr(self, f"problem{number}", None)

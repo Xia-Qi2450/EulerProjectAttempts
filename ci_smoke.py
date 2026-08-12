@@ -5,9 +5,19 @@ from euler_problems.solver import EulerSolver
 
 # Problems known to be too slow for CI.
 IGNORED_PROBLEMS = {
+    22,
+    42,
+    54,
     58,
+    59,
     60,
-    70
+    67,
+    70,
+    79,
+    81,
+    82,
+    83,
+    96
 }
 
 

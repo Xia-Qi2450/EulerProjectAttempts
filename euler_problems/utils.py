@@ -640,4 +640,60 @@ class UtilsMixin:
             num %= val
         return "".join(result)
 
+    def load_sudoku_puzzles(self, filename:str) -> list[list[list[int]]]:
+        """
+        Generates a list of all the sudoku puzzles in a given text file
+        """
+        puzzles = []
+        current_grid = []
+        with open(filename, "r") as file:
+            for line in file:
+                line = line.strip()
+                if line.startswith("Grid"):
+                    if current_grid:
+                        puzzles.append(current_grid)
+                        current_grid = []
+                elif line:  # Avoid empty lines
+                    current_grid.append([int(char) for char in line])
+        if current_grid:
+            puzzles.append(current_grid)
+            
+        return puzzles
+
+    def solve_sudoku(self, grid:list):
+        """
+        Solves the sudoku puzzles from the list given from self.load_sudoku_puzzles()
+        """
+        def is_valid(grid, r:int, c:int, num:int):
+            # Check row
+            if num in grid[r]:
+                return False
+                
+            # Check column
+            if num in [grid[i][c] for i in range(9)]:
+                return False
+                
+            # Check 3x3 box
+            box_r, box_c = (r // 3) * 3, (c // 3) * 3
+            for i in range(box_r, box_r + 3):
+                for j in range(box_c, box_c + 3):
+                    if grid[i][j] == num:
+                        return False
+                        
+            return True
+
+        for r in range(9):
+            for c in range(9):
+                if grid[r][c] == 0:
+                    for num in range(1, 10):
+                        if is_valid(grid, r, c, num):
+                            grid[r][c] = num
+                            
+                            if self.solve_sudoku(grid):
+                                return True
+                                
+                            grid[r][c] = 0  # Backtrack
+                    return False
+        return True
+
 

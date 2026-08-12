@@ -10,10 +10,10 @@ A collection of my solutions to the first **100 Project Euler** problems, writte
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **95 / 100** ✅
+**Current Progress:** **DONE!** ✅
 
 ```text
-████████████████████████████████████████████████░░  95%
+██████████████████████████████████████████████████  100%
 ```
 
 > **Note**
@@ -138,6 +138,11 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 93 | Arithmetic Expressions | ✅ |
 | 94 | Almost Equilateral Triangles | ✅ |
 | 95 | Amicable Chains | ✅ |
+| 96 | Su Doku | ✅ |
+| 97 | Large Non-Mersenne Prime | ✅ |
+| 98 | Anagramic Squares | ✅ |
+| 99 | Largest Exponential | ✅ |
+| 100 | Arranged Probability | ✅ |
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation
@@ -170,6 +175,9 @@ euler_problems/          (Package containing all solver logic)
 0079_keylog.txt          (The keyslogs for Problem 79)
 0081_matrix.txt          (The matrix for Problems 81-83)
 0089_roman.txt           (The Roman numerals for Problem 89)
+0096_sudoku.txt          (The Sudoku games for Problem 96)
+0098_words.txt           (The words for Problem 98)
+0099_base_exp.txt        (The exponents for Problem 99)
 README.md                (This file)
 LICENSE.txt              (The MIT License)
 ```

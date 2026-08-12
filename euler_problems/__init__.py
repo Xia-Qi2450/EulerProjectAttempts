@@ -16,6 +16,7 @@ EulerProblems.py. The EulerSolver class is now assembled from several
     problems_00_25.py         - problem0 .. problem25
     problems_26_50.py         - problem26 .. problem50
     problems_51_75.py         - problem51 .. problem75
+    problems_76_100.py        - problem76 .. problem100
     solver.py                 - EulerSolver, combining all of the above via
                                  multiple inheritance ("mixins"), plus __init__/run()
     cli.py                    - argparse setup and the console entry point
