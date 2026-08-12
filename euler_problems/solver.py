@@ -70,7 +70,7 @@ class EulerSolver(
     def __init__(self, easter_eggs=True, forced_easter_eggs=False, spinners_enabled=True) -> None:
         import colorama
         colorama.init(autoreset=True)
-        self.VERSION = "0.9"
+        self.VERSION = "1.0"
         self.GOAL = "100"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
