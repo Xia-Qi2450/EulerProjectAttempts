@@ -6,8 +6,8 @@ problem number is run, unless disabled with --no-easter-eggs (or forced
 with the hidden --force-easter-eggs flag). Purely cosmetic/for fun -
 none of this affects the actual Project Euler answers.
 
-EasterEggsMixin is combined into EulerSolver in solver.py. It genuinely
-inherits from HelpersMixin (rather than just assuming it) since it calls
+EasterEggs is combined into EulerSolver in solver.py. It genuinely
+inherits from Helpers (rather than just assuming it) since it calls
 self.header/self.run_task/self._typewriter/etc. - that real inheritance
 is what lets Pylance/Pyright resolve those calls instead of flagging
 them as unknown attributes.
@@ -397,7 +397,6 @@ You: March, you know this is all text right?
     
     def teto41(self):
         """
-        (WIP)
         Display the hidden Project Euler Problem 41 easter egg.
         
         This easter egg has a 1% chance of appearing when Problem 41
@@ -405,7 +404,6 @@ You: March, you know this is all text right?
         
         Teto word of the day! Mathematics!
         """
-        # TODO: Make a Kasane Teto easter egg here!
 
         print(Fore.CYAN + "=" * self.terminal_width)
         print(f"{Fore.YELLOW}/// WARNING ///{Fore.RESET}")
@@ -439,7 +437,19 @@ You: March, you know this is all text right?
             f"\rDownloaded bagettes, fetched {(total / 1e6):.2f} MB, "
             f"Checksum OK!                                             "
         )
-
+        time.sleep(3)
+        total = random.randint(int(9e7),int(2e8)) 
+        i = 0 
+        while i < total: 
+            self._progress_bar(i, total, title="Downloading songs...") 
+            i += random.randint(int(5e6),int(15e6)) 
+            time.sleep(0.1) 
+        i = None 
+        print(
+            f"\rDownloaded songs, fetched {(total/1e6):.2f}MB," 
+            f"Checksum OK! "
+        ) 
+        time.sleep(3)
         total = random.randint(int(1e11), int(9e13))
         i = 0
         while i < total:
@@ -517,4 +527,30 @@ Teto word of the day: Mathematics!
         self._wait("[Continue to next problem]")
         print(Fore.CYAN + "=" * self.terminal_width)
 
+    def funnynumber67(self):
+        """
+        (WIP)
+        Display the hidden Project Euler Problem 67 easter egg.
         
+        This easter egg has a 1% chance of appearing when Problem 41
+        is executed unless disabled with --no-easter-eggs.
+        
+        Ok dude, this is not funny anymore, why does this even exists?
+        """
+        # TODO: Make a easter egg for this... why is this number even famous?
+
+        raise NotImplementedError("Yea no, I don't think this is going to be implemented in like ever.")
+
+    def popular73(self):
+        """
+        (WIP)
+        Display the hidden Project Euler Problem 67 easter egg.
+        
+        This easter egg has a 1% chance of appearing when Problem 41
+        is executed unless disabled with --no-easter-eggs.
+        
+        Somehow one of the most popular numbers? I wonder why its so popular.
+        """
+        # TODO: Make a easter egg for this number.
+
+        raise NotImplementedError("The reason why its so popular is that it's a palindrome, a prime, and its mirror product equals 21. Also The Big Bang Theory popularized it")

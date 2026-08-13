@@ -7,13 +7,14 @@
 [![Python Backwards Compatibility](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml)
 
 A collection of my solutions to the first **100 Project Euler** problems, written in Python.
+Now I am deciding to do another 100! I need something to keep me from playing games.
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **DONE!** ✅
+**Current Progress:** **NEW GOAL! 100/200** ✅
 
 ```text
-██████████████████████████████████████████████████  100%
+█████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░  50%
 ```
 
 > **Note**
@@ -109,13 +110,13 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 64 | Odd Period Square Roots | ✅ |
 | 65 | Convergents of *e* | ✅ |
 | 66 | Diophantine Equation | ✅ |
-| 67 | Maximum Path Sum II | ✅ |
+| *67* | Maximum Path Sum II | ✅ |
 | 68 | Magic 5-gon Ring | ✅ |
 | 69 | Totient Maximum | ✅ |
 | 70 | Totient Permutation | ✅ |
 | 71 | Ordered Fractions | ✅ |
 | 72 | Counting Fractions | ✅ |
-| 73 | Counting Fractions in a Range | ✅ |
+| *73* | Counting Fractions in a Range | ✅ |
 | 74 | Digit Factorial Chains | ✅ |
 | 75 | Singular Integer Right Triangles | ✅ |
 | 76 | Counting Summations | ✅ |

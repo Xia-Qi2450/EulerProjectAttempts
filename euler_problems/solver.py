@@ -71,7 +71,7 @@ class EulerSolver(
         import colorama
         colorama.init(autoreset=True)
         self.VERSION = "1.0"
-        self.GOAL = "100"
+        self.GOAL = "200"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
         self.SPINNERS:bool = spinners_enabled
@@ -133,6 +133,8 @@ You may delete this to replay the sequence.
             print(f"{Style.BRIGHT}2.{Style.NORMAL} Honkai Star Rail / March 7th (Problem 37)")
             print(f"{Style.BRIGHT}3.{Style.NORMAL} Vocal Synth / Hatsune Miku (Problem 39)")
             print(f"{Style.BRIGHT}4.{Style.NORMAL} Vocal Synth / Kasane Teto (Problem 41)")
+            print(f"{Style.BRIGHT}5.{Style.NORMAL} 67 / That one number that got popular when that kid said it (Problem 67) {Style.DIM}(WIP){Style.NORMAL}")
+            print(f"{Style.BRIGHT}6.{Style.NORMAL} The popular number (73) / The Big Bang Theory (Problem 41) {Style.DIM}(WIP){Style.NORMAL}")
             print()
             easterEgg = input(f"{Fore.CYAN}>>>{Fore.RESET} ")
             match easterEgg:
@@ -144,6 +146,10 @@ You may delete this to replay the sequence.
                     self.miku39()
                 case "4":
                     self.teto41()
+                case "5":
+                    self.funnynumber67()
+                case "6":
+                    self.popular73()
                 case _ :
                     print(f"{Fore.RED}Not a valid input, dummy. Input the number corresponding to the easter egg to continue.{Fore.RESET}")
             return
