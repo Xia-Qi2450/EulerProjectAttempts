@@ -303,6 +303,7 @@ Finish all **100** Project Euler problems while continually improving:
 - [x] Command-line interface
 - [x] Run individual problems
 - [x] List implemented problems
+- [x] Debug options
 - [ ] Benchmark mode
 - [ ] Automatic answer verification against Project Euler answers
 - [ ] Export benchmark results to CSV

@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+venv
 
 # macOS
 .DS_Store
@@ -18,9 +19,9 @@ march.txt
 teto.txt
 
 # Runtime Flags
-/animeRan
+animeRan
 
 # Dev stuff
 # Local testing script
 test.py
-animeRan
+

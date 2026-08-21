@@ -26,7 +26,7 @@ class Helpers:
     terminal_width: int
     _spinner_frames: itertools.cycle
 
-    def header(self, problem_number, description: str) -> None:
+    def header(self, problem_number:object, description: str) -> None:
         """Print a formatted problem header."""
         print(f"\nEuler's problem {problem_number}: {Fore.BLUE}{description}")
 

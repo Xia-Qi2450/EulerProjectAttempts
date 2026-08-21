@@ -19,7 +19,7 @@ class UtilsMixin:
     CARD_VALUES: dict
     ROMAN_MAP: dict[str, int]
 
-    def find_all_squares_until(self, limit:int):
+    def find_all_squares_until(self, limit:int) -> list[int]:
         """Return every perfect square up to the given limit."""
         squares = []
 

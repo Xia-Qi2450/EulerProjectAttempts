@@ -32,6 +32,7 @@ from euler_problems.easter_eggs import EasterEggs
 
 from . import data
 from .exceptions import EulerProblemNotImplemented, EulerProblemExecutionError
+from .problems_test import ProblemsTest
 from .problems_00_25 import Problems00To25
 from .problems_26_50 import Problems26To50
 from .problems_51_75 import Problems51To75
@@ -39,6 +40,7 @@ from .problems_76_100 import Problems76To100
 
 
 class EulerSolver(
+    ProblemsTest,
     Problems00To25,
     Problems26To50,
     Problems51To75,
@@ -152,6 +154,26 @@ You may delete this to replay the sequence.
                     self.popular73()
                 case _ :
                     print(f"{Fore.RED}Not a valid input, dummy. Input the number corresponding to the easter egg to continue.{Fore.RESET}")
+            return
+        elif problems == ["debug"]:
+            test = ProblemsTest()
+            print(f"{Fore.YELLOW}WELCOME TO THE DEBUGGING OPTIONS{Fore.RESET}")
+            print(Fore.CYAN + "=" * self.terminal_width)
+            print(f"{Fore.GREEN}Select a debug function to run and test for errors: {Fore.RESET}\n")
+            print(f"{Style.BRIGHT}1.{Style.NORMAL} Test for basic functions")
+            print(f"{Style.BRIGHT}2.{Style.NORMAL} Test for exception propagation")
+            print(f"{Style.BRIGHT}3.{Style.NORMAL} Test for utility functions")
+            print()
+            test_to_run = input(f"{Fore.CYAN}>>>{Fore.RESET} ")
+            match test_to_run:
+                case "1":
+                    test.test_basic_functions(test.word)
+                case "2":
+                    test.test_run_task_exceptions()
+                case "3":
+                    test.test_utils()
+                case _ :
+                    print(f"{Fore.RED}Not a valid input, dummy. Input the number corresponding to the test to continue.{Fore.RESET}")
             return
         for number in problems:
             method = getattr(self, f"problem{number}", None)
