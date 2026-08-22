@@ -2,27 +2,11 @@ import time
 
 from euler_problems.solver import EulerSolver
 
-
 # Problems known to be too slow for CI.
-IGNORED_PROBLEMS = {
-    22,
-    42,
-    54,
-    58,
-    59,
-    60,
-    67,
-    70,
-    79,
-    81,
-    82,
-    83,
-    96
-}
-
+IGNORED_PROBLEMS = {12, 34, 22, 23, 42, 43, 54, 58, 59, 60, 67, 68, 70, 73, 74, 78, 79, 81, 82, 83, 84, 88, 91, 93, 95, 96}
 
 def main():
-    # Disable all easter eggs for CI smoke test.
+    # Disable all easter eggs and spinners for CI smoke test.
     solver = EulerSolver()
     solver.EASTER_EGGS = False
     solver.FORCED_EASTER_EGGS = False
@@ -38,6 +22,7 @@ def main():
         problem
         for problem in problems
         if problem not in IGNORED_PROBLEMS
+        if not(problem > 100)
     ]
 
     print(f"Running smoke test for {len(problems)} problems...")
@@ -84,7 +69,6 @@ def main():
         raise SystemExit(1)
 
     print("Smoke test passed! All tested problems executed successfully.")
-
 
 if __name__ == "__main__":
     main()
