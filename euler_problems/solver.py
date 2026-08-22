@@ -22,6 +22,7 @@ real inheritance, not an assumption baked in only at combination time.
 """
 
 import os
+import sys
 import time
 import itertools
 import shutil
@@ -37,6 +38,7 @@ from .problems_00_25 import Problems00To25
 from .problems_26_50 import Problems26To50
 from .problems_51_75 import Problems51To75
 from .problems_76_100 import Problems76To100
+from .problems_101_125 import Problems101To125
 
 
 class EulerSolver(
@@ -44,7 +46,8 @@ class EulerSolver(
     Problems00To25,
     Problems26To50,
     Problems51To75,
-    Problems76To100
+    Problems76To100,
+    Problems101To125
 ):
     """
     Solve and manage Project Euler problems.
@@ -72,7 +75,7 @@ class EulerSolver(
     def __init__(self, easter_eggs=True, forced_easter_eggs=False, spinners_enabled=True) -> None:
         import colorama
         colorama.init(autoreset=True)
-        self.VERSION = "1.0"
+        self.VERSION = "1.0_b"
         self.GOAL = "200"
         self.EASTER_EGGS: bool = easter_eggs
         self.FORCED_EASTER_EGGS: bool = forced_easter_eggs
@@ -89,6 +92,8 @@ class EulerSolver(
         self.problem81_matrix = data.PROBLEM81_MATRIX
         self.monopoly_squares = data.MONOPOLY_SQUARES
         self.ROMAN_MAP = data.ROMAN_MAP
+        # STUPID PROBLEM 104 
+        sys.set_int_max_str_digits(70_000)
 
     def __str__(self):
         return (

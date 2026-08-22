@@ -105,3 +105,13 @@ This is a table for all problems that has been completed.
 | 98 | Anagramic Squares | ✅ |
 | 99 | Largest Exponential | ✅ |
 | 100 | Arranged Probability | ✅ |
+| 101 | Optimum Polynomial | ✅ |
+| 102 | Triangle Containment | ✅ |
+| 103 | Special Subset Sums: Optimum | ✅ |
+| 104 | Pandigital Fibonacci Ends | ✅ |
+| 105 | Special Subset Sums: Testing | ✅ |
+| 106 | Special Subset Sums: Meta-testing | ✅ |
+| 107 | Minimal Network | ✅ |
+| 108 | Diophantine Reciprocals I | ✅ |
+| 109 | Darts | ✅ |
+| 110 | Diophantine Reciprocals II | ✅ |

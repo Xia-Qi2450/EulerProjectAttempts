@@ -696,4 +696,20 @@ class UtilsMixin:
                     return False
         return True
 
-
+    def count_divisors_n_squared(self, n:int) -> int:
+        """Calculates the number of divisors of n^2 using prime factorization."""
+        divisors = 1
+        d = 2
+        while d * d <= n:
+            if n % d == 0:
+                count = 0
+                while n % d == 0:
+                    count += 1
+                    n //= d
+                # If p^count divides n, then p^(2*count) divides n^2
+                divisors *= (2 * count + 1)
+            d += 1
+        if n > 1:
+            # Remaining prime factor has an exponent of 1
+            divisors *= (2 * 1 + 1)
+        return divisors
