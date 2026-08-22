@@ -447,7 +447,7 @@ You: March, you know this is all text right?
         i = None 
         print(
             f"\rDownloaded songs, fetched {(total/1e6):.2f}MB," 
-            f"Checksum OK! "
+            f"Checksum OK!                                             "
         ) 
         time.sleep(3)
         total = random.randint(int(1e11), int(9e13))

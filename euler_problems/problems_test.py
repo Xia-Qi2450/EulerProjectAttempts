@@ -11,7 +11,6 @@ import time
 import shutil
 import traceback
 
-
 from colorama import Fore
 
 from euler_problems.exceptions import EulerProblemError
