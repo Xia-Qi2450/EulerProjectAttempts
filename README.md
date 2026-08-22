@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/Xia-Qi2450/EulerProjectAttempts)](https://github.com/Xia-Qi2450/EulerProjectAttempts/releases)
 [![License](https://img.shields.io/github/license/Xia-Qi2450/EulerProjectAttempts)](LICENSE.txt)
-[![Python](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.14-blue.svg?logo=python)](https://www.python.org/downloads/release/python-3147/)
 [![Release](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml)
 [![Python Backwards Compatibility](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml)
 
@@ -11,7 +11,7 @@ Now I am deciding to do another 100! I need something to keep me from playing ga
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **NEW GOAL! 100/200** ✅
+**Current Progress:** **100/200** ✅
 
 ```text
 █████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░  50%
@@ -31,8 +31,8 @@ The goal of this project isn't just to get the correct answers—it's also an op
 - Command-line interface powered by `argparse`
 - Run individual Project Euler problems
 - List all implemented problems
-- Animated loading spinners using **Halo**
-- Colored terminal output using **Colorama**
+- Animated loading spinners using [**Halo**](https://github.com/manrajgrover/halo)
+- Colored terminal output using [**Colorama**](https://github.com/tartley/colorama)
 - Execution time displayed for computationally intensive problems
 - Clean and readable code with docstrings
 - Modular package structure (`euler_problems/`) split by responsibility for easier maintenance
@@ -50,100 +50,10 @@ The goal of this project isn't just to get the correct answers—it's also an op
 | 4 | Largest Palindrome Product | ✅ |
 | *5* | ✦ Smallest Multiple | ✅ |
 | 6 | Sum Square Difference | ✅ |
-| 7 | 10,001st Prime | ✅ |
-| 8 | Largest Product in a Series | ✅ |
-| 9 | Special Pythagorean Triplet | ✅ |
-| 10 | Summation of Primes | ✅ |
-| 11 | Largest Product in a Grid | ✅ |
-| 12 | Highly Divisible Triangular Number | ✅ |
-| 13 | Large Sum | ✅ |
-| 14 | Longest Collatz Sequence | ✅ |
-| 15 | Lattice Paths | ✅ |
-| 16 | Power Digit Sum | ✅ |
-| 17 | Number Letter Counts | ✅ |
-| 18 | Maximum Path Sum I | ✅ |
-| 19 | Counting Sundays | ✅ |
-| 20 | Factorial Digit Sum | ✅ |
-| 21 | Amicable Numbers | ✅ |
-| 22 | Names Scores | ✅ |
-| 23 | Non-Abundant Sums | ✅ |
-| 24 | Lexicographic Permutations | ✅ |
-| 25 | 1000-digit Fibonacci Number | ✅ |
-| 26 | Reciprocal Cycles | ✅ |
-| 27 | Quadratic Primes | ✅ |
-| 28 | Number Spiral Diagonals | ✅ |
-| 29 | Distinct Powers | ✅ |
-| 30 | Digit Fifth Powers | ✅ |
-| 31 | Coin Sums | ✅ |
-| 32 | Pandigital Products | ✅ |
-| 33 | Digit Cancelling Fractions | ✅ |
-| 34 | Digit Factorials | ✅ |
-| 35 | Circular Primes | ✅ |
-| 36 | Double-base Palindromes | ✅ |
-| *37* | ✦ Truncatable Primes | ✅ |
-| 38 | Pandigital Multiples | ✅ |
-| *39* | ✦ Integer Right Triangles | ✅ |
-| 40 | Champernowne's Constant | ✅ |
-| *41* | ✦ Pandigital Prime | ✅ |
-| 42 | Coded Triangle Numbers | ✅ |
-| 43 | Sub-string Divisibility | ✅ |
-| 44 | Pentagon Numbers | ✅ |
-| 45 | Triangular, Pentagonal, and Hexagonal | ✅ |
-| 46 | Goldbach's Other Conjecture | ✅ |
-| 47 | Distinct Primes Factors | ✅ |
-| 48 | Self Powers | ✅ |
-| 49 | Prime Permutations | ✅ |
-| 50 | Consecutive Prime Sum | ✅ |
-| 51 | Prime Digit Replacements | ✅ |
-| 52 | Permuted Multiples | ✅ |
-| 53 | Combinatoric Selections | ✅ |
-| 54 | Poker Hands | ✅ |
-| 55 | Lychrel Numbers | ✅ |
-| 56 | Powerful Digit Sum | ✅ |
-| 57 | Square Root Convergents | ✅ |
-| 58 | Spiral Primes | ✅ |
-| 59 | XOR Decryption | ✅ |
-| 60 | Prime Pair Sets | ✅ |
-| 61 | Cyclical Figurate Numbers | ✅ |
-| 62 | Cubic Permutations | ✅ |
-| 63 | Powerful Digit Counts | ✅ |
-| 64 | Odd Period Square Roots | ✅ |
-| 65 | Convergents of *e* | ✅ |
-| 66 | Diophantine Equation | ✅ |
-| *67* | Maximum Path Sum II | ✅ |
-| 68 | Magic 5-gon Ring | ✅ |
-| 69 | Totient Maximum | ✅ |
-| 70 | Totient Permutation | ✅ |
-| 71 | Ordered Fractions | ✅ |
-| 72 | Counting Fractions | ✅ |
-| *73* | Counting Fractions in a Range | ✅ |
-| 74 | Digit Factorial Chains | ✅ |
-| 75 | Singular Integer Right Triangles | ✅ |
-| 76 | Counting Summations | ✅ |
-| 77 | Prime Summations | ✅ |
-| 78 | Coin Partitions | ✅ |
-| 79 | Passcode Derivation | ✅ |
-| 80 | Square Root Digital Expansion | ✅ |
-| 81 | Path Sum: Two Ways | ✅ |
-| 82 | Path Sum: Three Ways | ✅ |
-| 83 | Path Sum: Four Ways | ✅ |
-| 84 | Monopoly Odds | ✅ |
-| 85 | Counting Rectangles | ✅ |
-| 86 | Cuboid Route | ✅ |
-| 87 | Prime Power Triples | ✅ |
-| 88 | Product-sum Numbers | ✅ |
-| 89 | Roman Numerals | ✅ |
-| 90 | Cube Digit Pairs | ✅ |
-| 91 | Right Triangles with Integer Coordinates | ✅ |
-| 92 | Square Digit Chains | ✅ |
-| 93 | Arithmetic Expressions | ✅ |
-| 94 | Almost Equilateral Triangles | ✅ |
-| 95 | Amicable Chains | ✅ |
-| 96 | Su Doku | ✅ |
-| 97 | Large Non-Mersenne Prime | ✅ |
-| 98 | Anagramic Squares | ✅ |
-| 99 | Largest Exponential | ✅ |
-| 100 | Arranged Probability | ✅ |
+
+...
+
+Check [PROBLEMS](PROBLEMS.md) for the full completed list
 
 ✦ Some solved problems contain optional surprises.
 > Note: Problem 0 is the starting challenge for account creation
@@ -204,7 +114,7 @@ Python 3.10+ is supported, with Python 3.14+ recommended for the best experience
 Install dependencies:
 
 ```bash
-pip install colorama halo
+pip install -r requirements.txt
 ```
 
 ---
@@ -261,6 +171,14 @@ Implemented Problems
  XX - Latest implemented problem
 ```
 
+### Debug options
+
+List all debug options currently implemented, select the option by inputing the corresponding number.
+
+```bash
+python EulerProblems.py debug
+```
+
 ---
 
 ## Helper Functions
@@ -275,11 +193,6 @@ Current helper functionality includes:
 - Fibonacci generation
 - Palindrome checking
 - Divisor counting
-- Triangle number generation
-- Grid searching
-- Integer-to-English conversion
-- Leap year calculations
-- Date calculations
 - Dynamic programming
 - Mathematical utilities
 - And more as new problems require them.
@@ -295,6 +208,8 @@ Finish all **100** Project Euler problems while continually improving:
 - Mathematical problem solving
 - Runtime efficiency
 - Code readability
+
+> This is currently complete. This repository is still being maintained and adding new problems. Check [PROBLEMS](PROBLEMS.md) for a list of all problems that has been completed
 
 ---
 
