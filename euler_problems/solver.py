@@ -168,6 +168,7 @@ You may delete this to replay the sequence.
             print(f"{Style.BRIGHT}1.{Style.NORMAL} Test for basic functions")
             print(f"{Style.BRIGHT}2.{Style.NORMAL} Test for exception propagation")
             print(f"{Style.BRIGHT}3.{Style.NORMAL} Test for utility functions")
+            print(f"{Style.BRIGHT}4.{Style.NORMAL} Test for easter egg related functions")
             print()
             test_to_run = input(f"{Fore.CYAN}>>>{Fore.RESET} ")
             match test_to_run:
@@ -177,6 +178,8 @@ You may delete this to replay the sequence.
                     test.test_run_task_exceptions()
                 case "3":
                     test.test_utils()
+                case "4":
+                    test.test_easter_egg_functions()
                 case _ :
                     print(f"{Fore.RED}Not a valid input, dummy. Input the number corresponding to the test to continue.{Fore.RESET}")
             return

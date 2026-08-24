@@ -10,8 +10,9 @@ import string
 import time
 import shutil
 import traceback
+import itertools
 
-from colorama import Fore
+from colorama import Fore, Style
 
 from euler_problems.exceptions import EulerProblemError
 
@@ -25,6 +26,7 @@ class ProblemsTest(UtilsMixin, EasterEggs):
     def __init__(self) -> None:
         """Initalise testing variables..."""
         self.SPINNERS:bool = True
+        self._spinner_frames: itertools.cycle = itertools.cycle("|/-\\")
         self.terminal_width: int = shutil.get_terminal_size(fallback=(70, 24)).columns
         self.LIST_OF_RANDOM_WORDS = ["python", "jumble", "easy", "difficult", "answer",  "xylophone"]
         self.word = random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS) + random.choice(self.LIST_OF_RANDOM_WORDS)
@@ -200,5 +202,64 @@ class ProblemsTest(UtilsMixin, EasterEggs):
 
         return True
 
+    def test_easter_egg_functions(self):
+        """This function tests for all easter egg functions to make sure that they are working."""
+        try: 
+            print(f"{Fore.CYAN}Testing for easter egg functions:{Fore.RESET}")
+            print(f"{Fore.CYAN} Testing typewriter function:{Fore.RESET}")
+            self._typewriter("Hello, World!")
+            self._typewriter("Hello, World!", 0.1)
+            self._typewriter("Hello, World! ", 0.05, False)
+            self._typewriter("How is it going?")
+            print(f"{Fore.GREEN} Typewriter test passed!{Fore.RESET}")
+            print()
+            time.sleep(0.5)
+            print(f"{Fore.CYAN} Testing wait function {Style.DIM}(Press enter for each){Style.NORMAL}:{Fore.RESET}")
+            self._wait()
+            self._wait("[Custom text]")
+            print(f"{Fore.GREEN} Wait test passed!{Fore.RESET}")
+            print()
+            time.sleep(0.5)
+            print(f"{Fore.CYAN} Testing progress bar function:{Fore.RESET}")
+            total = random.randint(50,200)
+            i = 0
+            while i < total:
+                self._progress_bar(i, total, title="Progress Bar")
+                i += random.randint(0,5)
+                time.sleep(0.1)
+            i = None
+            print(
+                f"\rProgress Bar Completed, total: {total}.                                          "
+            ) 
+            time.sleep(0.3)
+            total = random.randint(int(51e8), int(6e9))
+            i = 0
+            while i < total:
+                self._progress_bar(i, total, title="Downloading Stuff")
+                i += random.randint(int(9e6), int(20e6))
+                time.sleep(0.1)
+                if i > int(5e9):
+                    time.sleep(5)
+                    break
+            print()
+            print(
+                f"  {Fore.RED}{Style.BRIGHT}DOWNLOAD STOPPED{Style.NORMAL}: "
+                f"HTTP ERROR 503: xia-qi.is-a.dev is currently unable to handle this request."
+            )
+            time.sleep(0.5)
+            print(f"{Fore.GREEN} Progress bar test passed!{Fore.RESET}")
+            print()
+            time.sleep(0.5)
+            print(f"{Fore.CYAN} Testing fake spinner function:{Fore.RESET}")
+            self._load("spinner text", "Done", 2, False)
+            self._load("spinner text, now fails", "Failure", 2, True)
+            self._load("spinner text, now with fake duration", "Failure", 2, False, "10")
+            print(f"{Fore.GREEN} Fake spinner test passed!{Fore.RESET}")
+            print(f"{Fore.GREEN}All easter egg functions tests passed!{Fore.RESET}")
+        except Exception as e:
+            raise EulerProblemError(
+                f"Easter egg function test failed: {type(e).__name__}: {e}"
+            ) from e
 
+        return True
         
