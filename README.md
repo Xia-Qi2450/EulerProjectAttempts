@@ -11,10 +11,10 @@ Now I am deciding to do another 100! I need something to keep me from playing ga
 
 The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **110/200** ✅
+**Current Progress:** **120/200** ✅
 
 ```text
-████████████████████████████░░░░░░░░░░░░░░░░░░░░░░  55%
+██████████████████████████████░░░░░░░░░░░░░░░░░░░░  60%
 ```
 
 > **Note**

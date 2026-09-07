@@ -115,3 +115,13 @@ This is a table for all problems that has been completed.
 | 108 | Diophantine Reciprocals I | ✅ |
 | 109 | Darts | ✅ |
 | 110 | Diophantine Reciprocals II | ✅ |
+| 111 | Primes with Runs | ✅ |
+| 112 | Bouncy Numbers | ✅ |
+| 113 | Non-bouncy Numbers | ✅ |
+| 114 | Counting Block Combinations I | ✅ |
+| 115 | Counting Block Combinations II | ✅ |
+| 116 | Red, Green or Blue Tiles | ✅ |
+| 117 | Red, Green, and Blue Tiles | ✅ |
+| 118 | Pandigital Prime Sets | ✅ |
+| 119 | Digit Power Sum | ✅ |
+| 120 | Square Remainders | ✅ |
