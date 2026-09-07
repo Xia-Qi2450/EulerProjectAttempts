@@ -7,6 +7,7 @@ UtilsMixin is combined into EulerSolver in solver.py.
 
 import math
 import collections
+import itertools
 import random
 
 from colorama import Fore
@@ -75,6 +76,30 @@ class UtilsMixin:
                 return False
         return True
 
+    def get_primes_with_digit(self, n:int, d:int|str, count:int) -> list[int]:
+        """Generate all n-digit primes where digit d appears exactly `count` times."""
+        primes = set()
+        for positions in itertools.combinations(range(n), count):
+            other_pos = [i for i in range(n) if i not in positions]
+            num_others = len(other_pos)
+            
+            for other_digits in itertools.product(range(10), repeat=num_others):
+                arr = [''] * n
+                for p in positions:
+                    arr[p] = str(d)
+                for idx, p in enumerate(other_pos):
+                    arr[p] = str(other_digits[idx])
+                
+                # No leading zeros allowed
+                if arr[0] == '0':
+                    continue
+                    
+                val = int(''.join(arr))
+                if self.is_prime(val):
+                    primes.add(val)
+                    
+        return list(primes)
+
     def is_square(self, n:int) -> bool:
         s = int(math.isqrt(n))
         return s * s == n
@@ -113,7 +138,6 @@ class UtilsMixin:
         return square_of_sum - sum_of_squares
     
     def sieve_of_eratosthenes(self, limit:int, target_index:int):
-
         """
         Returns the prime numbers at your targeted index with a limit using the Sieve of Eratosthenes
         """
@@ -713,3 +737,26 @@ class UtilsMixin:
             # Remaining prime factor has an exponent of 1
             divisors *= (2 * 1 + 1)
         return divisors
+
+    def count_arrangements(self, row_length:int, tile_size:int):
+        """Counts the different arrangements in a given tile setup"""
+        # ways[i] stores the number of combinations for a row of length i
+        ways = [0] * (row_length + 1)
+        
+        # Base case: 1 way to fill an empty row (doing nothing)
+        ways[0] = 1 
+        for i in range(1, row_length + 1):
+            # Case 1: Place a 1-unit grey tile
+            ways[i] += ways[i - 1]
+            
+            # Case 2: Place a colored tile if there is enough space
+            if i >= tile_size:
+                ways[i] += ways[i - tile_size]
+                
+        # Subtract 1 to remove the 'all grey tiles' configuration
+        return ways[row_length] - 1
+
+
+
+
+    

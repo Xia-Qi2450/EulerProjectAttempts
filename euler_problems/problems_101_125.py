@@ -97,7 +97,6 @@ class Problems101To125(UtilsMixin, EasterEggs):
         )
         print(f"The number of triangles that contain the origin is: {Fore.GREEN}{result}{Fore.RESET}")
 
-
     def problem103(self):
         "Find the optimum special sum set for n = 7 and return its elements concatenated as a string."
         self.header(
@@ -184,7 +183,6 @@ class Problems101To125(UtilsMixin, EasterEggs):
         )
         print(f"The first Fibonacci number index or which both the first nine digits and the last nine digits are 1-9 pandigital is: {Fore.GREEN}{result}{Fore.RESET}")
 
-
     def problem105(self):
         "Find the sum of the element totals of sets matching the special subset sum criteria from a provided file"
         self.header(
@@ -226,7 +224,6 @@ class Problems101To125(UtilsMixin, EasterEggs):
             solve
         )
         print(f"The sum of the sets matching the special sum is: {Fore.GREEN}{result}{Fore.RESET}")
-
 
     def problem106(self):
         "Find how many equal-sized, disjoint subset pairs must be tested to verify a special sum set for n=12."
@@ -432,3 +429,288 @@ class Problems101To125(UtilsMixin, EasterEggs):
             solve
         )
         print(f"The least value of n is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem111(self):
+        "Find the sum of all 10-digit primes containing the maximum possible repetitions of each digit from 0 to 9."
+        self.header(
+            111,
+            "Find the sum of all 10-digit primes containing the maximum possible repetitions of each digit from 0 to 9."
+        )
+        def solve(n=10):
+            total_sum = 0
+            for d in range(10):
+                # Decrease count from n downwards until we find at least one prime
+                for count in range(n, 0, -1):
+                    found_primes = self.get_primes_with_digit(n, d, count)
+                    if found_primes:
+                        total_sum += sum(found_primes)
+                        break
+            return total_sum
+        result = self.run_task(
+            "Counting primes...",
+            solve
+        )
+        print(f"The sum of all 10-digit primes is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem112(self):
+        "Find the least number for which the proportion of bouncy numbers is exactly 99%."
+        self.header(
+            112,
+            "Find the least number for which the proportion of bouncy numbers is exactly 99%."
+        )
+        def is_bouncy(n):
+            def is_increasing(n):
+                s = str(n)
+                for i in range(len(s) - 1):
+                    if s[i] > s[i + 1]:
+                        return False
+                return True
+            def is_decreasing(n):
+                s = str(n)
+                for i in range(len(s) - 1):
+                    if s[i] < s[i + 1]:
+                        return False
+                return True
+            return not is_increasing(n) and not is_decreasing(n)
+        def solve():
+            bouncy_count = 0
+            n = 0
+            while True:
+                n += 1
+                if is_bouncy(n):
+                    bouncy_count += 1
+                # Check if the proportion of bouncy numbers is exactly 99%
+                # bouncy_count / n == 99 / 100  =>  bouncy_count * 100 == 99 * n
+                if bouncy_count * 100 == 99 * n:
+                    return n
+        result = self.run_task(
+            "Checking for bounciness...",
+            solve
+        )
+        print(f"The least number for which the proportion of bouncy numbers is exactly 99% is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem113(self):
+        "Find the total number of non-bouncy (increasing or decreasing) numbers below 10^100."
+        self.header(
+            113,
+            "Find the total number of non-bouncy (increasing or decreasing) numbers below 10^100."
+        )
+        def solve(digits=100):
+            # Calculate increasing numbers using stars and bars
+            increasing = math.comb(digits + 9, 9) - 1
+            
+            # Calculate decreasing numbers using stars and bars
+            decreasing = math.comb(digits + 10, 10) - (digits + 1)
+            
+            # Numbers consisting of identical digits are double-counted
+            duplicates = 9 * digits
+            return increasing + decreasing - duplicates
+        result = self.run_task(
+            "Combinatorics...",
+            solve
+        )
+        print(f"The total number of non-bouncy numbers is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem114(self):
+        "Find the number of ways to fill a row of length N with grey squares and red blocks of minimum length 3 separated by at least one grey square."
+        self.header(
+            114,
+            "Find the number of ways to fill a row of length N with grey squares and red blocks of minimum length 3 separated by at least one grey square."
+        )
+        def solve(target_length=50):
+            # Initialise a DP table where ways[i] stores combinations for length i
+            ways = [0] * (target_length + 1)
+
+            # Base cases: Rows of length 0, 1, or 2 cannot fit a red block (min length 3).
+            # There is exactly 1 way to fill them (leaving them entirely grey).
+            for i in range(3):
+                ways[i] = 1
+                
+            # Fill the DP table iteratively
+            for i in range(3, target_length + 1):
+                # Case 1: The leftmost tile is grey
+                total_ways = ways[i - 1]
+                
+                # Case 2: The leftmost tile starts a red block of length k
+                for k in range(3, i + 1):
+                    if k == i:
+                        total_ways += 1  # The whole row is a solid red block
+                    else:
+                        # Red block (k) + Grey spacer (1) leaves (i - k - 1) spaces
+                        total_ways += ways[i - k - 1]
+                        
+                ways[i] = total_ways
+            return ways[target_length]
+        result = self.run_task(
+            "Counting combinations...",
+            solve
+        )
+        print(f"The number of ways to fill a row of length 50 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem115(self):
+        "Find the least row length for which the number of block combinations exceeds one million."
+        self.header(
+            115,
+            "Find the least row length for which the number of block combinations exceeds one million."
+        )
+        def solve():
+            M = 50
+            ways = [1]
+            for n in itertools.count(1):
+                s = ways[n - 1] + sum(ways[ : max(n - M, 0)])
+                if n >= M:
+                    s += 1
+                ways.append(s)
+                if s > 1000000:
+                    return str(n)
+        result = self.run_task(
+            "Counting rows...",
+            solve
+        )
+        print(f"The least number of rows is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem116(self):
+        "Find the total number of ways to fill a row of length 50 using red, green, or blue tiles without mixing colors."
+        self.header(
+            116,
+            "Find the total number of ways to fill a row of length 50 using red, green, or blue tiles without mixing colors."
+        )
+        def solve():
+            ROW_LENGTH = 50
+    
+            # Red (length 2), Green (length 3), Blue (length 4)
+            red_ways = self.count_arrangements(ROW_LENGTH, 2)
+            green_ways = self.count_arrangements(ROW_LENGTH, 3)
+            blue_ways = self.count_arrangements(ROW_LENGTH, 4)
+            
+            total_ways = red_ways + green_ways + blue_ways
+            return total_ways
+        result = self.run_task(
+            "Finding ways...",
+            solve
+        )
+        print(f"The total number of ways is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem117(self):
+        "Find the number of ways to tile a row of length 50 using blocks of lengths 1, 2, 3, and 4."
+        self.header(
+            117,
+            "Find the number of ways to tile a row of length 50 using blocks of lengths 1, 2, 3, and 4."
+        )
+        def solve():
+            LENGTH = 50
+            ways = [1] + [0] * LENGTH
+            for n in range(1, len(ways)):
+                ways[n] += sum(ways[max(n - 4, 0) : n])
+            return str(ways[-1])
+        result = self.run_task(
+            "The same as before...",
+            solve
+        )
+        print(f"The total number of ways is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem118(self):
+        "Find the number of distinct sets of prime numbers that together contain each of the digits 1 to 9 exactly once."
+        self.header(
+            118,
+            "Find the number of distinct sets of prime numbers that together contain each of the digits 1 to 9 exactly once."
+        )
+        def solve():
+            digits = tuple(range(1, 10))
+            # Memoized prime check
+            prime_cache = {}
+            def check_prime(num):
+                if num in prime_cache:
+                    return prime_cache[num]
+
+                result = self.is_prime(num)
+                prime_cache[num] = result
+                return result
+
+            # Cache states based on:
+            # (remaining digits, smallest allowed prime)
+            cache = {}
+            def count_sets(remaining, min_val):
+                if not remaining:
+                    return 1
+                state = (remaining, min_val)
+                if state in cache:
+                    return cache[state]
+                total = 0
+
+                # Choose how many digits to use for the next prime
+                for length in range(1, len(remaining) + 1):
+                    # Pick every possible subset of this size
+                    for subset in itertools.combinations(remaining, length):
+                        # Arrange those digits in every possible order
+                        for perm in itertools.permutations(subset):
+                            # Multi-digit numbers cannot start with 0
+                            num = 0
+                            for digit in perm:
+                                num = num * 10 + digit
+                            # Enforce ordering 
+                            if num < min_val:
+                                continue
+                            if not check_prime(num):
+                                continue
+                            # Remove the digits used by this prime.
+                            new_remaining = tuple(
+                                digit
+                                for digit in remaining
+                                if digit not in subset
+                            )
+
+                            total += count_sets(new_remaining, num)
+                cache[state] = total
+                return total
+            return count_sets(digits, 0)
+        result = self.run_task(
+            "Primes are my favorites...",
+            solve
+        )
+        print(f"The number of distinct sets of prime numbers is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem119(self):
+        "Find the 30th number that can be written as the power of the sum of its digits."
+        self.header(
+            119,
+            "Find the 30th number that can be written as the power of the sum of its digits."
+        )
+        def solve():
+            def sum_digits(n):
+                return sum(int(digit) for digit in str(n))
+            # Generate candidate numbers: base^exp
+            candidates = []
+            for base in range(2, 100):
+                value = base * base
+                while value < 10**16:  # High enough upper limit for a_30
+                    if sum_digits(value) == base:
+                        candidates.append(value)
+                    value *= base
+            candidates = sorted(list(set(candidates)))
+            return candidates[29], candidates
+        result, the_list= self.run_task(
+            "Searching for a number...",
+            solve
+        )
+        print(f"The 30th number is: {Fore.GREEN}{result}{Fore.RESET}")
+        print(f"with the full list being: {Fore.GREEN}{the_list}{Fore.RESET}")
+
+    def problem120(self):
+        "Find the sum of maximum remainders for (a-1)^n + (a+1)^n modulo a^2 for 3 <= a <= 1000."
+        self.header(
+            120,
+            "Find the sum of maximum remainders for (a-1)^n + (a+1)^n modulo a^2 for 3 <= a <= 1000."
+        )
+        def solve():
+            # Calculate the sum of r_max for a from 3 to 1000
+            total_sum = sum(a * (a - 2 if a % 2 == 0 else a - 1) for a in range(3, 1001))
+            return total_sum
+        result = self.run_task(
+            "Why is this one so easy...",
+            solve
+        )
+        print(f"The sum of the maximum remainder is: {Fore.GREEN}{result}{Fore.RESET}")
+
+
+

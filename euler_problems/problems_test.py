@@ -236,7 +236,7 @@ class ProblemsTest(UtilsMixin, EasterEggs):
             i = 0
             while i < total:
                 self._progress_bar(i, total, title="Downloading Stuff")
-                i += random.randint(int(9e6), int(20e6))
+                i += random.randint(int(20e6), int(35e6))
                 time.sleep(0.1)
                 if i > int(5e9):
                     time.sleep(5)
@@ -253,7 +253,7 @@ class ProblemsTest(UtilsMixin, EasterEggs):
             print(f"{Fore.CYAN} Testing fake spinner function:{Fore.RESET}")
             self._load("spinner text", "Done", 2, False)
             self._load("spinner text, now fails", "Failure", 2, True)
-            self._load("spinner text, now with fake duration", "Failure", 2, False, "10")
+            self._load("spinner text, now with fake duration", "Fake Duration", 2, False, "10")
             print(f"{Fore.GREEN} Fake spinner test passed!{Fore.RESET}")
             print(f"{Fore.GREEN}All easter egg functions tests passed!{Fore.RESET}")
         except Exception as e:
