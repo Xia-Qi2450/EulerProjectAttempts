@@ -8,6 +8,7 @@ this package needs to hold the entire solver:
     Helpers          -> helpers.py         (CLI/output helpers)
     UtilsMixin       -> utils.py           (math helper functions)
     EasterEggs       -> easter_eggs.py     (hidden easter eggs; inherits HelpersMixin)
+    InstallerMixin   -> install.py         (downloads external data files; inherits Helpers)
     Problems00To25   -> problems_00_25.py  (inherits UtilsMixin, EasterEggs)
     Problems26To50   -> problems_26_50.py  (inherits UtilsMixin, EasterEggs)
     Problems51To75   -> problems_51_75.py  (inherits UtilsMixin, EasterEggs)
@@ -19,6 +20,8 @@ problem mixins need to be listed here - the rest come along transitively.
 This is also what lets a type checker like Pylance/Pyright correctly
 resolve calls like self.header(...) inside a problem method: it's now
 real inheritance, not an assumption baked in only at combination time.
+InstallerMixin is the one exception: nothing else pulls it in transitively,
+so it's listed explicitly in EulerSolver's bases below.
 """
 
 import os
@@ -32,7 +35,8 @@ from colorama import Fore, Style
 from euler_problems.easter_eggs import EasterEggs
 
 from . import data
-from .exceptions import EulerProblemNotImplemented, EulerProblemExecutionError
+from .exceptions import EulerProblemNotImplemented, EulerProblemExecutionError, RequiredDataFileNotFound
+from .install import InstallerMixin, DATA_FILES
 from .problems_test import ProblemsTest
 from .problems_00_25 import Problems00To25
 from .problems_26_50 import Problems26To50
@@ -42,6 +46,7 @@ from .problems_101_125 import Problems101To125
 
 
 class EulerSolver(
+    InstallerMixin,
     ProblemsTest,
     Problems00To25,
     Problems26To50,
@@ -183,10 +188,18 @@ You may delete this to replay the sequence.
                 case _ :
                     print(f"{Fore.RED}Not a valid input, dummy. Input the number corresponding to the test to continue.{Fore.RESET}")
             return
+        elif problems and problems[0] == "install":
+            self.install(problems[1:])
+            return
         for number in problems:
             method = getattr(self, f"problem{number}", None)
 
             if callable(method):
+                required_file = DATA_FILES.get(int(number))
+                if required_file and not os.path.isfile(required_file):
+                    print(f"{Fore.RED}Problem {number} needs {required_file}, which isn't present.{Fore.RESET}")
+                    print(f"{Fore.YELLOW}Run: ./EulerProblems.py install {number}{Fore.RESET}")
+                    raise RequiredDataFileNotFound(number, required_file)
                 try:
                     problem_start = time.perf_counter()
                     method()
@@ -203,6 +216,13 @@ You may delete this to replay the sequence.
                             "Yes, this is a nod towards the TI-84 Plus CE error when dividing by zero."
                             )
                     ) from e
+                except FileNotFoundError as e:
+                    # Safety net for any data file DATA_FILES doesn't know about yet -
+                    # the pre-flight check above should normally catch this first.
+                    missing = os.path.basename(e.filename or "the required file")
+                    print(f"{Fore.RED}Problem {number} needs {missing}, which isn't present.{Fore.RESET}")
+                    print(f"{Fore.YELLOW}Run: ./EulerProblems.py install {number}{Fore.RESET}")
+                    raise RequiredDataFileNotFound(number, missing) from e
                 except Exception as e:
                     print(f"{Fore.RED}Problem {number} ran into an error during execution.{Fore.RESET}")
                     raise EulerProblemExecutionError(number, e) from e

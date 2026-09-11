@@ -131,8 +131,15 @@ PROBLEM18_TRIANGLE = [
 CARD_VALUES = {str(n): n for n in range(2, 10)}
 CARD_VALUES.update({'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14})
 
-with open("0081_matrix.txt", "r") as f:
-    PROBLEM81_MATRIX = [[int(n) for n in line.strip().split(",")] for line in f if line.strip()]
+try:
+    with open("0081_matrix.txt", "r") as f:
+        PROBLEM81_MATRIX = [[int(n) for n in line.strip().split(",")] for line in f if line.strip()]
+except FileNotFoundError:
+    # Deliberately not fatal: importing this module must never crash just
+    # because the file hasn't been downloaded yet (e.g. via `... install`).
+    # solver.py's pre-flight check catches this before problem81/82/83 ever
+    # try to use a None matrix.
+    PROBLEM81_MATRIX = None
 
 MONOPOLY_SQUARES = [
     "GO",

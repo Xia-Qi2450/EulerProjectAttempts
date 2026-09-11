@@ -174,6 +174,9 @@ class Problems76To100(UtilsMixin, EasterEggs):
             81,
             "Find the minimal path sum from the top left to the bottom right by only moving right and down in 0081_matrix.txt"
         )
+        with open("0081_matrix.txt", "r") as f:
+            MATRIX = [[int(n) for n in line.strip().split(",")] for line in f if line.strip()]
+
         def solve_matrix_path(matrix):
             rows = len(matrix)
             cols = len(matrix[0])
@@ -189,7 +192,7 @@ class Problems76To100(UtilsMixin, EasterEggs):
         result = self.run_task(
             "Looking through the 80 by 80 matrix...",
             solve_matrix_path,
-            self.problem81_matrix
+            MATRIX
         )
         print(f"The minimal path sum the top left to the bottom right is: {Fore.GREEN}{result}{Fore.RESET}")
 

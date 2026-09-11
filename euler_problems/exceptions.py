@@ -28,6 +28,20 @@ class EulerProblemExecutionError(RuntimeError, EulerProblemError):
             f"Caused by {Style.BRIGHT}{Fore.MAGENTA}{type(error).__name__}{Fore.RESET}{Style.NORMAL}: {Fore.MAGENTA}{error}{Fore.MAGENTA}"
         )
 
+class RequiredDataFileNotFound(EulerProblemError):
+    """When a problem needs an external data file that hasn't been downloaded yet."""
+    def __init__(self, problem_no, filename: str) -> None:
+        from colorama import Fore, Style  # safe here: only raised after startup import check passes
+
+        self.problem_no = problem_no
+        self.filename = filename
+
+        super().__init__(
+            f"Problem {problem_no} needs the data file "
+            f"{Style.BRIGHT}{Fore.MAGENTA}{filename}{Fore.RESET}{Style.NORMAL}, which isn't present.\n"
+            f"Run {Style.BRIGHT}{Fore.CYAN}./EulerProblems.py install {problem_no}{Fore.RESET}{Style.NORMAL} to download it."
+        )
+
 class RequiredModulesNotFound(Exception):
     """When required modules are not able to be imported due to it not being found."""
     def __init__(self, module) -> None:
