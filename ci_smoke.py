@@ -3,7 +3,7 @@ import time
 from euler_problems.solver import EulerSolver
 
 # Problems known to be too slow for CI.
-IGNORED_PROBLEMS = {12, 34, 22, 23, 42, 43, 54, 58, 59, 60, 67, 68, 70, 73, 74, 78, 79, 81, 82, 83, 84, 88, 91, 93, 95, 96}
+IGNORED_PROBLEMS = {12, 34, 22, 23, 42, 43, 54, 58, 59, 60, 67, 68, 70, 73, 74, 78, 79, 81, 82, 83, 84, 88, 89, 91, 93, 95, 96, 98, 99}
 
 def main():
     # Disable all easter eggs and spinners for CI smoke test.
@@ -26,7 +26,7 @@ def main():
     ]
 
     print(f"Running smoke test for {len(problems)} problems...")
-    print(f"Ignoring slow problems: {sorted(IGNORED_PROBLEMS)}")
+    print(f"Ignoring slow problems or problems that require data files: {sorted(IGNORED_PROBLEMS)}")
     print("=" * 80)
     start_time = time.perf_counter()
     failures = []
