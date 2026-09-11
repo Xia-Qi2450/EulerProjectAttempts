@@ -9,7 +9,7 @@
 A collection of my solutions to the first **100 Project Euler** problems, written in Python.
 Now I am deciding to do another 100! I need something to keep me from playing games.
 
-The goal of this project isn't just to get the correct answers—it's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
+The goal of this project isn't just to get the correct answers. It's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
 **Current Progress:** **120/200** ✅
 
@@ -36,6 +36,7 @@ The goal of this project isn't just to get the correct answers—it's also an op
 - Execution time displayed for computationally intensive problems
 - Clean and readable code with docstrings
 - Modular package structure (`euler_problems/`) split by responsibility for easier maintenance
+- Data files installer that is inspired by the `dnf` package manager
 
 ---
 
@@ -80,20 +81,6 @@ euler_problems/          (Package containing all solver logic)
     problems_test.py        (Debug options/testing for errors)
     solver.py               (EulerSolver class, combining everything above)
     cli.py                  (argparse setup + main entry point)
-0022_names.txt           (The names for Problem 22)
-0042_words.txt           (The words for Problem 42)
-0054_poker.txt           (The poker hands for Problem 54)
-0059_cipher.txt          (The encrypted message for Problem 59)
-0067_triangle.txt        (The triangle for Problem 67)
-0079_keylog.txt          (The keyslogs for Problem 79)
-0081_matrix.txt          (The matrix for Problems 81-83)
-0089_roman.txt           (The Roman numerals for Problem 89)
-0096_sudoku.txt          (The Sudoku games for Problem 96)
-0098_words.txt           (The words for Problem 98)
-0099_base_exp.txt        (The exponents for Problem 99)
-0102_triangles.txt       (The triangles for Problem 102)
-0105_sets.txt            (The sets for Problem 105)
-0107_network.txt         (The network layout for Problem 107)
 README.md                (This file)
 LICENSE.txt              (The MIT License)
 ```
@@ -123,6 +110,12 @@ pip install -r requirements.txt
 ```
 
 ---
+
+Install data files (optional if you don't need to run problems that require them):
+
+```bash
+python EulerProblems.py install
+```
 
 ## Running
 
@@ -228,7 +221,7 @@ Finish all **100** Project Euler problems while continually improving:
 - [ ] Automatic answer verification against Project Euler answers
 - [ ] Export benchmark results to CSV
 - [ ] Unit tests
-- [ ] More optimized algorithms for later problems
+- [x] Downloading data from the official webiste
 - [x] Progress statistics
 - [x] Separate helper functions into their own module
 - [x] Split codebase into multiple modules
