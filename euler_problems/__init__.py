@@ -39,6 +39,7 @@ try:
     import colorama
     from colorama import Fore, Style
     from halo import Halo
+    import requests
 except ModuleNotFoundError as e:
     raise RequiredModulesNotFound(e.name) from e
 except Exception as e:

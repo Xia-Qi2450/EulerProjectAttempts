@@ -56,10 +56,8 @@ def _unique_files() -> list[str]:
             seen.append(filename)
     return seen
 
-
 def _problems_for(filename: str) -> list[int]:
     return sorted(n for n, f in DATA_FILES.items() if f == filename)
-
 
 def _format_size(num_bytes: int | None) -> str:
     if num_bytes is None:
@@ -71,6 +69,12 @@ def _format_size(num_bytes: int | None) -> str:
         size /= 1024
     return f"{size:.1f} GiB"
 
+def _shorten_filename(name, max_len=30):
+    """Shortens a filename to fit within a specified maximum length, adding ellipsis in the middle if necessary."""
+    if len(name) <= max_len:
+        return name
+    half = (max_len - 3) // 2
+    return f"{name[:half]}...{name[-half:]}"
 
 class InstallerMixin(Helpers):
     """Downloads Project Euler's external data files, dnf-style."""
@@ -116,11 +120,11 @@ class InstallerMixin(Helpers):
         except (requests.HTTPError, ValueError, TimeoutError):
             return None
 
-    def _download_file(self, url: str, dest: str, index: int, total: int, totals:dict[str, int | None]={}) -> int:
+    def _download_file(self, url: str, dest: str, index: int, total: int, totals: dict[str, int | None] | None = None) -> int:
         """Streams url to dest, driving self._progress_bar. Returns bytes written."""
         request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         length: int | None = 0
-        if totals: length = totals[url.removeprefix(PROJECT_EULER_BASE_URL)]
+        if totals is not None: length = totals[url.removeprefix(PROJECT_EULER_BASE_URL)]
         else: length = self._head_content_length(url)
         chunk_size = 4096
         written = 0
@@ -233,3 +237,101 @@ class InstallerMixin(Helpers):
                 print(f"  {filename}")
 
         print(f"\n{Fore.GREEN}{Style.BRIGHT}Complete!{Style.NORMAL}{Fore.RESET}")
+
+    def install_bypass(self, files: list[str] | None = None) -> None:
+            """Download external files dnf-style. Bypassed version of `install()`"""
+            to_download = files or []
+    
+            if not to_download:
+                print(f"{Fore.RED}Nothing to install.{Fore.RESET}")
+                return
+    
+            print(f"{Fore.CYAN}Project Euler File Installer{Fore.RESET}")
+            print("Last metadata expiration check: 0:00:00 ago.")
+    
+            to_install = [
+                url for url in to_download
+                if not os.path.exists(os.path.basename(url))
+            ]
+            already_present = []
+
+            for url in to_download:
+                filename = os.path.basename(url)
+
+                if os.path.exists(filename):
+                    already_present.append(filename)
+    
+            for filename in already_present:
+                print(f"File {filename} is already exists, skipping.")
+    
+            if not to_install:
+                print(f"\n{Fore.GREEN}Nothing to do. All requested files are already present.{Fore.RESET}")
+                return
+    
+            print(f"{Fore.GREEN}Dependencies resolved.{Fore.RESET}")
+            print("=" * self.terminal_width)
+            print(f" {'File':<30}{'Size':>10}   Source")
+            print("=" * self.terminal_width)
+            print("Installing:")
+    
+            sizes: dict[str, int | None] = {}
+            for filename in to_install:
+                url = filename
+                size = self._head_content_length(url)
+                sizes[filename] = size
+                print(f" {_shorten_filename(filename):<30}{_format_size(size):>10}   projecteuler.net")
+    
+            print()
+            print(f"{Style.BRIGHT}Transaction Summary{Style.NORMAL}")
+            print("=" * self.terminal_width)
+            print(f"Install  {len(to_install)} File{'s' if len(to_install) != 1 else ''}")
+            known_sizes = [s for s in sizes.values() if s is not None]
+            if known_sizes:
+                print(f"\nTotal download size: {_format_size(sum(known_sizes))}")
+    
+            answer = input(f"\n{Fore.CYAN}Is this ok [y/N]: {Fore.RESET}")
+            if answer.strip().lower() not in ("y", "yes"):
+                print(f"{Fore.YELLOW}Operation aborted.{Fore.RESET}")
+                return
+    
+            print(f"\n{Style.BRIGHT}Downloading Packages:{Style.NORMAL}")
+            succeeded: list[str] = []
+            failed: list[str] = []
+            try:
+                for i, filename in enumerate(to_install, start=1):
+                    url = filename
+                    tempfilename = os.path.basename(url)
+                    try:
+                        self._download_file(url, tempfilename, i, len(to_install), sizes)
+                        succeeded.append(filename)
+                    except (urllib.error.URLError, TimeoutError, OSError) as e:
+                        print(f"{Fore.RED}Failed to download {filename}: {e}{Fore.RESET}")
+                        failed.append(filename)
+            except KeyboardInterrupt:
+                print(f"\n{Style.DIM}{Fore.YELLOW}Installation interrupted by user{Fore.RESET}{Style.NORMAL}")
+                return
+    
+            if not succeeded:
+                print(f"\n{Fore.RED}No files were downloaded.{Fore.RESET}")
+                return
+    
+            print()
+            print(f"{Style.DIM}Running transaction check{Style.NORMAL}")
+            print(f"{Style.DIM}Running transaction test{Style.NORMAL}")
+            print(f"{Style.DIM}Transaction test succeeded.{Style.NORMAL}")
+            print(f"{Style.DIM}Running transaction{Style.NORMAL}")
+            for i, filename in enumerate(succeeded, start=1):
+                label = f"  Installing : {_shorten_filename(filename, 55)} "
+                print(f"{label:<70}{i}/{len(succeeded)}")
+    
+            print(f"\n{Fore.GREEN}Installed:{Fore.RESET}")
+            for filename in succeeded:
+                print(f"  {filename}")
+    
+            if failed:
+                print(f"\n{Fore.RED}Failed:{Fore.RESET}")
+                for filename in failed:
+                    print(f"  {filename}")
+    
+            print(f"\n{Fore.GREEN}{Style.BRIGHT}Complete!{Style.NORMAL}{Fore.RESET}")
+    

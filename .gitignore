@@ -27,6 +27,7 @@ teto.txt
 animeRan
 
 # Dev stuff
-# Local testing script
+# Local testing 
+/test
 test.py
 
