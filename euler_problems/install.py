@@ -126,7 +126,7 @@ class InstallerMixin(Helpers):
         length: int | None = 0
         if totals is not None: length = totals[url.removeprefix(PROJECT_EULER_BASE_URL)]
         else: length = self._head_content_length(url)
-        chunk_size = 4096
+        chunk_size = 64
         written = 0
         title = f"({index}/{total}) {os.path.basename(dest)}"
         tmp_path = dest + ".part"
