@@ -151,6 +151,10 @@ class Problems101To125(UtilsMixin, EasterEggs):
 
     def problem104(self):
         "Find the first Fibonacci number index for which both the first nine digits and the last nine digits are 1-9 pandigital."
+        self.header(
+            104,
+            "Find the first Fibonacci number index for which both the first nine digits and the last nine digits are 1-9 pandigital."
+        )
         def is_pandigital_9(s):
             return "".join(sorted(str(s))) == "123456789"
         def solve():
@@ -712,5 +716,183 @@ class Problems101To125(UtilsMixin, EasterEggs):
         )
         print(f"The sum of the maximum remainder is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem121(self):
+        "Find the maximum prize fund for a disc game by computing the probability of drawing more blue discs than red discs over 15 turns."
+        self.header(
+            121,
+            "Find the maximum prize fund for a disc game by computing the probability of drawing more blue discs than red discs over 15 turns."
+        )
+        def solve(turns=15):
+            # f[k][b] represents the number of ways to get b blue discs after k turns
+            f = [[0] * (turns + 1) for _ in range(turns + 1)]
+            f[0][0] = 1
+            
+            for k in range(1, turns + 1):
+                for b in range(0, k + 1):
+                    ways_red = k * f[k - 1][b]
+                    ways_blue = f[k - 1][b - 1] if b > 0 else 0
+                    f[k][b] = ways_red + ways_blue
+                    
+            # A player wins if blue discs > red discs (b > turns - b)
+            min_blue = math.ceil((turns + 1) / 2)
+            winning_ways = sum(f[turns][b] for b in range(min_blue, turns + 1))
+            total_ways = math.factorial(turns + 1)
+            
+            # Maximum prize fund floor(1 / p) = total_ways // winning_ways
+            return total_ways // winning_ways
+        result = self.run_task(
+            "We love probablility",
+            solve,
+            15
+        )
+        print(f"The maximum prize fund that should be allocated for 15 turns is: {Fore.GREEN}{result}{Fore.RESET}")
 
+    def problem122(self):
+        "Find the total minimum number of multiplications required to compute all exponents from x^1 to x^200."
+        self.header(
+            122,
+            "Find the total minimum number of multiplications required to compute all exponents from x^1 to x^200."
+        )
+        def solve(limit=200):
+            def min_chain_length(target):
+                if target == 1:
+                    return 0
+                chain = [1]
+                def search(remaining):
+                    current = chain[-1]
+                    # Even doubling at every remaining step
+                    # cannot reach the target.
+                    if current * (2 ** remaining) < target:
+                        return False
+                    if remaining == 0:
+                        return current == target
+                    tried = set()
+                    # Try larger sums first.
+                    for i in range(len(chain) - 1, -1, -1):
+                        for j in range(i, -1, -1):
+                            nxt = chain[i] + chain[j]
+                            # Addition chains must strictly increase.
+                            if nxt <= current:
+                                continue
+                            if nxt > target:
+                                continue
+                            # Avoid generating the same value multiple times.
+                            if nxt in tried:
+                                continue
+                            tried.add(nxt)
+                            chain.append(nxt)
+                            if search(remaining - 1):
+                                return True
+                            chain.pop()
+                    return False
+                
+                # Iterative deepening:
+                # first successful depth is the minimum.
+                for depth in range(1, target.bit_length() + 5):
+                    if search(depth):
+                        return depth
 
+                raise RuntimeError(f"Could not find addition chain for {target}")
+            min_ops = [
+                min_chain_length(n)
+                for n in range(1, limit + 1)
+            ]
+            return sum(min_ops)
+        result = self.run_task(
+            "Calculating minimum multiplications...",
+            solve
+        )
+        print(f"The total minimum number of multiplications required is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem123(self):
+        "Find the smallest 1-based prime index n where the remainder of ((p_n - 1)^n + (p_n + 1)^n) / p_n^2 exceeds 10^10."
+        self.header(
+            123,
+            "Find the smallest 1-based prime index n where the remainder of ((p_n - 1)^n + (p_n + 1)^n) / p_n^2 exceeds 10^10."
+        )
+        def solve():
+            # 1,000,000 is an optimal upper bound to find our target
+            limit = 1000000
+            is_prime_list = self.sieve_of_eratosthenes_list(limit)
+            
+            target = 10**10
+            n = 0
+            
+            # Traverse the boolean list to pick up primes
+            for candidate, is_prime in enumerate(is_prime_list):
+                if is_prime:
+                    n += 1  # n is the 1-based index of the prime
+                    
+                    # As derived, we only care about odd values of n
+                    if n % 2 == 1:
+                        remainder = 2 * n * candidate
+                        if remainder > target:
+                            return n
+        result = self.run_task(
+            "Traversing primes...",
+            solve
+        )
+        print(f"The smallest 1-based prime index is {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem124(self):
+        "Find the k-th sorted element by computing radicals using a sieve."
+        self.header(
+            124,
+            "Find the k-th sorted element by computing radicals using a sieve."
+        )
+        def solve(limit: int, target_index: int) -> int:
+            # Initialize the radical array with 1s
+            # rads[i] will store the radical of i
+            rads = [1] * (limit + 1)
+            
+            # Modified Sieve of Eratosthenes to compute radicals (I wanted to use my included one)
+            for i in range(2, limit + 1):
+                # If rads[i] is still 1, then i is a prime number
+                if rads[i] == 1:
+                    for j in range(i, limit + 1, i):
+                        rads[j] *= i
+                        
+            # Create a list of tuples: (radical_value, original_number)
+            # Then sort the list
+            ordered_radicals = [(rads[n], n) for n in range(1, limit + 1)]
+            ordered_radicals.sort()
+            
+            return ordered_radicals[target_index - 1][1]
+        result = self.run_task(
+            "That's a lot of radicals...",
+            solve,
+            100_000,
+            10_000
+        )
+        print(f"The k-th sorted element is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    def problem125(self):
+        "Find the sum of all palindromic numbers less than 10^8 that can be written as the sum of consecutive squares."
+        self.header(
+            125,
+            "Find the sum of all palindromic numbers less than 10^8 that can be written as the sum of consecutive squares."
+        )
+        def solve(limit: int = 10**8) -> int:
+            palindromic_sums = set()
+            # The maximum value for the starting square
+            for i in range(1, int(limit**0.5) + 1):
+                total = i * i
+                count = 0
+                # Add consecutive squares
+                for j in range(i + 1, int(limit**0.5) + 1):
+                    total += j * j
+                    if total >= limit:
+                        break
+                    count += 1
+                    # A valid sum of consecutive squares requires at least 2 squares
+                    if count >= 1 and self.is_palindrome_str(total):
+                        palindromic_sums.add(total)
+                        
+            return sum(palindromic_sums)
+        result = self.run_task(
+            "We all like palindromes...",
+            solve
+        )
+        print(f"The sum of all palindromic numbers less than 10^8 is: {Fore.GREEN}{result}{Fore.RESET}")
+
+    

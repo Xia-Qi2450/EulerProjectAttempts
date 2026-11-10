@@ -60,7 +60,7 @@ class UtilsMixin:
 
         return n
 
-    def is_palindrome(self, s) -> bool:
+    def is_palindrome(self, s:str) -> bool:
         return s == s[::-1]
     
     def is_palindrome_str(self, number: int) -> bool:
