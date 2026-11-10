@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/Xia-Qi2450/EulerProjectAttempts)](https://github.com/Xia-Qi2450/EulerProjectAttempts/releases)
 [![License](https://img.shields.io/github/license/Xia-Qi2450/EulerProjectAttempts)](LICENSE.txt)
-[![Python](https://img.shields.io/badge/python-3.14-blue.svg?logo=python)](https://www.python.org/downloads/release/python-3147/)
+[![Python](https://img.shields.io/badge/python-3.15-blue.svg?logo=python)](https://www.python.org/downloads/release/python-3152/)
 [![Release](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/release.yaml)
 [![Python Backwards Compatibility](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml/badge.svg)](https://github.com/Xia-Qi2450/EulerProjectAttempts/actions/workflows/compatibility.yaml)
 
@@ -11,10 +11,10 @@ Now I am deciding to do another 100! I need something to keep me from playing ga
 
 The goal of this project isn't just to get the correct answers. It's also an opportunity to practice writing clean, reusable, and reasonably efficient code while learning new algorithms and mathematical techniques.
 
-**Current Progress:** **120/200** ✅
+**Current Progress:** **125/200** ✅
 
 ```text
-██████████████████████████████░░░░░░░░░░░░░░░░░░░░  60%
+███████████████████████████████░░░░░░░░░░░░░░░░░░░  62.5%
 ```
 
 > **Note**
